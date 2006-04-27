@@ -1,4 +1,4 @@
-Math::Symbolic version 0.201
+Math::Symbolic version 0.501
 ============================
 
 Math::Symbolic is intended to offer symbolic calculation capabilities
@@ -55,6 +55,13 @@ If you wish, you may use the old MakeMaker style instead:
    make test
    make install
 
+Since version 0.501, we include support for a new, faster
+Parse::Yapp based parser. By default we use the old parser, but
+if you would like to test the new parser, run the tests as
+follows:
+
+  TEST_YAPP_PARSER=1 ./Build test
+
 DEPENDENCIES
 
 This module requires these other modules and libraries:
@@ -77,7 +84,7 @@ math-symbolic-develop at lists dot sourceforge dot net
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2003-2005 Steffen Mueller
+Copyright (C) 2003-2006 Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl (5) itself. 
