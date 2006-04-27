@@ -3,10 +3,15 @@ use warnings;
 
 use Test::More tests => 19;
 
-#use lib 'lib';
+BEGIN {
+	use_ok('Math::Symbolic');
+	use_ok('Math::Symbolic::VectorCalculus');
+}
 
-use_ok('Math::Symbolic');
-use_ok('Math::Symbolic::VectorCalculus');
+if ($ENV{TEST_YAPP_PARSER}) {
+	require Math::Symbolic::Parser::Yapp;
+	$Math::Symbolic::Parser = Math::Symbolic::Parser::Yapp->new();
+}
 
 use Math::Symbolic qw/:all/;
 use Math::Symbolic::ExportConstants qw/:all/;

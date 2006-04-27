@@ -5,9 +5,15 @@ use warnings;
 
 use Test::More tests => 17;
 
-#use lib 'lib';
+BEGIN {
+	use_ok('Math::Symbolic');
+}
 
-use_ok('Math::Symbolic');
+if ($ENV{TEST_YAPP_PARSER}) {
+	require Math::Symbolic::Parser::Yapp;
+	$Math::Symbolic::Parser = Math::Symbolic::Parser::Yapp->new();
+}
+
 use Math::Symbolic::ExportConstants qw/:all/;
 
 my $tree;

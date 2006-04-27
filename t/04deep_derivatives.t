@@ -5,7 +5,15 @@ use Test::More tests => 4;
 
 #use lib 'lib';
 
-use_ok('Math::Symbolic');
+BEGIN {
+	use_ok('Math::Symbolic');
+}
+
+if ($ENV{TEST_YAPP_PARSER}) {
+	require Math::Symbolic::Parser::Yapp;
+	$Math::Symbolic::Parser = Math::Symbolic::Parser::Yapp->new();
+}
+
 use Math::Symbolic::ExportConstants qw/:all/;
 
 my $var = Math::Symbolic::Variable->new();
