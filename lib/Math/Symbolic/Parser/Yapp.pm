@@ -768,7 +768,7 @@ sub { $_[2] }
 	],
 	[#Rule 11
 		 'list', 3,
-sub { push @{$_[3]}, $_[1]; $_[3] }
+sub { unshift @{$_[3]}, $_[1]; $_[3] }
 	],
 	[#Rule 12
 		 'list', 1,
@@ -781,6 +781,8 @@ sub { [$_[1]] }
 
 
 
+use strict;
+use warnings;
 use Math::Symbolic qw//;
 use constant DAT => 0;
 use constant OP  => 1;
@@ -802,10 +804,13 @@ my $Func = qr/log|partial_derivative|total_derivative|a?(?:sin|sinh|cos|cosh|tan
 my $Unary = qr/\+|\-/o;
 
 # This is a hack so we can hook into the new() method.
-*real_new = \&new;
-*new = sub {
-	goto &real_new;
-};
+{
+	no warnings; no strict;
+	*real_new = \&new;
+	*new = sub {
+		goto &real_new;
+	};
+}
 
 sub _Lexer {
     my($parser)=shift;
@@ -874,6 +879,7 @@ sub parse {
 	$in =~ s/\s+//g;
 	$self->{USER}{STATE} = DAT;
 	$self->{USER}{INPUT} = $in;
+	pos($self->{USER}{INPUT}) = 0;
     return $self->YYParse( yylex => \&_Lexer, yyerror => \&_Error );
 }
 
@@ -883,6 +889,7 @@ sub parsedebug {
 	$in =~ s/\s+//g;
 	$self->{USER}{STATE} = DAT;
 	$self->{USER}{INPUT} = $in;
+	pos($self->{USER}{INPUT}) = 0;
     return $self->YYParse( yydebug => 0x1F, yylex => \&_Lexer, yyerror => \&_Error );
 }
 
