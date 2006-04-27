@@ -19,8 +19,27 @@ Math::Symbolic::Parser - Parse strings into Math::Symbolic trees
 This module contains the parsing routines used by Math::Symbolic to
 parse strings into Math::Symbolic trees. Usually, you will want
 to simply use the Math::Symbolic->parse_from_string() class method
-instead of this module directly. If you do, however, make sure to
-remove any whitespace from your input string.
+instead of this module directly. If you do use this module directly,
+however, make sure to remove any whitespace from your input string.
+
+=head2 NOTE
+
+With version 0.501 of Math::Symbolic, an experimental, new parser is
+introduced, but it is not enabled by default. The new parser is based
+on Parse::Yapp instead of Parse::RecDescent and comes with an at least
+ten fold speed increase. However, it has not been availlable for a long
+time and is not as well tested. Furthermore, it currently does not play
+well with parser extensions such as
+L<Math::SymbolicX::ParserExtensionFactory>. As soon as these problems
+have been addressed (which might be a long time away), the new
+parser will be enabled by default. Until then, you need to load it by hand
+as follows:
+
+  use Math::Symbolic::Parser::Yapp;
+  $Math::Symbolic::Parser::Parser = Math::Symbolic::Parser::Yapp->new();
+
+This replaces the default Math::Symbolic parser with an instance of the
+new Yapp parser. Doing this voids the warranty, you've been warned.
 
 =head2 STRING FORMAT
 
@@ -413,6 +432,28 @@ Sourceforge at http://sourceforge.net/projects/math-symbolic/
 L<Math::Symbolic>
 
 L<Math::Symbolic::Parser::Precompiled>
+
+=head1 ADDITIONAL COPYRIGHT NOTICE
+
+This package is distributed under the same license as the rest of the
+Math::Symbolic distribution (Artistic+GPL), but the author of Parse::Yapp
+has requested that his copyright and the licensing terms of Parse::Yapp
+derived works be reproduced. Note that the license is the same as
+Math::Symbolic's license. We're using the "standalone parser" option.
+
+  The Parse::Yapp module and its related modules and shell scripts
+  are copyright (c) 1998-2001 Francois Desarmenien, France. All
+  rights reserved.
+  
+  You may use and distribute them under the terms of either the GNU
+  General Public License or the Artistic License, as specified in
+  the Perl README file.
+  
+  If you use the "standalone parser" option so people don't need to
+  install Parse::Yapp on their systems in order to run you software,
+  this copyright notice should be included in your software
+  copyright too, and the copyright notice in the embedded driver
+  should be left untouched.
 
 =cut
 
