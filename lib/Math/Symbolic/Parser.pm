@@ -36,7 +36,7 @@ parser will be enabled by default. Until then, you need to load it by hand
 as follows:
 
   use Math::Symbolic::Parser::Yapp;
-  $Math::Symbolic::Parser::Parser = Math::Symbolic::Parser::Yapp->new();
+  $Math::Symbolic::Parser = Math::Symbolic::Parser::Yapp->new();
 
 This replaces the default Math::Symbolic parser with an instance of the
 new Yapp parser. Doing this voids the warranty, you've been warned.
