@@ -1,5 +1,14 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.501  Thu Apr 27 19:19 2006
+	- Added a completely new and optional(!) parser as
+	  Math::Symbolic::Parser::Yapp.
+	  This new parser should be about 30x faster and it's over 10x faster in
+	  all benchmarks.
+	- Documented the new parser in Math::Symbolic::Parser.
+	- Augmented the tests.
+	- Added the new parser's grammar as Yapp.yp.
+	
 0.201  Tue Feb 14 15:32 2006
 	- Rewrote the to_latex() LaTeX dumper. Since it's quite a bit of code
 	  which few people actually need to load, the LaTeX dumper will be
