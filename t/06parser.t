@@ -75,11 +75,11 @@ ok( ( !$@ and $str eq 'exponentiate(5,log(2,4))' ), 'Parsing exp and log' );
 
 undef $@;
 eval <<'HERE';
-$tree = Math::Symbolic->parse_from_string('1+2*-5^log(2,4)');
+$tree = Math::Symbolic->parse_from_string('1+2*(-5)^log(2,4)');
 HERE
 $str = $tree->to_string('prefix');
 $str =~ s/\s+//g;
-ok( ( !$@ and $str eq 'add(1,multiply(2,exponentiate(negate(5),log(2,4))))' ),
+ok( ( !$@ and $str eq 'add(1,multiply(2,exponentiate(-5,log(2,4))))' ),
     'Parsing complicated term' );
 
 undef $@;
@@ -92,7 +92,7 @@ ok(
     (
         !$@
           and $str eq
-          'cos(sin(add(1,multiply(2,exponentiate(negate(5),log(2,4))))))'
+          'cos(sin(add(1,multiply(2,exponentiate(-5,log(2,4))))))'
     ),
     'Parsing complicated term involving sine and cosine'
 );
