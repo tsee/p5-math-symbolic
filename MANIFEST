@@ -37,10 +37,12 @@ lib/Math/Symbolic/MiscCalculus.pm
 lib/Math/Symbolic/Operator.pm
 lib/Math/Symbolic/Parser.pm
 lib/Math/Symbolic/Parser/Precompiled.pm
+lib/Math/Symbolic/Parser/Yapp.pm
 lib/Math/Symbolic/Variable.pm
 lib/Math/Symbolic/VectorCalculus.pm
 Makefile.PL
 MANIFEST			This list of files
+META.yml
 README
 t/00dist.t
 t/00pod.t
@@ -66,4 +68,5 @@ t/18vectorcalc.t
 t/19misccalc.t
 t/20miscalgebra.t
 TODO
-META.yml
+Yapp.README
+Yapp.yp
