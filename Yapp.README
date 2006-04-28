@@ -1,5 +1,0 @@
-In order to recompile the Yapp.yp grammar, you need to install
-the Parse::Yapp module and then run the 'yapp' tool in this
-directory as follows:
-
-  yapp -s -n -m Math::Symbolic::Parser::Yapp -o lib/Math/Symbolic/Parser/Yapp.pm Yapp.yp
