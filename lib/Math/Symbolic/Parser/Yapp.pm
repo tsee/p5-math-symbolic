@@ -11,7 +11,7 @@ package Math::Symbolic::Parser::Yapp;
 use vars qw ( @ISA );
 use strict;
 
-@ISA= qw ( Parse::Yapp::Driver );
+@ISA= qw ( Math::Symbolic::Parser::Yapp::Driver );
 #Included Parse/Yapp/Driver.pm file----------------------------------------
 {
 #
@@ -29,7 +29,7 @@ use strict;
 # (see the pod text in Parse::Yapp module for use and distribution rights)
 #
 
-package Parse::Yapp::Driver;
+package Math::Symbolic::Parser::Yapp::Driver;
 
 require 5.004;
 
