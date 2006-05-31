@@ -1,5 +1,6 @@
 Build.PL
 Changes
+compile_yapp_parser.pl
 examples/run01.pl
 examples/run02.pl
 examples/run03.pl
@@ -68,5 +69,4 @@ t/18vectorcalc.t
 t/19misccalc.t
 t/20miscalgebra.t
 TODO
-Yapp.README
 Yapp.yp

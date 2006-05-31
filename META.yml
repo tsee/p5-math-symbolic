@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Math-Symbolic
-version: 0.501
+version: 0.502
 author:
   - Steffen Mueller <modules at steffen-mueller dot net>
 abstract: Symbolic calculations

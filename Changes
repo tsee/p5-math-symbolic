@@ -1,5 +1,10 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.502  Fri Apr 28  9:20 2006
+	- Small changes to the new parser to make it indexable by PAUSE.
+	- Added a script to compile the Yapp parser.
+	- Removed the Yapp parser's readme because the script documents itself.
+
 0.501  Thu Apr 27 19:19 2006
 	- Added a completely new and optional(!) parser as
 	  Math::Symbolic::Parser::Yapp.
