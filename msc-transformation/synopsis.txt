@@ -1,0 +1,135 @@
+
+$trafo = new_trafo('VAR_a + VAR_a' => '2 * VAR_a');
+
+$tree = parse_from_string('...');
+
+$matched = $tree->transform($trafo);
+
+# or
+
+$matched = $trafo->apply($tree);
+
+# or slower
+
+$matched = $tree->transform('VAR_a + VAR_a' => '2 * VAR_a');
+
+# with additional criteria:
+?????????????????????
+$trafo = new_trafo(
+	'VAR_a + VAR_a' => '2 * VAR_a',
+	criteria => [
+		'$a->name() '
+	]
+);
+
+
+#################
+# trig identities
+
+'( cos(TREE_x) )^2 + ( sin(TREE_x) )^2' => '1'
+'( sin(TREE_x) )^2 + ( cos(TREE_x) )^2' => '1'
+
+# inversion
+'asin( sin(TREE_x) )' => 'TREE_x'
+'sin( asin(TREE_x) )' => 'TREE_x'
+'acos( cos(TREE_x) )' => 'TREE_x'
+'cos( acos(TREE_x) )' => 'TREE_x'
+
+'atan( tan(TREE_x) )' => 'TREE_x'
+'tan( atan(TREE_x) )' => 'TREE_x'
+'acot( cot(TREE_x) )' => 'TREE_x'
+'cot( acot(TREE_x) )' => 'TREE_x'
+
+'asinh( sinh(TREE_x) )' => 'TREE_x'
+'sinh( asinh(TREE_x) )' => 'TREE_x'
+'acosh( cosh(TREE_x) )' => 'TREE_x'
+'cosh( acosh(TREE_x) )' => 'TREE_x'
+
+#############
+# unary minus
+'-CONST_x' => 'value(-CONST_x)'
+
+
+########################
+# Addition / Subtraction
+
+# constant to left
+'TREE_x + CONST_y' => 'CONST_y + TREE_x'
+
+# neutral element
+'0 + TREE_x' => 'TREE_x'
+'TREE_x - 0' => 'TREE_x'
+'0 - TREE_x' => '-TREE_x'
+
+# incorporate inversions
+'TREE_x - (-TREE_y)' => 'TREE_x + TREE_y'
+'(-TREE_x) - TREE_y' => '-(TREE_x + TREE_y)'
+'(-TREE_x) - (-TREE_y)' => 'TREE_y - TREE_x)'
+
+'TREE_x + (-TREE_y)' => 'TREE_x - TREE_y'
+'(-TREE_x) + TREE_y' => 'TREE_y - TREE_x'
+'(-TREE_x) + (-TREE_y)' => '-(TREE_x + TREE_y)'
+
+# same tree
+'TREE_x - TREE_x' => '0'
+'TREE_x + TREE_x' => '2 * TREE_x'
+'-(TREE_x + TREE_x)' => '-2 * TREE_x'
+
+# same tree deeper
+'TREE_a*TREE_x + TREE_x' => 'simplify(TREE_a+1) * TREE_x'
+'TREE_x*TREE_a + TREE_x' => 'simplify(TREE_a+1) * TREE_x'
+'TREE_x + TREE_a*TREE_x' => 'simplify(TREE_a+1) * TREE_x'
+'TREE_x + TREE_x*TREE_a' => 'simplify(TREE_a+1) * TREE_x'
+
+'TREE_a*TREE_x + TREE_b*TREE_x' => 'simplify(TREE_a+TREE_b) * TREE_x'
+'TREE_x*TREE_a + TREE_b*TREE_x' => 'simplify(TREE_a+TREE_b) * TREE_x'
+'TREE_a*TREE_x + TREE_x*TREE_b' => 'simplify(TREE_a+TREE_b) * TREE_x'
+'TREE_x*TREE_a + TREE_x*TREE_b' => 'simplify(TREE_a+TREE_b) * TREE_x'
+
+###########################
+# Multiplication / Division
+
+# neutral elements, zero and constant to left
+'TREE_x / 1' => 'TREE_x'
+
+'TREE_x / CONST_y' => 'value(1/CONST_y) * TREE_x'
+'TREE_x * CONST_y' => 'CONST_y * TREE_x'
+
+'1 * TREE_x' => 'TREE_x'
+'0 * TREE_x' => '0'
+'0 / TREE_x' => '0'
+
+# inversion
+'TREE_a / (TREE_x / TREE_y)' => 'TREE_a * (TREE_y / TREE_x)'
+
+# same tree
+'TREE_x / TREE_x' => '1'
+'TREE_x * TREE_x' => 'TREE_x^2'
+
+# same tree deeper
+'TREE_x^TREE_y * TREE_x^TREE_z' => 'TREE_x^simplify(TREE_y*TREE_z)'
+'TREE_x^TREE_y / TREE_x^TREE_z' => 'TREE_x^simplify(TREE_y-TREE_z)'
+
+################
+# Exponentiation
+
+# neutral elements
+'TREE_x ^ 1' => 'TREE_x'
+'TREE_x ^ 0' => '1'
+'1^TREE_x' => '1'
+'0^TREE_x' => '0'
+
+# inversion
+'TREE_x ^ log(TREE_x, TREE_y)' => 'TREE_y'
+'log(TREE_x, TREE_x^TREE_y)' => 'TREE_y'
+
+#####
+# log
+'log(TREE_x, TREE_x)' => '1'
+'log(TREE_x, 1)' => '0'
+
+
+
+
+
+
