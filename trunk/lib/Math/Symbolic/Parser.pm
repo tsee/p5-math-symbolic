@@ -57,6 +57,11 @@ important for total derivatives.
 The supported builtin-functions are listed in the documentation for
 Math::Symbolic::Operator in the section on the new() constructor.
 
+=head2 EXTENSIONS
+
+In version 0.503, a function named C<exp(...)> is recognized and
+transformed into C<e^(...)> internally.
+
 =head2 EXAMPLES
 
   # An example from analytical mechanics:
@@ -136,8 +141,22 @@ use Math::Symbolic::ExportConstants qw/:all/;
 #use Parse::RecDescent;
 my $Required_Parse_RecDescent = 0;
 
-our $VERSION = '0.502';
+our $VERSION = '0.503';
 our $DEBUG   = 0;
+
+# Functions that are parsed and translated to specific M::S trees
+# *by the parser*.
+our %Parser_Functions = (
+    'exp' => sub {
+        my $func = shift;
+        my $arg = shift;
+        return Math::Symbolic::Operator->new(
+            '^',
+            Math::Symbolic::Constant->euler(),
+            $arg
+        );
+    },
+);
 
 our $Grammar = <<'GRAMMAR_END';
 	parse: expr /^\Z/
@@ -294,19 +313,28 @@ our $Grammar = <<'GRAMMAR_END';
 			{
 				#warn 'function ' 
 				#  if $Math::Symbolic::Parser::DEBUG;
-				my $function =
-				  $Math::Symbolic::Operator::Op_Symbols{
-				    $item[1]
-				  };
-				die "Invalid function '$item[1]'!"
-				  unless defined $function;
-					
-				Math::Symbolic::Operator->new(
-				  {
-				    type => $function,
-				    operands => $item[3],
-				  }
-				);
+                my $fname = $item[1];
+				my $function;
+                if (exists($Math::Symbolic::Parser::Parser_Functions{$fname})) {
+                    $function = $Math::Symbolic::Parser::Parser_Functions{$fname}->($fname, @{$item[3]});
+				    die "Invalid function '$fname'!"
+    				  unless defined $function;
+                }
+                else {
+                    $function =
+	    			  $Math::Symbolic::Operator::Op_Symbols{
+		    		    $fname
+			    	  };
+				    die "Invalid function '$fname'!"
+    				  unless defined $function;
+				    $function = Math::Symbolic::Operator->new(
+    				  {
+	    			    type => $function,
+		    		    operands => $item[3],
+			    	  }
+				    );
+                }
+                $function
 			}
 
 	function_name: 'log'
@@ -324,6 +352,7 @@ our $Grammar = <<'GRAMMAR_END';
 		     | 'cos'
 		     | 'tan'
 		     | 'cot'
+             | 'exp'
 
 
 	expr_list: <leftop:expr ',' expr>

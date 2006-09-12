@@ -58,7 +58,7 @@ use Math::Symbolic::Derivative qw//;
 
 use base 'Math::Symbolic::Base';
 
-our $VERSION = '0.502';
+our $VERSION = '0.503';
 
 =head1 CLASS DATA
 
@@ -1064,5 +1064,6 @@ Sourceforge at http://sourceforge.net/projects/math-symbolic/
 L<Math::Symbolic>
 
 =cut
+
 
 

@@ -1,5 +1,10 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.503  Fri Sep 12 18:08 2006
+    - Added an "exp()" function to the parsers. So now you can use "exp()" in
+      expressions and have it transformed to "e^(...)" internally with a pretty
+      high-precision Euler number. (The one returned by M::S::Constant->euler())
+
 0.502  Fri Apr 28  9:20 2006
 	- Small changes to the new parser to make it indexable by PAUSE.
 	- Added a script to compile the Yapp parser.

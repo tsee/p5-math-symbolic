@@ -732,7 +732,11 @@ sub { $_[1] }
 	],
 	[#Rule 2
 		 'exp', 4,
-sub { Math::Symbolic::Operator->new($_[1], @{$_[3]}) }
+sub {
+                exists($Math::Symbolic::Parser::Parser_Functions{$_[1]})
+                ? $Math::Symbolic::Parser::Parser_Functions{$_[1]}->($_[1], @{$_[3]})
+                : Math::Symbolic::Operator->new($_[1], @{$_[3]})
+            }
 	],
 	[#Rule 3
 		 'exp', 1,
@@ -800,7 +804,7 @@ sub _Error {
 my $Num = qr/[+-]?(?=\d|\.\d)\d*(?:\.\d*)?(?:[Ee]([+-]?\d+))?/o;
 my $Ident = qr/[a-zA-Z][a-zA-Z0-9_]*/o;
 my $Op =  qr/\+|\-|\*|\/|\^/o;
-my $Func = qr/log|partial_derivative|total_derivative|a?(?:sin|sinh|cos|cosh|tan|cot)/;
+my $Func = qr/log|partial_derivative|total_derivative|a?(?:sin|sinh|cos|cosh|tan|cot)|exp/;
 my $Unary = qr/\+|\-/o;
 
 # This is a hack so we can hook into the new() method.

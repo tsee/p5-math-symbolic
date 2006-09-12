@@ -76,7 +76,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw(
 );
-our $VERSION = '0.502';
+our $VERSION = '0.503';
 
 1;
 __END__

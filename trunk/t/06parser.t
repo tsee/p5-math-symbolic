@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 14;
 
 BEGIN {
 	use_ok('Math::Symbolic');
@@ -104,4 +104,14 @@ eval {
 $res = Math::Symbolic->parse_from_string('blah[blubb');
 };
 ok((not defined($res)), 'Parse fails on invalid string.');
+
+eval {
+    $res = Math::Symbolic->parse_from_string('exp(a*b)');
+};
+ok( !$@, 'parsing exp() does not throw an error');
+isa_ok($res, 'Math::Symbolic::Operator', 'parsing exp() returns an operator');
+my $string = $res->to_string('prefix');
+ok( ($string =~ /^exponentiate\(2\.7\d*,\s*multiply\(a,\s*b\)\)$/),
+    'Parse of exp() turns it into e^()'
+);
 
