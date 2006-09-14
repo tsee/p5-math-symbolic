@@ -1,0 +1,11 @@
+--- #YAML:1.0
+name: Math-Symbolic-Custom-CCompiler
+version: 1.00
+abstract: Compile Math::Symbolic trees to C
+license: perl
+distribution_type: module
+requires:
+  Test::More: 0.44
+  Math::Symbolic: 0.127
+  Inline::C: 0.44
+dynamic_config: 0

@@ -1,0 +1,10 @@
+^MANIFEST\.SKIP$
+^pm_to_blib$
+^blib/
+^dist/
+^Makefile$
+^Makefile.old$
+~$
+\/CVS\/
+\.swp$
+^perltidy\.conf$
