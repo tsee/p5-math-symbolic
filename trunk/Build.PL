@@ -18,7 +18,7 @@ my $b = Module::Build->new
                       'Test::More' => 0,
                      },
    create_makefile_pl => 'traditional',
-   sign => 1,
+#   sign => 1,
 #   conflicts => {},
 #   script_files => [],
   );
