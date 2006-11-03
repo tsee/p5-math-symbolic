@@ -3,23 +3,6 @@ use warnings;
 
 use Test::More;
 
-BEGIN {
-    eval { require Pod::Coverage; };
-    if ($@) {
-        plan skip_all => 'Pod::Coverage not installed';
-        exit;
-    }
-    else {
-        import Pod::Coverage;
-        plan tests => 22;
-    }
-}
-
-use_ok('Math::Symbolic');
-use_ok('Math::Symbolic::MiscAlgebra');
-use_ok('Math::Symbolic::VectorCalculus');
-use_ok('Math::Symbolic::MiscCalculus');
-
 my @packages = qw(
   Math::Symbolic
   Math::Symbolic::AuxFunctions
@@ -41,29 +24,26 @@ my @packages = qw(
   Math::Symbolic::VectorCalculus
 );
 
+eval { require Test::Pod::Coverage; };
+if ($@) {
+    plan skip_all => 'Test::Pod::Coverage not installed';
+    exit;
+}
+else {
+    import Test::Pod::Coverage;
+    plan tests => (4+scalar(@packages));
+}
+
+use_ok('Math::Symbolic');
+use_ok('Math::Symbolic::MiscAlgebra');
+use_ok('Math::Symbolic::VectorCalculus');
+use_ok('Math::Symbolic::MiscCalculus');
+
+
+my $also_private = {also_private=> [qr/^_/, qr/^\(/, qr/^AUTOLOAD$/, qr/^DESTROY$/, '^can$']};
 foreach my $namespace (@packages) {
-    my $coverage = Pod::Coverage->new(
-        package => $namespace,
-        private => [ '^_', '^\(', '^AUTOLOAD$', '^DESTROY$', '^can$' ],
+    pod_coverage_ok(
+        $namespace, $also_private
     );
-    ok(
-        (
-            not defined $coverage->coverage()
-              and $coverage->why_unrated() =~ /^no public symbols/
-        )
-          || ( defined( $coverage->coverage() ) && $coverage->coverage() == 1 ),
-        "Package coverage for $namespace."
-    );
-    if ( not defined( $coverage->coverage() ) ) {
-        my $reason = $coverage->why_unrated();
-        if ( $reason !~ /^no public symbols/ ) {
-            warn "\nDocumentation missing or broken in $namespace:\n"
-              . $coverage->why_unrated() . "\n";
-        }
-    }
-    elsif ( $coverage->coverage() < 1 ) {
-        warn "\nDocumentation missing in $namespace for:\n"
-          . join( "\n", $coverage->uncovered() ) . "\n";
-    }
 }
 
