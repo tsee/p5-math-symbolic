@@ -1,5 +1,5 @@
-Math::Symbolic version 0.503
-============================
+Math::Symbolic
+==============
 
 Math::Symbolic is intended to offer symbolic calculation capabilities
 to the Perl programmer without using external (and commercial) libraries

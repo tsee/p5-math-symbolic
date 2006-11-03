@@ -1,5 +1,10 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.504  Fri Nov  3 16:15 2006
+    - Improved POD coverage tests.
+    - This release is mainly intended to fix some PAUSE indexing trouble
+      of the last release.
+
 0.503  Fri Sep 12 18:08 2006
     - Added an "exp()" function to the parsers. So now you can use "exp()" in
       expressions and have it transformed to "e^(...)" internally with a pretty

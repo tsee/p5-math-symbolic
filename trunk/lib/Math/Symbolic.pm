@@ -151,7 +151,7 @@ our %EXPORT_TAGS = (
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT    = qw();
 
-our $VERSION = '0.503';
+our $VERSION = '0.504';
 
 =head1 CLASS DATA
 

@@ -98,7 +98,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-our $VERSION = '0.503';
+our $VERSION = '0.504';
 
 =head2 ($code, $trees) = compile_to_code($tree, $vars)
 
