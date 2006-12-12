@@ -10,7 +10,7 @@ use Clone qw/clone/;
 use Math::Symbolic qw/:all/;
 use Math::Symbolic::Custom::Pattern::Export;
 
-our $VERSION = '1.11';
+our $VERSION = '1.20';
 
 use constant EPSILON => 1e-29;
 
@@ -133,7 +133,7 @@ This module does not export anything.
 
 =head2 METHODS
 
-This is a list ofpublic methods.
+This is a list of public methods.
 
 =over 2
 
@@ -172,6 +172,7 @@ sub new {
 	my $self = {
 		pattern => $pattern,
 		info => $info,
+        string => $proto->to_string(),
 	};
 
 	return bless $self => $class;
@@ -445,6 +446,16 @@ sub _descend_generalize {
 
 =cut
 
+=item to_string
+
+Returns a string representation of the pattern.
+
+=cut
+
+sub to_string {
+    my $self = shift;
+    return $self->{string};
+}
 
 1;
 __END__
@@ -469,7 +480,7 @@ Steffen Müller, E<lt>symbolic-module at steffen-mueller dot netE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2005 by Steffen Müller
+Copyright (C) 2005, 2006 by Steffen Müller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.4 or,

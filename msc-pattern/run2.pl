@@ -12,6 +12,8 @@ my $pat_string = "a + VAR_foo - (1+VAR_foo)^TREE + 1+TREE - (1-VAR_foo^(VAR_bar*
 my $pat = parse_from_string($pat_string);
 my $pattern = Math::Symbolic::Custom::Pattern->new($pat);
 
+print $pattern->to_string()."\n";
+
 my $str_ok = "a + r - (1+r)^(r-1+fopo(a,v)*2) + 1+a^b*r - (1-r^(a*2+2^2))";
 #my $str_ok = "a + b - (1+b)^3";
 my $tree_ok = parse_from_string($str_ok);

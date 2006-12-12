@@ -9,7 +9,7 @@ use Math::Symbolic qw/parse_from_string/;
 use Math::Symbolic::Custom::Base;
 BEGIN {*import = \&Math::Symbolic::Custom::Base::aggregate_import}
 
-our $VERSION = '1.11';
+our $VERSION = '1.20';
 
 =head1 NAME
 
@@ -132,7 +132,7 @@ Steffen Müller, E<lt>symbolic-module at steffen-mueller dot netE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2005 by Steffen Müller
+Copyright (C) 2005, 2006 by Steffen Müller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.4 or,

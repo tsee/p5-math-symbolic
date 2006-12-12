@@ -5,6 +5,7 @@ WriteMakefile
           'PL_FILES' => {},
           'INSTALLDIRS' => 'site',
           'NAME' => 'Math::Symbolic::Custom::Pattern',
+          'EXE_FILES' => [],
           'VERSION_FROM' => 'lib/Math/Symbolic/Custom/Pattern.pm',
           'PREREQ_PM' => {
                            'Test::More' => 0,

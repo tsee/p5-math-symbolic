@@ -1,17 +1,20 @@
 Revision history for Perl extension Math::Symbolic::Custom::Pattern.
 
-1.11  Sun Jan 15 18:23:11 2006
-	- Added Clone to the list of dependencies.
-	- Upgraded Math::Symbolic version.
+1.20  Tue Dec 12 16:27 2006
+  - Added to_string() method.
 
-1.10  Wed Oct 12 22:32:53 2005
-	- Now using Module::Build.
-	- Now match() returns meta information on how the tree matched.
+1.11  Sun Jan 15 18:23 2006
+  - Added Clone to the list of dependencies.
+  - Upgraded Math::Symbolic version.
 
-1.02  Thu Sep  9 21:47:12 2005
-	- Added license info to META.yml
-	- Fixed trouble with Math::Symbolic version requirement.
-	- Bumped Math::Symbolic requirement to 0.162
+1.10  Wed Oct 12 22:32 2005
+  - Now using Module::Build.
+  - Now match() returns meta information on how the tree matched.
 
-1.00  Thu Sep  9 21:47:12 2005
-	- original version as uploaded to CPAN
+1.02  Thu Sep  9 21:47 2005
+  - Added license info to META.yml
+  - Fixed trouble with Math::Symbolic version requirement.
+  - Bumped Math::Symbolic requirement to 0.162
+
+1.00  Thu Sep  9 21:47 2005
+  - original version as uploaded to CPAN
