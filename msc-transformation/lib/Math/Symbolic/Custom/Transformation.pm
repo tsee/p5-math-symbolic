@@ -12,7 +12,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '1.01';
+our $VERSION = '1.10';
 
 =head1 NAME
 
@@ -412,6 +412,59 @@ sub apply {
 	$new->descend(@descend_options);
 	
 	return $new;
+}
+
+=item to_string
+
+Returns a string representation of the transformation.
+In presence of the C<simplify> or C<value> hooks, this may
+fail to return the correct represenation. It does not round-trip!
+
+(Generally, it should work if only one hook is present, but fails if
+more than one hook is found.)
+
+=cut
+
+sub to_string {
+    my $self = shift;
+    my $pattern_str = $self->{pattern}->to_string();
+    my $repl = $self->{replacement};
+
+    my $repl_str = _repl_to_string($repl);
+    
+    return $pattern_str . ' -> ' . $repl_str;
+}
+
+sub _repl_to_string {
+    my $repl = shift;
+    my $repl_str = $repl->to_string();
+    if ($repl_str =~ /TRANSFORMATION_HOOK/) {
+        my @hooks;
+        $repl->descend(
+            before => sub {
+                my $node = shift;
+                if (
+                    ref($node) =~ /^Math::Symbolic::Variable$/
+                    and $node->name() eq 'TRANSFORMATION_HOOK'
+                   )
+                {
+                   push @hooks, $node;
+                }
+                return();
+            },
+            in_place => 1, # won't change anything
+        );
+
+        $repl_str =~ s{TRANSFORMATION_HOOK}!
+            my $node = shift @hooks;
+            my $value = $node->value();
+            my $operand = _repl_to_string($value->[1]);
+            my $name = $value->[0];
+            "$name\{ $operand }"
+        !ge;
+    }
+
+    return $repl_str;
 }
 
 =back

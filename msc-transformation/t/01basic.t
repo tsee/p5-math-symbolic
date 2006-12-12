@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 731;
+use Test::More tests => 784;
 #use Test::More 'no_plan';
 use_ok('Math::Symbolic');
 use_ok('Math::Symbolic::Custom::Pattern');
@@ -85,6 +85,7 @@ sub run_test {
 		warn "Error: $@\n" if $@;
 		warn "Error: not ref(\$trafo)\n" if not ref($trafo);
 		warn "Error: not correct object.\n" if ref($trafo) and not $trafo->isa('Math::Symbolic::Custom::Transformation');
+        ok( defined($trafo->to_string()), 'to_string() returns a string' );
 	}
 	else {
 		ok(
@@ -101,6 +102,7 @@ sub run_test {
 			),
 			"Pattern creation from same source using new_trafo expectedly did not succeed."
 		);
+        ok(1, 'Cannot test to_string for a failing pattern');
 	}
 
 	foreach my $subt ( @{$test->{subtests}} ) {

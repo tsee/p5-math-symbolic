@@ -7,7 +7,7 @@ my $b = Module::Build->new
    license => 'perl',
    requires => {
                 'Math::Symbolic' => '0.163',
-				'Math::Symbolic::Custom::Pattern' => '1.10',
+                'Math::Symbolic::Custom::Pattern' => '1.20',
                },
    recommends => {
                   'Test::Pod' => '1.0',

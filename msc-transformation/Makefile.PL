@@ -5,11 +5,12 @@ WriteMakefile
           'PL_FILES' => {},
           'INSTALLDIRS' => 'site',
           'NAME' => 'Math::Symbolic::Custom::Transformation',
+          'EXE_FILES' => [],
           'VERSION_FROM' => 'lib/Math/Symbolic/Custom/Transformation.pm',
           'PREREQ_PM' => {
                            'Test::More' => 0,
                            'Math::Symbolic' => '0.163',
-                           'Math::Symbolic::Custom::Pattern' => '1.10'
+                           'Math::Symbolic::Custom::Pattern' => '1.20'
                          }
         )
 ;
