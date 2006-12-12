@@ -1,5 +1,10 @@
 Revision history for Perl extension Math::Symbolic::Custom::Transformation.
 
+1.20  Tue Dec 12 20:05 2006
+    - Fixed major bug in transformations of single variables
+      via VAR_...
+    - Added the apply_recursive() method.
+
 1.10  Tue Dec 12 16:21 2006
     - Upgraded ::Pattern dependency.
     - Added to_string() method.

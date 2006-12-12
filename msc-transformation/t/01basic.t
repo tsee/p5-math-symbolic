@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 784;
+use Test::More tests => 793;
 #use Test::More 'no_plan';
 use_ok('Math::Symbolic');
 use_ok('Math::Symbolic::Custom::Pattern');
@@ -474,4 +474,10 @@ trafo: log(TREE_x, 1) => 0
 status: 1
 log(x, 1) = 0
 
+trafo: foo => foo^2
+status: 1
+foo = foo^2
 
+trafo: VAR_foo => VAR_foo^2
+status: 1
+bar => bar^2

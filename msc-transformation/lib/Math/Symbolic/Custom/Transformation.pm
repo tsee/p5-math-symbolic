@@ -12,7 +12,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '1.10';
+our $VERSION = '1.20';
 
 =head1 NAME
 
@@ -371,7 +371,11 @@ sub apply {
 				my $name = $2;
 				if ($type eq 'VAR') {
 					if (exists $match_vars->{$name}) {
-						$tree->replace($match_vars->{$name});
+						$tree->replace(
+                            Math::Symbolic::Variable->new(
+                                $match_vars->{$name}
+                            )
+                        );
 					}
 				}
 				elsif ($type eq 'TREE') {
@@ -412,6 +416,50 @@ sub apply {
 	$new->descend(@descend_options);
 	
 	return $new;
+}
+
+=item apply_recursive
+
+"Recursively" applies the transformation. The Math::Symbolic tree
+passed in as argument B<will be modified in-place>.
+
+Hold on: This does not mean
+that the transformation is applied again and again, but that the
+Math::Symbolic tree you are applying to is descended into and while walking
+back up the tree, the transformation is tried for every node.
+
+Basically, it's applied bottom-up. Top-down would not usually make much sense.
+If the application to any sub-tree throws a fatal error, this error is silently
+caught and the application to other sub-trees is continued.
+
+Usage is the same as with the "shallow" C<apply()> method.
+
+=cut
+
+sub apply_recursive {
+    my $self = shift;
+    my $tree = shift;
+
+    my $matched = 0;
+
+    $tree->descend(
+        after => sub {
+            my $node = shift;
+            warn $node;
+            my $res;
+            eval { $res = $self->apply($node); };
+            if (defined $res and not $@) {
+                $matched = 1;
+                warn "$node ===> $res";
+                $node->replace($res);
+            }
+            return();
+        },
+        in_place => 1
+    );
+
+    return $tree if $matched;
+    return();
 }
 
 =item to_string
