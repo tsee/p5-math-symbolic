@@ -12,7 +12,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '1.21';
+our $VERSION = '1.22';
 
 =head1 NAME
 
@@ -342,7 +342,7 @@ sub apply {
 				}
 				else {
 					my $type = $hook->[0];
-					my $operand = $hook->[1];
+					my $operand = $hook->[1]->new();
 					$operand->descend(
 						@descend_options
 					);
@@ -441,7 +441,6 @@ sub apply_recursive {
     my $tree = shift;
 
     my $matched = 0;
-
     $tree->descend(
         after => sub {
             my $node = shift;

@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Symbolic::Custom::Transformation.
 
+1.22  Tue Dec 12 21:25 2006
+    - Fixed bug in value{} construct for reused transformations.
+    - *curses*. This is the fourth release today!?
+
 1.21  Tue Dec 12 20:09 2006
     - Removed debug statements from last release. You may laugh at me now.
 
