@@ -1,5 +1,8 @@
 Revision history for Perl extension Math::Symbolic::Custom::Transformation.
 
+1.21  Tue Dec 12 20:09 2006
+    - Removed debug statements from last release. You may laugh at me now.
+
 1.20  Tue Dec 12 20:05 2006
     - Fixed major bug in transformations of single variables
       via VAR_...

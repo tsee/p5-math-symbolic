@@ -12,7 +12,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '1.20';
+our $VERSION = '1.21';
 
 =head1 NAME
 
@@ -445,12 +445,10 @@ sub apply_recursive {
     $tree->descend(
         after => sub {
             my $node = shift;
-            warn $node;
             my $res;
             eval { $res = $self->apply($node); };
             if (defined $res and not $@) {
                 $matched = 1;
-                warn "$node ===> $res";
                 $node->replace($res);
             }
             return();
