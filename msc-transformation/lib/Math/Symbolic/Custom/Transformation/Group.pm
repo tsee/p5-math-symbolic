@@ -214,12 +214,12 @@ more than one hook is found.)
 sub to_string {
     my $self = shift;
 
-    my $str = '{ ' . join(
-        $self->{conjunction},
+    my $str = '[ ' . join(
+        ' '.$self->{conjunction}.' ',
         map {
             $_->to_string()
         } @{$self->{transformations}}
-    ) . ' }';
+    ) . ' ]';
     return $str;
 }
 
