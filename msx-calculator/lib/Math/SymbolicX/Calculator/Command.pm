@@ -120,7 +120,7 @@ and C<$func> is its new value.
 
 =cut
 
-=head1 new
+=head2 new
 
 Returns a new Command object. Takes named parameters. The only
 universally mandatory parameter is the C<type> of the command to 
@@ -148,4 +148,25 @@ sub new {
 
 1;
 __END__
+
+=head1 SEE ALSO
+
+L<Math::SymbolicX::Calculator>,
+L<Math::SymbolicX::Calculator::Interface::Shell>
+
+L<Math::Symbolic>, L<Math::Symbolic::Custom::Transformation>
+
+=head1 AUTHOR
+
+Steffen Müller, E<lt>smueller@cpan.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2006 by Steffen Müller
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.6 or,
+at your option, any later version of Perl 5 you may have available.
+
+=cut
 

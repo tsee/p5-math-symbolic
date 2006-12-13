@@ -46,7 +46,7 @@ or a L<Math::Symbolic::Custom::Transformation> object.
 
 =cut
 
-=head1 new
+=head2 new
 
 Returns a new Calculator object.
 
