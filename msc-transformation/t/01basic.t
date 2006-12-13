@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 793;
+use Test::More tests => 855;
 #use Test::More 'no_plan';
 use_ok('Math::Symbolic');
 use_ok('Math::Symbolic::Custom::Pattern');
@@ -158,7 +158,7 @@ sub run_test {
 }
 
 __DATA__
-# line 158 (check that yourself, though)
+# line 161 (check that yourself, though)
 trafo: TREE_x + TREE_x => 2 * TREE_x
 status: 1
 a + a = 2 * a
@@ -342,37 +342,37 @@ status: 1
 -(a + b) = undef
 1 = undef
 
-#trafo: TREE_a*TREE_x + TREE_x => simplify{TREE_a+1} * TREE_x
-#status: 1
-#3*x + x = 4*x
-#1*x + x = 2*x
-#x*3 + x = undef
-#1 = undef
+trafo: TREE_a*TREE_x + TREE_x => simplify{TREE_a+1} * TREE_x
+status: 1
+3*x + x = 4*x
+1*x + x = 2*x
+x*3 + x = undef
+1 = undef
 
 trafo: TREE_x*TREE_a + TREE_x => simplify{TREE_a+1} * TREE_x
 status: 1
 x*3 + x = 4*x
-x*1 + x = 4*x
+x*1 + x = 2*x
 3*x + x = undef
 1 = undef
 
-#trafo: TREE_x + TREE_a*TREE_x => simplify{TREE_a+1} * TREE_x
-#status: 1
-#x + 1*x = 2*x
-#x + 3*x = 4*x
-#1 + 3 = undef
+trafo: TREE_x + TREE_a*TREE_x => simplify{TREE_a+1} * TREE_x
+status: 1
+x + 1*x = 2*x
+x + 3*x = 4*x
+1 + 3 = undef
 
 trafo: TREE_x + TREE_x*TREE_a => simplify{TREE_a+1} * TREE_x
 status: 1
 x + x*3 = 4*x
 1 = undef
 
-#trafo: TREE_a*TREE_x + TREE_b*TREE_x => simplify{TREE_a+TREE_b} * TREE_x
-#status: 1
-#5*x + 2*x = 7*x
-#9*log(t,u) + 1*log(t,u) = 10*log(t,u)
-#1*2 + 3 * 4 = undef
-#1 = undef
+trafo: TREE_a*TREE_x + TREE_b*TREE_x => simplify{TREE_a+TREE_b} * TREE_x
+status: 1
+5*x + 2*x = 7*x
+9*log(t,u) + 1*log(t,u) = 10*log(t,u)
+1*2 + 3 * 4 = undef
+1 = undef
 
 trafo: TREE_x*TREE_a + TREE_b*TREE_x => simplify{TREE_a+TREE_b} * TREE_x
 status: 1
