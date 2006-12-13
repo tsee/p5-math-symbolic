@@ -1,0 +1,8 @@
+^MANIFEST\.SKIP$
+^pm_to_blib$
+^blib/
+^dist/
+^Makefile$
+^Makefile.old$
+~$
+\.swp$

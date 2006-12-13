@@ -1,0 +1,8 @@
+Changes
+MANIFEST
+Makefile.PL
+README
+lib/Math/SymbolicX/NoSimplification.pm
+t/00pod.t
+t/00podcover.t
+t/01basic.t
