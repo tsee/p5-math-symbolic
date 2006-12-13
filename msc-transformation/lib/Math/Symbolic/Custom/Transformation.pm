@@ -13,7 +13,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '1.22';
+our $VERSION = '1.24';
 
 =head1 NAME
 
