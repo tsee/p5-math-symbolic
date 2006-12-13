@@ -11,6 +11,8 @@ my $b = Module::Build->new
        'Params::Util' => '0',
        'Math::Symbolic' => '0.501',
        'Parse::RecDescent' => '0',
+       'Pod::Usage' => '0',
+       'Getopt::Long', => '0',
                },
    recommends => {
                   'Test::Pod' => '1.0',

@@ -38,3 +38,28 @@ my $shell = Math::SymbolicX::Calculator::Interface::Shell->new(
 
 $shell->run();
 
+__END__
+
+=head1 NAME
+
+symbolic_calculator_shell
+
+=head1 SYNOPSIS
+
+  symbolic_calculator [-s FILE] [--man] [--help]
+
+=head1 OPTIONS
+
+  -s or --source FILE
+    Read from this file instead of STDIN
+  --man
+    Display the full manual (which is currently rather lacking).
+  -h or --help
+    Display (this) short help.
+
+=head1 DESCRIPTION
+
+This is a shell interface for the Math::SymbolicX::Calculator Perl module.
+(See also "perldoc Math::SymbolicX::Calculator::Interface::Shell")
+
+=cut
