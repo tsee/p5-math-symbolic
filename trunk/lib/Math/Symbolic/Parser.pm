@@ -412,7 +412,8 @@ sub new {
         local $@;
         eval 'require Parse::RecDescent;';
         croak "Could not require Parse::RecDescent. Please install\n"
-          . "Parse::RecDescent in order to use Math::Symbolic::Parser."
+          . "Parse::RecDescent in order to use Math::Symbolic::Parser.\n"
+          . "(Error: $@)"
           if $@;
     }
     my %args = @_;
@@ -423,11 +424,17 @@ sub new {
     }
     else {
         eval 'require Math::Symbolic::Parser::Precompiled;';
-        croak "Could not require Math::Symbolic::Parser::Precompiled.\n"
-          . "Please install the latest version of Math::Symbolic"
-          . "(>=0.135)."
-          if $@;
-        $parser = Math::Symbolic::Parser::Precompiled->new();
+#        croak "Could not require Math::Symbolic::Parser::Precompiled.\n"
+#          . "Please install the latest version of Math::Symbolic"
+#          . "(>=0.135).\n"
+#          . "(Error: $@)"
+#          if $@;
+        if ($@) {
+            $parser = Parse::RecDescent->new($Grammar);
+        }
+        else {
+            $parser = Math::Symbolic::Parser::Precompiled->new();
+        }
     }
     return $parser;
 }
