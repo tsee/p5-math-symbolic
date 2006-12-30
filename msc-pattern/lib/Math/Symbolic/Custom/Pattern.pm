@@ -10,26 +10,22 @@ use Clone qw/clone/;
 use Math::Symbolic qw/:all/;
 use Math::Symbolic::Custom::Pattern::Export;
 
-our $VERSION = '1.20';
+our $VERSION = '1.21';
 
 use constant EPSILON => 1e-29;
 
-use constant {
-	TYPE => 0,
-	VAL => 1,
-	OPS => 2,
-};
+use constant TYPE => 0;
+use constant VAL => 1;
+use constant OPS => 2;
 
 use constant PATTERN => -1;
 
-use constant {
-	ANY_TREE    => 0,
-	ANY_CONST   => 1,
-	ANY_VAR     => 2,
-	NAMED_TREE  => 3,
-	NAMED_CONST => 4,
-	NAMED_VAR   => 5,
-};
+use constant ANY_TREE    => 0;
+use constant ANY_CONST   => 1;
+use constant ANY_VAR     => 2;
+use constant NAMED_TREE  => 3;
+use constant NAMED_CONST => 4;
+use constant NAMED_VAR   => 5;
 
 =head1 NAME
 
