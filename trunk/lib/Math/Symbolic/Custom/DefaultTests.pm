@@ -49,6 +49,9 @@ use Carp;
 
 our $Aggregate_Export = [
     qw/
+      is_one
+      is_zero
+      is_zero_or_one
       is_sum
       is_constant
       is_simple_constant
@@ -57,6 +60,49 @@ our $Aggregate_Export = [
       is_identical_base
       /
 ];
+
+=head2 is_zero()
+
+Returns true (1) of the tree is a constant and '0'. Returns
+false (0) otherwise.
+
+=cut
+
+sub is_zero {
+    my $tree = shift;
+    return 0 unless $tree->term_type() == T_CONSTANT;
+    return 1 if $tree->{value} == 0;
+    return 0;
+}
+
+=head2 is_one()
+
+Returns true (1) of the tree is a constant and '1'. Returns
+false (0) otherwise.
+
+=cut
+
+sub is_one {
+    my $tree = shift;
+    return 0 unless $tree->term_type() == T_CONSTANT;
+    return 1 if $tree->{value} == 1;
+    return 0;
+}
+
+=head2 is_zero_or_one()
+
+Returns true ('1' for 1, '0E0' for 0) of the tree is a constant and '1' or '0'.
+Returns false (0) otherwise.
+
+=cut
+
+sub is_zero_or_one {
+    my $tree = shift;
+    return 0 unless $tree->term_type() == T_CONSTANT;
+    return 1 if $tree->{value} == 1;
+    return "0E0" if $tree->{value} == 0;
+    return 0;
+}
 
 =head2 is_integer()
 
@@ -81,7 +127,7 @@ sub is_integer {
 
 is_simple_constant() returns a boolean.
 
-It returns true (1) if the tree consists of only constants and operators.
+It returns true if the tree consists of only constants and operators.
 As opposed to is_constant(), is_simple_constant() does not apply derivatives
 if necessary.
 
