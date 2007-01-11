@@ -25,16 +25,14 @@ print "Vars: x=" . $a->value() . " (Value is optional)\n\n";
 my $op = Math::Symbolic::Operator->new();
 
 my $sin;
-undef $@;
 eval <<'HERE';
 $sin = $op->new('sin', $op->new('*', $two, $a));
 HERE
-ok( !$@, 'sine creation' );
+ok( !$@, 'sine creation'.($@?" Error: $@":'') );
 
 print "Expression: sin(2*x)\n\n";
 
 print "prefix notation and evaluation:\n";
-undef $@;
 eval <<'HERE';
 print $sin->to_string('prefix') . "\n\n";
 HERE
@@ -54,11 +52,10 @@ print $n_tree->to_string('prefix') . "\n\n";
 print "Now, we apply the derivative to the term: (infix)\n";
 
 my $derived;
-undef $@;
 eval <<'HERE';
 $derived = $n_tree->apply_derivatives();
 HERE
-ok( !$@, 'sine derivative' );
+ok( !$@, 'sine derivative'.($@?" Error: $@":'') );
 
 print "$derived\n\n";
 

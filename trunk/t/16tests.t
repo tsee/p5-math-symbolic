@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 36;
+use Test::More tests => 48;
 
 BEGIN {
 	use_ok('Math::Symbolic');
@@ -174,4 +174,19 @@ ok( parse_from_string('(x*y^3)')->is_identical_base('(x*y^3)^3'),
 
 ok( not( parse_from_string('(y)^(a*b)')->is_identical_base('(x*y)^3') ),
     'more is_identical_base tests' );
+
+ok( parse_from_string('1')->is_one(), '1 is_one' );
+ok( !parse_from_string('0')->is_one(), '!0 is_one' );
+ok( !parse_from_string('4-3')->is_one(), '!4-3 is_one' );
+ok( !parse_from_string('a')->is_one(), '!a is_one' );
+
+ok( !parse_from_string('1')->is_zero(), '!1 is_zero' );
+ok( parse_from_string('0')->is_zero(), '!0 is_zero' );
+ok( !parse_from_string('4-4')->is_zero(), '!4-4 is_zero' );
+ok( !parse_from_string('a')->is_zero(), '!a is_zero' );
+
+ok( parse_from_string('1')->is_zero_or_one(), '1 is_zero_or_one' );
+ok( parse_from_string('0')->is_zero_or_one(), '0 is_zero_or_one' );
+ok( !parse_from_string('4-4')->is_zero_or_one(), '!4-4 is_zero_or_one' );
+ok( !parse_from_string('a')->is_zero_or_one(), '!a is_zero_or_one' );
 
