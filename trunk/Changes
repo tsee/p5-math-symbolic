@@ -5,6 +5,10 @@ Revision history for Perl extension Math::Symbolic.
       (Thanks, Jerrad Pierce)
     - You can now request a Parse::Yapp-based parser from the ::Parser->new()
       method.
+    - Add is_one, is_zero, is_zero_or_one to DefaultTests
+    - Now does some simplification while deriving.
+    - Fix bug while deriving some logarithms.
+    - More derivative tests.
 
 0.504  Fri Nov  3 16:15 2006
     - Improved POD coverage tests.
