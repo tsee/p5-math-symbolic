@@ -89,6 +89,62 @@ our %Rules = (
 our $Partial_Sub;
 our $Total_Sub;
 
+our @Constant_Simplify = (
+    # B_SUM
+    sub {
+        my $tree = shift;
+        my ($op1, $op2) = @{$tree->{operands}};
+        my ($t1, $t2) = ($op1->term_type(), $op2->term_type());
+        if ($t1 == T_CONSTANT) {
+            return $op2 if $op1->{value} == 0;
+            if ($t2 == T_CONSTANT) {
+                return Math::Symbolic::Constant->new($op1->{value} + $op2->{value});
+            }
+        }
+        elsif ($t2 == T_CONSTANT) {
+            return $op1 if $op2->{value} == 0;
+        }
+
+        return $tree;
+    },
+
+    # B_DIFFERENCE
+    sub {
+        my $tree = shift;
+        my ($op1, $op2) = @{$tree->{operands}};
+        my ($t1, $t2) = ($op1->term_type(), $op2->term_type());
+        if ($t1 == T_CONSTANT) {
+            $op2->{value} *= -1, return $op2 if $op1->{value} == 0;
+            if ($t2 == T_CONSTANT) {
+                return Math::Symbolic::Constant->new($op1->{value} - $op2->{value});
+            }
+        }
+        elsif ($t2 == T_CONSTANT) {
+            return $op1 if $op2->{value} == 0;
+            $op2->{value} *= -1;
+            return Math::Symbolic::Operator->new('+', $op1, $op2);
+        }
+        return $tree;
+    },
+    
+    # B_PRODUCT
+    undef, # implemented inline
+    # B_DIVISION
+    undef, # not implemented
+
+    # U_MINUS
+    sub {
+        my $tree = shift;
+        my $op = $tree->{operands}[0];
+        if ($op->term_type == T_CONSTANT) {
+            return Math::Symbolic::Constant->new(-$op->{value});
+        }
+        return $tree;
+    },
+
+    #... not implemented
+);
+
 =begin comment
 
 The following subroutines are helper subroutines that apply a
@@ -103,32 +159,168 @@ sub _each_operand {
     foreach ( @{ $tree->{operands} } ) {
         $_ = $d_sub->( $_, $var, 1 );
     }
+
+    my $type = $tree->type();
+    my $simplifier = $Constant_Simplify[$type];
+    return $simplifier->($tree) if $simplifier;
+
     return $tree;
 }
 
+
 sub _product_rule {
     my ( $tree, $var, $cloned, $d_sub ) = @_;
-
     my $ops = $tree->{operands};
-    my $do1 = $d_sub->( $ops->[0], $var, 0 );
-    my $do2 = $d_sub->( $ops->[1], $var, 0 );
-    my $m1  = Math::Symbolic::Operator->new( '*', $ops->[0], $do2 );
-    my $m2  = Math::Symbolic::Operator->new( '*', $ops->[1], $do1 );
+    my ($o1, $o2) = @$ops;
+    my ($to1, $to2) = ($o1->term_type(), $o2->term_type());
+
+    # one of the terms is a constant, don't derive it
+    if ($to1 == T_CONSTANT) {
+        return Math::Symbolic::Constant->zero() if $o1->{value} == 0;
+        my $deriv = $d_sub->( $o2, $var, 0 );
+        return $deriv if $o1->{value} == 0;
+        return Math::Symbolic::Constant->new($deriv->{value}*$o1->{value})
+          if $deriv->term_type == T_CONSTANT;
+    }
+    if ($to2 == T_CONSTANT) {
+        return Math::Symbolic::Constant->zero() if $o2->{value} == 0;
+        my $deriv = $d_sub->( $o1, $var, 0 );
+        return $deriv if $o2->{value} == 0;
+        return Math::Symbolic::Constant->new($deriv->{value}*$o2->{value})
+          if $deriv->term_type == T_CONSTANT;
+    }
+    
+    my $do1 = $d_sub->( $o1, $var, 0 );
+    my $do2 = $d_sub->( $o2, $var, 0 );
+
+    my ($tdo1, $tdo2) = ($do1->term_type(), $do2->term_type());
+
+    my ($m1, $m2);
+    # check for const*const
+    if ($tdo1 == T_CONSTANT) {
+        if ($to2 == T_CONSTANT) {
+            $m1 = $do1->new($o2->{value} * $do1->{value}); # const
+        } elsif ($do1->{value} == 0) {
+            $m1 = $do1->zero(); # 0
+        } elsif ($do1->{value} == 1) {
+            $m1 = $o2;
+        } else {
+            $m1 = $do1*$o2; # c*tree
+        }
+    }
+    else {
+        $m1 = $o2*$do1;
+    }
+
+    if ($tdo2 == T_CONSTANT) {
+        if ($to1 == T_CONSTANT) {
+            $m2 = $do2->new($o1->{value} * $do2->{value}); # const
+        } elsif ($do2->{value} == 0) {
+            $m2 = $do2->zero(); # 0
+        } elsif ($do2->{value} == 1) {
+            $m2 = $o1;
+        } else {
+            $m2 = $do2*$o1; # c*tree
+        }
+    }
+    else {
+        $m2 = $o1*$do2;
+    }
+
+    # 0's or 2 consts in +
+    if ($m1->term_type == T_CONSTANT) {
+        return $m2 if $m1->{value} == 0;
+        if ($m2->term_type == T_CONSTANT) {
+            return $m2->new($m1->{value}*$m2->{value});
+        }
+    }
+    elsif ($m2->term_type == T_CONSTANT) {
+        return $m1 if $m2->{value} == 0;
+    }
+
     return Math::Symbolic::Operator->new( '+', $m1, $m2 );
 }
 
 sub _quotient_rule {
     my ( $tree, $var, $cloned, $d_sub ) = @_;
-    my $ops = $tree->{operands};
-    my $do1 = $d_sub->( $ops->[0], $var, 0 );
-    my $do2 = $d_sub->( $ops->[1], $var, 0 );
-    my $m1  = Math::Symbolic::Operator->new( '*', $do1, $ops->[1] );
-    my $m2  = Math::Symbolic::Operator->new( '*', $ops->[0], $do2 );
-    my $m3  = Math::Symbolic::Operator->new(
-		'^', $ops->[1], Math::Symbolic::Constant->new(2)
-    );
-    my $a   = Math::Symbolic::Operator->new( '-', $m1, $m2 );
-    return Math::Symbolic::Operator->new( '/', $a, $m3 );
+
+    my ($op1, $op2) = @{$tree->{operands}};
+
+    my ($do1, $do2);
+
+    # y = f(x)/c; y' = f'/c
+    if ($op2->is_simple_constant()) {
+        $do1 = $d_sub->( $op1, $var, 0 );
+        my $val = $op2->value();
+
+        if ($val == 0) {
+            return $tree->new('/', $do1, $op2->new()); # inf!
+        }
+        elsif ($val == 1) {
+            return $do1; # f/1
+        }
+        return $tree->new('*', Math::Symbolic::Constant->new(1/$val), $do1);
+    }
+    # y = c/f(x)
+    elsif ($op1->is_simple_constant()) {
+        $do2 = $d_sub->( $op2, $var, 0 );
+        my $val = $op1->value();
+        
+        if ($val == 0) {
+            return Math::Symbolic::Constant->zero(); # 0*f'/f
+        }
+
+        my $tdo2 = $do2->term_type();
+        if ($tdo2 == T_CONSTANT) {
+            return $do2->zero() if $do2->{value} == 0; # c*0/f
+            return $tree->new('*', $do2->new($val*$do2->{value}), $op1);
+        }
+        else {
+            return $tree->new(
+                '*', Math::Symbolic::Constant->new($val),
+                $tree->new('/', $do2, $op1)
+            );
+        }
+    }
+
+    $do1 = $d_sub->( $op1, $var, 0 ) if not $do1;
+    $do2 = $d_sub->( $op2, $var, 0 ) if not $do2;
+
+    my $m1  = Math::Symbolic::Operator->new( '*', $do1, $op2 );
+    my $m2  = Math::Symbolic::Operator->new( '*', $op1, $do2 );
+
+    # f' = 0
+    if ($do1->is_zero()) {
+        $m1 = undef;
+    }
+    # f' = 1
+    elsif ($do1->is_one()) {
+        $m1 = $op2->new();
+    }
+
+    # g' = 0
+    if ($do2->is_zero()) {
+        $m2 = undef;
+    }
+    elsif ($do2->is_one()) {
+        $m2 = $op1->new();
+    }
+
+    my $upper;
+    # -g'f / g^2
+    if (not defined $m1) {
+        # f'=g'=0
+        return Math::Symbolic::Constant->zero() if not defined $m2;
+        $upper = $tree->new('neg', $m2);
+    }
+    # f'g / g^2 = f'/g
+    elsif (not defined $m2) {
+        return $tree->new('/', $do1, $op2);
+    }
+
+    my $m3 = $tree->new('^', $op2, Math::Symbolic::Constant->new(2));
+    $upper = Math::Symbolic::Operator->new( '-', $m1, $m2 );
+    return Math::Symbolic::Operator->new( '/', $upper, $m3 );
 }
 
 sub _logarithmic_chain_rule_after_ln {
@@ -144,6 +336,21 @@ sub _logarithmic_chain_rule_after_ln {
     # y'(x)=CONST*y* d/dx ln(u)
 	# y'(x)=CONST*y* u' / u
 	if ($v->term_type() == T_CONSTANT) {
+
+        # y=VAR^CONST
+        if ($u->term_type() == T_VARIABLE) {
+            my $d = $d_sub->($u, $var, 0);
+            my $dtt = $d->term_type();
+            if ($dtt == T_CONSTANT) {
+                # not our var
+                return Math::Symbolic::Constant->zero() if $d->{value} == 0;
+                # our var
+                return Math::Symbolic::Constant->one() if $v->{value} == 1;
+                return $tree->new('*', $v->new(), $u->new()) if $v->{value} == 2;
+                return $tree->new('*', $v->new(), $tree->new('^', $u->new(), $v->new($v->{value}-1)));
+            }
+            # otherwise: signature contains $var
+        }
         return Math::Symbolic::Operator->new(
 			'*', 
 			Math::Symbolic::Operator->new(
@@ -154,6 +361,7 @@ sub _logarithmic_chain_rule_after_ln {
 			)
 		);
 	}
+
     my $e    = Math::Symbolic::Constant->euler();
     my $ln   = Math::Symbolic::Operator->new( 'log', $e, $u );
     my $mul1 = $ln->new( '*', $v, $ln );
@@ -168,15 +376,15 @@ sub _logarithmic_chain_rule {
     #log_a(y(x))=>y'(x)/(ln(a)*y(x))
     my ($a, $y) = @{$tree->{operands}};
     my $dy  = $d_sub->( $y, $var, 0 );
-	
-	# This would be y'/y
+
+    # This would be y'/y
 	if ($a->term_type() == T_CONSTANT and $a->{special} eq 'euler') {
 		return Math::Symbolic::Operator->new('/', $dy, $y);
 	}
 	
     my $e    = Math::Symbolic::Constant->euler();
     my $ln   = Math::Symbolic::Operator->new( 'log', $e, $a );
-    my $mul1 = $ln->new( '*', $ln, $a->new() );
+    my $mul1 = $ln->new( '*', $ln, $y->new() );
     $tree = $ln->new( '/', $dy, $mul1 );
     return $tree;
 }
@@ -332,7 +540,6 @@ sub partial_derivative {
         die "Cannot derive using rule '$rulename'."
           unless defined $subref;
         $tree = $subref->( $tree, $var, $cloned, $Partial_Sub );
-
     }
     elsif ( $tree->term_type() == T_CONSTANT ) {
         $tree = Math::Symbolic::Constant->zero();
