@@ -1,6 +1,6 @@
 Revision history for Perl extension Math::Symbolic.
 
-0.505  Mon Dec 18 10:53 2006
+0.505  Fri Jan 12 11:35 2007
     - Fixed bug in ::Parser related to missing precompiled parsers.
       (Thanks, Jerrad Pierce)
     - You can now request a Parse::Yapp-based parser from the ::Parser->new()

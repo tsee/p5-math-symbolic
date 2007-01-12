@@ -68,5 +68,6 @@ t/17modifications.t
 t/18vectorcalc.t
 t/19misccalc.t
 t/20miscalgebra.t
+t/21more_derivatives.t
 TODO
 Yapp.yp

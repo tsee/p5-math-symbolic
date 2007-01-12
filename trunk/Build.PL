@@ -3,7 +3,7 @@ use Module::Build;
 my $b = Module::Build->new
   (
    module_name => 'Math::Symbolic',
-   dist_author => 'Steffen Mueller <modules at steffen-mueller dot net>',
+   dist_author => 'Steffen Mueller <smueller@cpan.org',
    license => 'perl',
    requires => {
 	   			Memoize => '1.01',
