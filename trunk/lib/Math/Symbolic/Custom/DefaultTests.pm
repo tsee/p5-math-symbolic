@@ -31,6 +31,8 @@ package Math::Symbolic::Custom::DefaultTests;
 use 5.006;
 use strict;
 use warnings;
+use Data::Dumper; # for numerical equivalence test
+
 no warnings 'recursion';
 
 our $VERSION = '0.505';
@@ -58,6 +60,7 @@ our $Aggregate_Export = [
       is_integer
       is_identical
       is_identical_base
+      test_num_equiv
       /
 ];
 
@@ -408,6 +411,118 @@ sub is_sum {
         },
     );
     return $return;
+}
+
+=head2 test_num_equiv()
+
+Takes another Math::Symbolic tree or a code ref as first
+argument. Tests the tree
+it is called on and the one passed in as first argument for
+equivalence by sampling random numbers for their parameters and
+evaluating them.
+
+This is no guarantee that the functions are actually similar. The
+computation required for this test may be very high for large
+numbers of tests.
+
+In case of a subroutine reference passed in, the values of the
+parameters of the Math::Symbolic tree are passed to the sub
+ref sorted by the parameter names.
+
+Following the test-tree, there may be various options as key/value
+pairs:
+
+  limits: A hash reference with parameter names as keys and code refs
+          as arguments. A code ref for parameter 'x', will be executed
+          for every number of 'x' that is generated. If the code
+          returns false, the number is discarded and regenerated.
+  tests:  The number of tests to carry out. Default: 20
+  epsilon: The accuracy of the numeric comparison. Default: 1e-7
+  retries: The number of attempts to make if a function evaluation
+           throws an error.
+  upper:   Upper limit of the random numbers. Default: 10
+  lower:   Lower limit of the random numbers. Default: -10
+
+=cut
+
+sub test_num_equiv {
+    my ($t1, $t2) = (shift(), shift());
+    if (ref($t1) !~ /^Math::Symbolic/) {
+        croak("test_numeric_equivalence() must be called on Math::Symbolic tree");
+    }
+    if (ref($t2) !~ /^Math::Symbolic/ and ref($t2) ne 'CODE') {
+        croak("first argument to test_numeric_equivalence() must be a Math::Symbolic tree or a code reference");
+    }
+
+    my $is_code = ref($t2) eq 'CODE' ? 1 : 0;
+
+    my %args = @_;
+    my $limits = $args{limits} || {};
+    my $tests = $args{tests} || 20;
+    my $eps = $args{epsilon} || 1e-7;
+    my $retries = $args{retries} || 5;
+    my $upper = $args{upper} || 10;
+    my $lower = $args{lower} || -10;
+
+    my @s1 = $t1->signature();
+    my @s2 = $is_code ? () : $t2->signature();
+
+    my %sig = map {($_=>undef)} @s1, @s2;
+
+    my $mult = $upper-$lower;
+
+    my $retry = 0;
+    foreach (1..$tests) {
+        croak("Could not evaluate test functions with numbers -10..10")
+          if $retry > $retries-1;
+        for (keys %sig) {
+            my $num = rand()*$mult - $mult/2;
+            redo if $limits->{$_} and not $limits->{$_}->($num);
+            $sig{$_} = $num;
+        }
+
+        no warnings;
+        my($y1, $y2);
+        eval {$y1 = $t1->value(%sig);};
+        if ($@) {
+            warn "error during evaluation: $@";
+            $retry++;
+            $mult /= 2;
+            redo;
+        }
+        if ($is_code) {
+            eval {$y2 = $t2->(map {$sig{$_}} sort keys %sig)};
+        }
+        else {
+            eval {$y2 = $t2->value(%sig);};
+        }
+        if ($@) {
+            warn "error during evaluation: $@";
+            $retry++;
+            $mult /= 2;
+            redo;
+        }
+
+        if (not defined $y1) {
+            warn "Result of '$t1' not defined; ".Dumper(\%sig);
+            next if not defined $y2;
+            $retry++;
+            redo;
+        }
+        elsif (not defined $y2) {
+            warn "Result of '$t2' not defined; ".Dumper(\%sig);
+            $retry++;
+            redo;
+        }
+
+
+        warn("1: $y1, 2: $y2; ".Dumper(\%sig)), return 0 if $y1+$eps < $y2 or $y1-$eps > $y2;
+
+        $mult = $upper-$lower;
+        $retry = 0;
+    }
+
+    return 1;
 }
 
 1;

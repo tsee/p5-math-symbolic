@@ -1,9 +1,10 @@
+#!perl
 # BEGIN{$::RD_HINT = 1;}
 
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 20;
 
 BEGIN {
 	use_ok('Math::Symbolic');
@@ -114,4 +115,32 @@ my $string = $res->to_string('prefix');
 ok( ($string =~ /^exponentiate\(2\.7\d*,\s*multiply\(a,\s*b\)\)$/),
     'Parse of exp() turns it into e^()'
 );
+
+
+# test failure of parse_from_string
+eval {
+    $res = Math::Symbolic::parse_from_string();
+};
+ok ($@, 'parse_from_string complains about being called without args');
+
+eval {
+    $res = Math::Symbolic->parse_from_string();
+};
+ok ($@, 'parse_from_string complains about being called as method without args');
+
+$Math::Symbolic::Parser = undef;
+eval {
+    $res = Math::Symbolic::parse_from_string('2');
+};
+ok(!$@ && ref($res) =~ /^Math::Symbolic/, 'parse_from_string creates a new parser if necessary');
+
+
+my $yapp = Math::Symbolic::Parser->new(implementation => 'Yapp');
+isa_ok($yapp, 'Math::Symbolic::Parser::Yapp');
+
+my $rd = Math::Symbolic::Parser->new(implementation => 'RecDescent', recompile => 1);
+ok(defined($rd) && $rd->isa('Parse::RecDescent')||$rd->isa('Math::Symbolic::Parser::Precompiled'), 'chose implementation RecDescent');
+
+eval {$rd = Math::Symbolic::Parser->new(implementation=>'foo');};
+ok ($@, 'Cannot create parser of unknown implementation');
 

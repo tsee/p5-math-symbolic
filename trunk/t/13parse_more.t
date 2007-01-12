@@ -1,3 +1,4 @@
+#!perl
 # BEGIN{$::RD_HINT = 1;}
 
 use strict;

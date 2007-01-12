@@ -1,3 +1,4 @@
+#!perl
 use Test::More tests => 8;
 
 use strict;

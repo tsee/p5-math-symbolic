@@ -1,7 +1,8 @@
+#!perl
 use strict;
 use warnings;
 
-use Test::More tests => 19;
+use Test::More tests => 24;
 
 BEGIN {
 	use_ok('Math::Symbolic');
@@ -18,6 +19,14 @@ my $var = Math::Symbolic::Variable->new();
 my $a   = $var->new( 'a' => 2 );
 
 print "Vars: a=" . $a->value() . " (Value is optional)\n\n";
+ok($a->value() == 2, 'value of a==2 is 2');
+ok($a->value(3) == 3, 'value of a=3 is 3');
+ok($a->value() == 3, 'value of a==3 is still 3');
+
+ok($a->name('foo') eq 'foo', 'name=foo is foo');
+ok($a->name() eq 'foo', 'name==foo is foo');
+
+$a = $a->new('a', 2);
 
 my $const;
 local $@;

@@ -430,7 +430,6 @@ sub new {
     else {
         croak("'implementation' must be one of RecDescent or Yapp");
     }
-    die "Sanity Check!";
 }
 
 sub _new_recdescent {
@@ -449,7 +448,7 @@ sub _new_recdescent {
     my $parser;
 
     if ( $args->{recompile} ) {
-        $parser = new Parse::RecDescent($Grammar);
+        $parser = Parse::RecDescent->new($Grammar);
     }
     else {
         eval 'require Math::Symbolic::Parser::Precompiled;';
