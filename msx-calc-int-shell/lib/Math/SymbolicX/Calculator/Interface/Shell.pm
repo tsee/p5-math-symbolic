@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Term::ReadLine;
 use Params::Util qw/_INSTANCE/;
@@ -317,8 +317,28 @@ sub _generic_out {
 
 
 
-
-
-
 1;
 __END__
+
+=head1 SEE ALSO
+
+L<Term::ReadLine>
+
+L<Math::SymbolicX::Calculator>,
+L<Math::SymbolicX::Calculator::Interface::Web>
+
+L<Math::Symbolic>, L<Math::Symbolic::Custom::Transformation>
+
+=head1 AUTHOR
+
+Steffen Müller, E<lt>smueller@cpan.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2007 by Steffen Müller
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.6 or,
+at your option, any later version of Perl 5 you may have available.
+
+=cut
