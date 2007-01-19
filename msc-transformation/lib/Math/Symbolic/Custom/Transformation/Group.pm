@@ -42,7 +42,7 @@ Math::Symbolic::Custom::Transformation::Group - Group of Transformations
 =head1 DESCRIPTION
 
 A C<Math::Symbolic::Custom::Transformation::Group> object (Trafo Group for now)
-represents a conjucntion of several transformations and is a transformation
+represents a conjunction of several transformations and is a transformation
 itself. An example is in order here:
 
   my $group = new_trafo_group( ',', $trafo1, $trafo2, ... );
