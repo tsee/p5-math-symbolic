@@ -5,13 +5,14 @@ use strict;
 use warnings;
 use Carp;
 use Math::Symbolic;
+use Text::Balanced;
 
-our $BeenUsedBefore    = 0;
+our $BeenUsedBefore    = {};
 our $Functions         = {};
 our $Order             = [];
 our $RegularExpression = qw//;
 
-our $VERSION = '1.00';
+our $VERSION = '2.00';
 
 sub import {
     my $package = shift;
@@ -21,31 +22,7 @@ sub import {
 
     my %args = @_;
 
-    if ( not $BeenUsedBefore ) {
-        $Math::Symbolic::Parser->Extend(<<'EXTENSION');
-function: /$Math::SymbolicX::ParserExtensionFactory::RegularExpression/
-	{
-		warn 'function_msx_parser_extension_factory ' 
-		  if $Math::Symbolic::Parser::DEBUG;
-		my $string = $item[1];
-		my ($function, $argstring) = ($string =~ /^([^\(]+)\((.*)\)$/);
-		die "Invalid extension function and/or arguments '$string'".
-		  "(Math::SymbolicX::ParserExtensionFactory)"
-		  if not exists
-		     $Math::SymbolicX::ParserExtensionFactory::Functions
-		     ->{$function};
-		my $result =
-		  $Math::SymbolicX::ParserExtensionFactory::Functions
-		  ->{$function}->($argstring);
-		die "Invalid result of extension function application "
-		  ."('$item[1]($argstring)'). Also refer to the "
-		  ."Math::SymbolicX::ParserExtensionFactory manpage."
-		  if ref($result) !~ /^Math::Symbolic/;
-		$return = $result;
-	}
-EXTENSION
-        $BeenUsedBefore = 1;
-    }
+    _extend_parser();
 
     foreach my $key ( keys %args ) {
         croak "Invalid keys => value pairs as arguments in usage of "
@@ -62,9 +39,65 @@ EXTENSION
     return ();
 }
 
+sub _extend_parser {
+
+    my $parser = $Math::Symbolic::Parser;
+
+    # make sure there is a parser
+    if (not defined $parser) {
+        $parser = $Math::Symbolic::Parser = Math::Symbolic::Parser->new();
+    }
+
+    if ( not exists $BeenUsedBefore->{"$parser"} ) {
+        if ($parser->isa('Parse::RecDescent')) {
+            _extend_parser_recdescent($parser)
+        }
+        elsif ($parser->isa('Math::Symbolic::Parser::Yapp')) {
+            _extend_parser_yapp($parser);
+        }
+        else {
+        }
+        $BeenUsedBefore->{"$parser"} = 1;
+    }
+}
+
+sub _extend_parser_yapp {
+    # This is a no-op since ::Parser::Yapp has built-in support for
+    # ::ParserExtensionFactory. This would probably not be possible
+    # otherwise.
+    return(1);
+}
+
+sub _extend_parser_recdescent {
+    my $parser = shift;
+    $parser->Extend(<<'EXTENSION');
+function: /$Math::SymbolicX::ParserExtensionFactory::RegularExpression/ {extract_bracketed($text, '(')}
+	{
+		warn 'function_msx_parser_extension_factory ' 
+		  if $Math::Symbolic::Parser::DEBUG;
+		my $function = $item[1];
+        my $argstring = substr($item[2], 1, length($item[2])-2);
+		die "Invalid extension function and/or arguments '$function$item[2]'".
+		  "(Math::SymbolicX::ParserExtensionFactory)"
+		  if not exists
+		     $Math::SymbolicX::ParserExtensionFactory::Functions
+		     ->{$function};
+		my $result =
+		  $Math::SymbolicX::ParserExtensionFactory::Functions
+		  ->{$function}->($argstring);
+		die "Invalid result of extension function application "
+		  ."('$item[1]($argstring)'). Also refer to the "
+		  ."Math::SymbolicX::ParserExtensionFactory manpage."
+		  if ref($result) !~ /^Math::Symbolic/;
+		$return = $result;
+	}
+EXTENSION
+    return(1);
+}
+
 sub _regenerate_regex {
-    my $string = join '|', @$Order;
-    $RegularExpression = qr/(?:$string)\(.*?(?<!\\)\)/;
+    my $string = join '|', map {"\Q$_\E"} @$Order;
+    $RegularExpression = qr/(?:$string)/;
 }
 
 1;
@@ -125,12 +158,13 @@ module code. By specifying key => value pairs of function names and
 function implementations (code references) as arguments to the use() call
 of the module, this module extends the parser that is stored in the
 C<$Math::Symbolic::Parser> variable with the specified functions and whenever
-"C<yourfunction(any argument string not containing an unescaped \) )>" occurs
+"C<yourfunction(any argument string with balanced parenthesis)>" occurs
 in the code, the subroutine reference is called with the argument string as
 argument.
 
 The subroutine is expected to return any Math::Symbolic tree. That means,
-as of version 0.133, a Math::Symbolic::Operator, a Math::Symbolic::Variable,
+as of version 0.506 of Math::Symbolic, a Math::Symbolic::Operator, a
+Math::Symbolic::Variable,
 or a Math::Symbolic::Constant object. The returned object will be incorporated
 into the Math::Symbolic tree that results from the parse at the exact position
 at which the custom function call was parsed.
@@ -142,21 +176,20 @@ should be low, however.
 
 =head1 CAVEATS
 
-Since the module is implemented in a way that won't affect the parse speed a
-lot at runtime, it is somewhat inflexible. The extensions get the actual
-argument string, not a preprocessed form of it. Since the extensions are
-implemented as regular expressions, they cannot correctly parse expressions
-involving balanced parenthesis. See C<perldoc -q nesting> for details.
-For example C<foo(bar(1))> would only match
-the C<foo> call until the first parenthesis. You can escape the inner
-parenthesis like this: C<foo(bar(1\))>. It's not currently possible to escape
-the escape character ('\'). Again: This is a somewhat simple regular expression.
-It's not hard to write a parser for balanced parenthesis with escaping, but its
-nigh on impossible to do this in a single expression.
+Since version 2.00 of this module, the old, broken parsing of the argument
+string which would fail on nested, unescaped parenthesis was replaced
+by a better routine which will correctly parse nested pairs of parenthesis.
+
+On the flip side, if the argument string contains unmatched parenthesis,
+the parse will fail. Examples:
+
+  "myfunction(foo(bar)" # fails because missing closing parenthesis
+
+Escaping of parenthesis in the argument string B<is no longer supported>.
 
 =head1 AUTHOR
 
-Copyright (C) 2003-2005 Steffen Mueller
+Copyright (C) 2003-2007 Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
