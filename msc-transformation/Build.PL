@@ -6,7 +6,7 @@ my $b = Module::Build->new
    dist_author => 'Steffen Mueller <symbolic-module at steffen-mueller dot net>',
    license => 'perl',
    requires => {
-                'Math::Symbolic' => '0.163',
+                'Math::Symbolic' => '0.507',
                 'Math::Symbolic::Custom::Pattern' => '1.20',
                },
    recommends => {

@@ -9,7 +9,7 @@ WriteMakefile
           'VERSION_FROM' => 'lib/Math/Symbolic/Custom/Transformation.pm',
           'PREREQ_PM' => {
                            'Test::More' => 0,
-                           'Math::Symbolic' => '0.163',
+                           'Math::Symbolic' => '0.507',
                            'Math::Symbolic::Custom::Pattern' => '1.20'
                          }
         )

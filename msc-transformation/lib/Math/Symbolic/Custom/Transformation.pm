@@ -13,7 +13,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '1.24';
+our $VERSION = '2.00';
 
 =head1 NAME
 
@@ -144,6 +144,25 @@ The construction of transformations is really slow because they have
 been optimised for performance on application, not creation.
 (Application should be around 40 times faster than creation from strings!)
 
+I<Note:> Starting with version 2.00, this module also supports the new-ish
+Math::Symbolic::Parser::Yapp parser implementation which is significantly
+faster than the old Parse::RecDescent based implementation. Replacement
+strings are parsed using Yapp by default now, which means a performance
+increase of about 20%. The search patterns are still parsed using the default
+Math::Symbolic parser which will be switched to Yapp at some point in the
+future. If you force the use of the Yapp parser globally, the parser
+performance will improve by about an order of magnitude! You can do so by
+adding the following before using Math::Symbolic::Custom::Transformation:
+
+  use Math::Symbolic;
+  BEGIN {
+    $Math::Symbolic::Parser = Math::Symbolic::Parser->new(
+      implementation => 'Yapp'
+    );
+  }
+  use Math::Symbolic::Custom::Transformation;
+  #...
+
 If you absolutely must include the source strings where the transformation
 is used, consider using the L<Memoize> module which is part of the standard
 Perl distribution these days.
@@ -191,19 +210,33 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
+our $Predicates = [
+    qw/simplify value/
+];
+
 # We have some class data. Namely, the parser for the transformation strings
 # which aren't quite ordinary Math::Symbolic strings.
-our $Parser = Math::Symbolic::Parser->new();
+our $Parser;
+{
+    my $pred = join '|', @$Predicates;
+    $Parser = Math::Symbolic::Parser->new(
+        implementation => 'Yapp',
+        yapp_predicates => qr/$pred/o,
+    );
+}
 
-$Parser->Extend(<<'HERE');
-function: /(?:simplify|value)\{/ expr '}'
+if ($Parser->isa('Parse::RecDescent')) {
+    # This is left in for reference.
+    my $pred = join '|', @$Predicates;
+    $Parser->Extend(<<"HERE");
+function: /(?:$pred)\{/ expr '}'
 	{
-				my $function_name = $item[1];
-				$function_name =~ s/\{$//;
+				my \$function_name = \$item[1];
+				\$function_name =~ s/\{\$//;
 
-				my $inner = $item[2];
+				my \$inner = \$item[2];
 
-				my $name = 'TRANSFORMATION_HOOK';
+				my \$name = 'TRANSFORMATION_HOOK';
 
 				# Since we need to evaluate both 'simplify' and 'value'
 				# at the time we apply the transformation, we just replace
@@ -211,10 +244,18 @@ function: /(?:simplify|value)\{/ expr '}'
 				# recognized later. The function name and argument is stored
 				# in an array as the value of the special variable.
 				Math::Symbolic::Variable->new(
-					$name, [$function_name, $inner]
+					\$name, [\$function_name, \$inner]
 				);
 	}
 HERE
+}
+elsif ($Parser->isa('Math::Symbolic::Parser::Yapp')) {
+    # This is a no-op since the logic had to be built into
+    # the Yapp parser. *sigh*
+}
+else {
+    die "Unsupported Math::Symbolic::Parser implementation.";
+}
 
 =head2 METHODS
 
@@ -558,7 +599,7 @@ Steffen Müller, E<lt>symbolic-module at steffen-mueller dot netE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2006 by Steffen Mueller
+Copyright (C) 2006-2007 by Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.6.1 or,

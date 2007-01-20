@@ -1,3 +1,4 @@
+#!perl
 use strict;
 use warnings;
 
@@ -158,7 +159,7 @@ sub run_test {
 }
 
 __DATA__
-# line 161 (check that yourself, though)
+# line 162 (check that yourself, though)
 trafo: TREE_x + TREE_x => 2 * TREE_x
 status: 1
 a + a = 2 * a
@@ -336,9 +337,11 @@ a + a = 2 * a
 1 = undef
 1 + a = undef
 
-trafo: -(TREE_x + TREE_x) => -2 * TREE_x
+# Those parens around the 2's are to disambiguate between
+# unary - (2) and the number -2
+trafo: -(TREE_x + TREE_x) => -(2) * TREE_x
 status: 1
--(a + a) = (-2) * a
+-(a + a) = (-(2)) * a
 -(a + b) = undef
 1 = undef
 
