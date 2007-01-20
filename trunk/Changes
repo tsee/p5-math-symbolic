@@ -1,9 +1,16 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.507  Sat Jan 20 11:35 2007
+    - The Yapp parser was improved so that it now works with
+      Math::Symbolic::Custom::Transformation.
+
 0.506  Fri Jan 12 11:35 2007
     - Much more tests.
     - Added test_num_equiv to DefaultTests for testing approximate equivalence
       of a M::S tree and another or a M::S tree and a sub.
+    - Added a 'sqrt' function to both parsers which is transformed into
+      '(...)^0.5' internally.
+    - The Yapp parser now works with Math::SymbolicX::ParserExtensionFactory!
 
 0.505  Fri Jan 12 11:35 2007
     - Fixed bug in ::Parser related to missing precompiled parsers.

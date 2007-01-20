@@ -27,19 +27,24 @@ however, make sure to remove any whitespace from your input string.
 With version 0.501 of Math::Symbolic, an experimental, new parser is
 introduced, but it is not enabled by default. The new parser is based
 on Parse::Yapp instead of Parse::RecDescent and comes with an at least
-ten fold speed increase. However, it has not been availlable for a long
-time and is not as well tested. Furthermore, it currently does not play
-well with parser extensions such as
-L<Math::SymbolicX::ParserExtensionFactory>. As soon as these problems
-have been addressed (which might be a long time away), the new
-parser will be enabled by default. Until then, you need to load it by hand
-as follows:
+ten fold speed increase. However, it has not been available for a long
+time and is not as well tested. 
+Since version 2.00 of the Math::SymbolicX::ParserExtensionFactory module,
+it's possible to extend Yapp parsers.
 
-  use Math::Symbolic::Parser::Yapp;
-  $Math::Symbolic::Parser = Math::Symbolic::Parser::Yapp->new();
+B<At some point in the future the Yapp-based parser will become the
+default!> It is suggested you test your code against it before that.
+Code that uses the RecDescent based parser's C<Extend> method may
+fail!
+
+Until then, you need to load it by hand as follows:
+
+  $Math::Symbolic::Parser = Math::Symbolic::Parser->new(
+    implementation=>'Yapp'
+  );
 
 This replaces the default Math::Symbolic parser with an instance of the
-new Yapp parser. Doing this voids the warranty, you've been warned.
+new Yapp parser.
 
 =head2 STRING FORMAT
 
@@ -60,7 +65,8 @@ Math::Symbolic::Operator in the section on the new() constructor.
 =head2 EXTENSIONS
 
 In version 0.503, a function named C<exp(...)> is recognized and
-transformed into C<e^(...)> internally.
+transformed into C<e^(...)> internally. In version 0.506, a function
+named C<sqrt(...)> was added which is transformed into C<(...)^0.5>.
 
 =head2 EXAMPLES
 
@@ -141,7 +147,7 @@ use Math::Symbolic::ExportConstants qw/:all/;
 #use Parse::RecDescent;
 my $Required_Parse_RecDescent = 0;
 
-our $VERSION = '0.505';
+our $VERSION = '0.507';
 our $DEBUG   = 0;
 
 # Functions that are parsed and translated to specific M::S trees
@@ -154,6 +160,15 @@ our %Parser_Functions = (
             '^',
             Math::Symbolic::Constant->euler(),
             $arg
+        );
+    },
+    'sqrt' => sub {
+        my $func = shift;
+        my $arg = shift;
+        return Math::Symbolic::Operator->new(
+            '^',
+            $arg,
+            Math::Symbolic::Constant->new(0.5)
         );
     },
 );
@@ -353,6 +368,7 @@ our $Grammar = <<'GRAMMAR_END';
 		     | 'tan'
 		     | 'cot'
              | 'exp'
+             | 'sqrt'
 
 
 	expr_list: <leftop:expr ',' expr>
@@ -410,8 +426,8 @@ If you care about parsing speed more than about being able to extend the
 parser at run-time, you can specify the C<implementation> option. Currently
 recognized are C<RecDescent> and C<Yapp> implementations. C<RecDescent> is
 the default and C<Yapp> is significantly faster. The L<Parse::Yapp> based
-implementation does not support all extension modules. In particular not
-those using L<Math::SymbolicX::ParserExtensionFactory>.
+implementation may not support all extension modules. It has been tested
+with Math::SymbolicX::ParserExtensionFactory and Math::SymbolicX::Complex.
 
 =cut
 
@@ -466,12 +482,14 @@ sub _new_yapp {
     my $class = shift;
     my $args = shift;
     eval 'require Math::Symbolic::Parser::Yapp';
-
+    my %yapp_args;
+    $yapp_args{predicates} = $args->{yapp_predicates}
+      if $args->{yapp_predicates};
     if ($@) {
         croak("Could not load Math::Symbolic::Parser::Yapp. Error: $@");
     }
     else {
-        return Math::Symbolic::Parser::Yapp->new();
+        return Math::Symbolic::Parser::Yapp->new(%yapp_args);
     }
 }
 

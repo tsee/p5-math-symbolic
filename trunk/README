@@ -32,6 +32,9 @@ Math::Symbolic::MiscAlgebra.
 Using the Math::Symbolic::Custom::LaTeXDumper distribution from CPAN, it is
 possible to dump Math::Symbolic trees as LaTeX formulae!
 
+You are encouraged to visit http://search.cpan.org and search for
+'Math::Symbolic'. You will find various extension modules!
+
 INSTALLATION
 
 To install this module type the following:
