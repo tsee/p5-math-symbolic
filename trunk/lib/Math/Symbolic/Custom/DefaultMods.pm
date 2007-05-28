@@ -33,7 +33,7 @@ use strict;
 use warnings;
 no warnings 'recursion';
 
-our $VERSION = '0.507';
+our $VERSION = '0.508';
 
 use Math::Symbolic::Custom::Base;
 BEGIN { *import = \&Math::Symbolic::Custom::Base::aggregate_import }
@@ -51,6 +51,8 @@ our $Aggregate_Export = [
     qw/
       apply_derivatives
       apply_constant_fold
+      mod_add_constant
+      mod_multiply_constant
       /
 ];
 
@@ -167,6 +169,171 @@ sub apply_constant_fold {
     );
 
     return $tree;
+}
+
+=head2 mod_add_constant
+
+Given a constant (object or number) as argument, this method tries
+hard to fold it into an existing constant of the object this is called
+on is already a sum or a difference.
+
+Basically, this is the same as C<$tree + $constant> but does some
+simplification.
+
+=cut
+
+sub mod_add_constant {
+    my $tree = shift;
+    my $constant = shift;
+
+    return $tree if not $constant;
+    $constant = $constant->value() if ref($constant);
+    
+    my $tt = $tree->term_type();
+    if ($tt == T_CONSTANT) {
+        return Math::Symbolic::Constant->new($tree->{value}+$constant);
+    }
+    elsif ($tt == T_OPERATOR) {
+        my $type = $tree->type();
+
+        if ($type == B_SUM || $type == B_DIFFERENCE) {
+            my $ops = $tree->{operands};
+            my $const_op;
+            if ($ops->[0]->is_simple_constant()) {
+                $const_op = 0;
+            } elsif ($ops->[1]->is_simple_constant()) {
+                $const_op = 1;
+            }
+            if (defined $const_op) {
+                my $value = $ops->[$const_op]->value();
+                my $other = $ops->[($const_op+1)%2];
+
+                if ($const_op == 0) {
+                    $value += $constant;
+                }
+                else { # second
+                    $value = $type==B_SUM ? $value + $constant : $value - $constant;
+                }
+
+                if ($value == 0) {
+                    return $other if $const_op == 1 or $type == B_SUM;
+                    return Math::Symbolic::Constant->new(-$other->{value});
+                }
+                return Math::Symbolic::Operator->new(
+                    ($type == B_DIFFERENCE ? '-' : '+'), # op-type
+                    $const_op == 0 # order of ops 
+                      ?($value, $other)
+                      :($other, $value)
+                );
+            }
+            if ($ops->[1]->term_type() == T_OPERATOR) {
+                my $otype = $ops->[1]->type();
+                if ($otype == B_SUM || $otype == B_DIFFERENCE) {
+                    return Math::Symbolic::Operator->new(
+                        ($type == B_SUM ? '+' : '-'),
+                        $ops->[0],
+                        $ops->[1]->mod_add_constant($constant)
+                    );
+                }
+            }
+            else {
+                return Math::Symbolic::Operator->new(
+                    ($type == B_SUM ? '+' : '-'),
+                    $ops->[0]->mod_add_constant($constant),
+                    $ops->[1],
+                );
+            }
+        }
+    }
+
+    # fallback: variable, didn't apply, etc.
+    return Math::Symbolic::Operator->new(
+        '+', Math::Symbolic::Constant->new($constant), $tree
+    );
+}
+
+
+=head2 mod_multiply_constant
+
+Given a constant (object or number) as argument, this method tries
+hard to fold it into an existing constant of the object this is called
+on is already a product or a division.
+
+Basically, this is the same as C<$tree * $constant> but does some
+simplification.
+
+=cut
+
+sub mod_multiply_constant {
+    my $tree = shift;
+    my $constant = shift;
+
+    return $tree if not defined $constant;
+    $constant = $constant->value() if ref($constant);
+    return $tree if $constant == 1;
+    return Math::Symbolic::Constant->zero() if $constant == 0;
+    
+    my $tt = $tree->term_type();
+    if ($tt == T_CONSTANT) {
+        return Math::Symbolic::Constant->new($tree->{value}*$constant);
+    }
+    elsif ($tt == T_OPERATOR) {
+        my $type = $tree->type();
+
+        if ($type == B_PRODUCT || $type == B_DIVISION) {
+            my $ops = $tree->{operands};
+            my $const_op;
+            if ($ops->[0]->is_simple_constant()) {
+                $const_op = 0;
+            } elsif ($ops->[1]->is_simple_constant()) {
+                $const_op = 1;
+            }
+            if (defined $const_op) {
+                my $value = $ops->[$const_op]->value();
+                my $other = $ops->[($const_op+1)%2];
+
+                if ($const_op == 0) {
+                    $value *= $constant;
+                }
+                else { # second
+                    $value = $type==B_PRODUCT ? $value * $constant : $value / $constant;
+                }
+
+                if ($value == 1) {
+                    return $other if $const_op == 1 or $type == B_PRODUCT;
+                    return Math::Symbolic::Constant->new(1/$other->{value});
+                }
+                return Math::Symbolic::Operator->new(
+                    ($type == B_DIVISION ? '/' : '*'), # op-type
+                    $const_op == 0 # order of ops 
+                      ?($value, $other)
+                      :($other, $value)
+                );
+            }
+            if ($ops->[1]->term_type() == T_OPERATOR) {
+                my $otype = $ops->[1]->type();
+                if ($otype == B_PRODUCT || $otype == B_DIVISION) {
+                    return Math::Symbolic::Operator->new(
+                        ($type == B_PRODUCT ? '*' : '/'),
+                        $ops->[0],
+                        $ops->[1]->mod_multiply_constant($constant)
+                    );
+                }
+            }
+            else {
+                return Math::Symbolic::Operator->new(
+                    ($type == B_PRODUCT ? '*' : '('),
+                    $ops->[0]->mod_multiply_constant($constant),
+                    $ops->[1],
+                );
+            }
+        }
+    }
+
+    # fallback: variable, didn't apply, etc.
+    return Math::Symbolic::Operator->new(
+        '*', Math::Symbolic::Constant->new($constant), $tree
+    );
 }
 
 =begin comment

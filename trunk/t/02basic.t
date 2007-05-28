@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 26;
 
 BEGIN {
 	use_ok('Math::Symbolic');
@@ -142,5 +142,16 @@ is_deeply( [ $term2->explicit_signature() ], [qw/a b/], 'explicit_signature' );
 $variable1->set_value({a => 2});
 ok( $variable1->value() == 2, 'new (as of 0.132) syntax for set_value()' );
 ok( $variable1->value({ a => 3 }) == 3, 'new (as of 0.132) syntax for value()' );
+
+# this shouldn't be before 06parser.t...
+my $result = Math::Symbolic->parse_from_string("x+x^2")->simplify();
+ok( $result->is_identical("x+x^2"), "Simplification never adds a superfluous zero" );
+
+# this shouldn't be before 17modifications.t...
+ok(
+    Math::Symbolic->parse_from_string("((x+x^2)+3)-3")
+      ->simplify()->is_identical("x+x^2"),
+    "simplification: ((x+x^2)+3)-3 ==> x+x^2"
+);
 
 

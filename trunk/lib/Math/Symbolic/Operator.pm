@@ -58,7 +58,7 @@ use Math::Symbolic::Derivative qw//;
 
 use base 'Math::Symbolic::Base';
 
-our $VERSION = '0.507';
+our $VERSION = '0.508';
 
 =head1 CLASS DATA
 
@@ -558,13 +558,13 @@ safe route.
 
 sub simplify {
     my $self = shift;
-	my $dont_clone = shift;
+    my $dont_clone = shift;
     $self = $self->new() unless $dont_clone;
 
     my $operands = $self->{operands};
     my $op       = $Op_Types[ $self->type() ];
 
-	# simplify operands without cloning.
+    # simplify operands without cloning.
     @$operands = map { $_->simplify(1) } @$operands;
 
     if ( $self->arity() == 2 ) {
@@ -599,6 +599,7 @@ sub simplify {
             }
         }
 
+        # exp(0) = 1
         if (    $tt2 == T_CONSTANT
             and $tt1 == T_OPERATOR
             and $type == B_EXP
@@ -606,14 +607,16 @@ sub simplify {
         {
             return Math::Symbolic::Constant->one();
         }
-		
+        
+        # a^1 = a
         if ( $tt2 == T_CONSTANT
             and $type == B_EXP
             and ( $o2->value() == 1 or $o2->special() eq 'one' ) )
         {
             return $o1;
         }
-		
+
+        # (a^b)^const = a^(const*b)
         if ( $tt2 == T_CONSTANT
             and $tt1 == T_OPERATOR
             and $type == B_EXP
@@ -643,6 +646,7 @@ sub simplify {
 #                return Math::Symbolic::Constant->one();
 #            }
 #        }
+
         if ( $tt1 == T_CONSTANT or $tt2 == T_CONSTANT ) {
             my $const = ( $tt1 == T_CONSTANT ? $o1 : $o2 );
             my $not_c = ( $tt1 == T_CONSTANT ? $o2 : $o1 );
@@ -650,13 +654,15 @@ sub simplify {
 
             if ( $type == B_SUM ) {
                 return $not_c if $const->value() == 0;
-				return Math::Symbolic::Operator->new('+', $const, $not_c);
+                return $not_c->mod_add_constant($const);
             }
             
-			if ( $type == B_DIFFERENCE ) {
-                return $not_c
-                  if !$constant_first
-                  and $const->value == 0;
+            if ( $type == B_DIFFERENCE ) {
+                if (!$constant_first) {
+                    my $value = $const->value();
+                    return $not_c if $value == 0;
+                    return $not_c->mod_add_constant(-$value);
+                }
                 if ( $constant_first and $const->value == 0 ) {
                     return Math::Symbolic::Operator->new(
                         {
@@ -667,7 +673,7 @@ sub simplify {
                 }
             }
             
-			if ( $type == B_PRODUCT ) {
+            if ( $type == B_PRODUCT ) {
                 return $not_c if $const->value() == 1;
                 return Math::Symbolic::Constant->zero()
                   if $const->value == 0;
@@ -711,8 +717,11 @@ sub simplify {
             }
         }
         elsif ( $type == B_PRODUCT ) {
-            if ( $tt2 == T_CONSTANT and $tt1 != T_CONSTANT ) {
-                return $self->new( '*', $o2, $o1 );
+            if ( $tt2 == T_CONSTANT ) {
+                return $o1->mod_multiply_constant($o2);
+            }
+            elsif ( $tt1 == T_CONSTANT ) {
+                return $o2->mod_multiply_constant($o1);
             }
             elsif ( $tt1 == T_OPERATOR and $tt2 == T_VARIABLE ) {
                 return $self->new( '*', $o2, $o1 );
@@ -726,6 +735,7 @@ sub simplify {
             my %vars;
             while (@todo) {
 				my $this = shift @todo;
+
                 if ( $this->term_type() == T_OPERATOR ) {
                     my $t = $this->type();
                     if ( $t == B_SUM ) {
@@ -814,9 +824,8 @@ sub simplify {
 					: $mul;				
 			}
             
-			my $const = 0;
-            $const += $_ foreach @const;
-            $const = Math::Symbolic::Constant->new($const) if $const != 0;
+			my $const;
+            $const = Math::Symbolic::Constant->new($const) if defined $const and $const != 0;
 
 			$const = shift @vars if not defined $const;
             foreach ( @vars ) {
