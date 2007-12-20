@@ -101,6 +101,7 @@ all constants and the parse_from_string subroutine.
     U_COSINE_H
     U_AREASINE_H
     U_AREACOSINE_H
+    B_ARCTANGENT_TWO
     
   Constants representing Math::Symbolic term types:
   (These evaluate to the same numbers that are returned by the term_type()
@@ -151,7 +152,7 @@ our %EXPORT_TAGS = (
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT    = qw();
 
-our $VERSION = '0.508';
+our $VERSION = '0.509';
 
 =head1 CLASS DATA
 

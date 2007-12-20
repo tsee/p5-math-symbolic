@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More tests => 28;
 
 BEGIN {
 	use_ok('Math::Symbolic');
@@ -74,6 +74,13 @@ $atan = $op->new('atan', $op->new('*', $two, $a));
 HERE
 ok( !$@, 'arc tangent creation' );
 
+my $atan2;
+undef $@;
+eval <<'HERE';
+$atan2 = $op->new('atan2', $two, $a);
+HERE
+ok( !$@, 'atan2 creation' );
+
 my $acot;
 undef $@;
 eval <<'HERE';
@@ -127,13 +134,19 @@ ok( !$@, 'arc tangent to_string' );
 
 undef $@;
 eval <<'HERE';
+print $atan2->to_string('prefix') . "\n\n";
+HERE
+ok( !$@, 'atan2 to_string' );
+
+undef $@;
+eval <<'HERE';
 print $acot->to_string('prefix') . "\n\n";
 HERE
 ok( !$@, 'arc cotangent to_string' );
 
 print "Now, we derive this partially to x: (prefix again)\n";
 
-my ( $dsin, $dcos, $dtan, $dcot, $dasin, $dacos, $datan, $dacot );
+my ( $dsin, $dcos, $dtan, $dcot, $dasin, $dacos, $datan, $datan2, $dacot );
 undef $@;
 eval <<'HERE';
 $dsin  = $op->new( 'partial_derivative', $sin, $a );
@@ -194,6 +207,15 @@ $datan = $op->new( 'partial_derivative', $atan, $a );
 $datan = $datan->apply_derivatives();
 $datan = $datan->simplify();
 print $datan->to_string('prefix'), "\n";
+HERE
+ok( !$@, 'arc tangent derivative, simplification' );
+
+undef $@;
+eval <<'HERE';
+$datan2 = $op->new( 'partial_derivative', $atan2, $a );
+$datan2 = $datan2->apply_derivatives();
+$datan2 = $datan2->simplify();
+print $datan2->to_string('prefix'), "\n";
 HERE
 ok( !$@, 'arc tangent derivative, simplification' );
 

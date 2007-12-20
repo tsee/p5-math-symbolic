@@ -63,7 +63,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-our $VERSION = '0.508';
+our $VERSION = '0.509';
 
 =head1  CLASS DATA
 
@@ -82,6 +82,7 @@ our %Rules = (
     'derivative commutation'            => \&_derivative_commutation,
     'trigonometric derivatives'         => \&_trigonometric_derivatives,
     'inverse trigonometric derivatives' => \&_inverse_trigonometric_derivatives,
+    'inverse atan2'                     => \&_inverse_atan2,
 );
 
 # References to derivative subroutines
@@ -495,6 +496,28 @@ sub _inverse_trigonometric_derivatives {
 		}
 	}
     return $op->new( '*', $d_inner, $trig );
+}
+
+sub _inverse_atan2 {
+    my ( $tree, $var, $cloned, $d_sub ) = @_;
+    # d/df atan(y/x) = x^2/(x^2+y^2) * (d/df y/x)
+    my ($op1, $op2) = @{$tree->{operands}}; 
+
+    my $inner = $d_sub->( $op1->new()/$op2->new(), $var, 0 );
+    my $x = Math::Symbolic::Variable->new('x');
+    my $two = Math::Symbolic::Constant->new(2);
+
+    my $result = $op1->new('*',
+      $op1->new('/',
+        $op1->new('^', $x->new('x'), $two->new()), 
+        $op1->new(
+          '+', $op1->new('^', $x->new('x'), $two->new()),
+          $op1->new('^', $x->new('y'), $two->new())
+        )
+      ),
+      $inner
+    );
+    return $result;
 }
 
 =head1 SUBROUTINES

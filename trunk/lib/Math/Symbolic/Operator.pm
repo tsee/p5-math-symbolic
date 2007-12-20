@@ -58,7 +58,7 @@ use Math::Symbolic::Derivative qw//;
 
 use base 'Math::Symbolic::Base';
 
-our $VERSION = '0.508';
+our $VERSION = '0.509';
 
 =head1 CLASS DATA
 
@@ -98,6 +98,7 @@ our %Op_Symbols = (
     'cosh'               => U_COSINE_H,
     'asinh'              => U_AREASINE_H,
     'acosh'              => U_AREACOSINE_H,
+    'atan2'              => B_ARCTANGENT_TWO,
 );
 
 =pod
@@ -308,6 +309,16 @@ our @Op_Types = (
         #application   => 'Math::Symbolic::AuxFunctions::acosh($_[0])',
     },
 
+    # B_ARCTANGENT_TWO
+    {
+        arity         => 2,
+        derive        => 'inverse atan2',
+        infix_string  => undef,
+        prefix_string => 'atan2',
+        application   => 'atan2($_[0], $_[1])',
+        #application   => 'Math::Symbolic::AuxFunctions::atan($_[0])',
+    },
+
 );
 
 =head1 METHODS
@@ -349,6 +360,7 @@ function in parens)
   asin               => arc sine (1)
   acos               => arc cosine (1)
   atan               => arc tangent (1)
+  atan2              => arc tangent of y/x (2: y, x)
   acot               => arc cotangent (1)
   sinh               => hyperbolic sine (1)
   cosh               => hyperbolic cosine (1)

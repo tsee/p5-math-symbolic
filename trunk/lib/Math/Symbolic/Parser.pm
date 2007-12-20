@@ -147,7 +147,7 @@ use Math::Symbolic::ExportConstants qw/:all/;
 #use Parse::RecDescent;
 my $Required_Parse_RecDescent = 0;
 
-our $VERSION = '0.508';
+our $VERSION = '0.509';
 our $DEBUG   = 0;
 
 # Functions that are parsed and translated to specific M::S trees
@@ -361,6 +361,7 @@ our $Grammar = <<'GRAMMAR_END';
 		     | 'acosh'
 		     | 'asin'
 		     | 'acos'
+		     | 'atan2'
 		     | 'atan'
 		     | 'acot'
 		     | 'sin'

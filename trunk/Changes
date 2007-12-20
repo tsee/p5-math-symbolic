@@ -1,5 +1,10 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.509  Thu Dec 20 22:01 2007
+    - Add new operator type: atan2 which mostly corresponds to perl's atan2.
+      This provides some saftey during evaluation of atan(y/x) which may be
+      more common than any other use the arc tangent.
+
 0.508  Mon May 28 17:40 2007
     - Fix two bugs in simplification (James Mastros).
     - Some simplification improvements. (It's still crude, though.)
