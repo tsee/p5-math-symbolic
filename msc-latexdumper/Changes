@@ -1,0 +1,19 @@
+Revision history for Perl extension Math::Symbolic::Custom::LaTeXDumper
+
+0.204 Wed Aug 30 2006
+  - Upgraded to Module::Install 0.64.
+  - Removed auto_install from Makefile.PL
+  - Removed SIGNATURE because Module::Signature is still broken
+
+0.203 Fri Jun  9 2006
+  - Upgraded to Module::Install 0.63.
+
+0.202 Fri Feb 17 13:33 2006
+  - Removed a few more unnecessary parenthesis in a special case of
+    exponentiation.
+  - Added the no_sqrt option and the sqrt converter.
+    By default foo^0.5 is converted to \sqrt{foo} now.
+
+0.201 Tue Feb 14 15:43 2006
+  - original version as uploaded to CPAN
+
