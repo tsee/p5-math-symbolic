@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'		=> 'Math::Symbolic::Custom::CCompiler',
     'VERSION_FROM'	=> 'lib/Math/Symbolic/Custom/CCompiler.pm',
-    'PREREQ_PM'		=> {Math::Symbolic => 0.127,
+    'PREREQ_PM'		=> {Math::Symbolic => 0.509,
     	Test::More => 0.44, Inline::C => 0.44},
 	($] >= 5.005 ?    ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM => 'lib/Math/Symbolic/Custom/CCompiler.pm',

@@ -10,7 +10,7 @@ use Math::Symbolic::Custom::Base;
 BEGIN {*import = \&Math::Symbolic::Custom::Base::aggregate_import}
 
 use Math::Symbolic::ExportConstants qw/:all/;
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 our $Aggregate_Export = [qw/to_c to_compiled_c/];
 
@@ -57,6 +57,8 @@ our @Operators_To_C = (
 	'log( $_[0] + sqrt( $_[0] * $_[0] + 1 ) )',
     # U_AREACOSINE_H
 	'log( $_[0] + sqrt( $_[0] * $_[0] - 1 ) )',
+    # B_ARCTANGENT_TWO
+	'atan2($_[0], $_[1])',
 );
 
 sub to_compiled_c {
