@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Symbolic::Custom::LaTeXDumper
 
+0.205 Sat Jan  5 2008
+  - Support for B_ARCTANGENT_TWO.
+  - Thus requiring Math::Symbolic 0.509.
+
 0.204 Wed Aug 30 2006
   - Upgraded to Module::Install 0.64.
   - Removed auto_install from Makefile.PL

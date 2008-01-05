@@ -37,7 +37,7 @@ use strict;
 use warnings;
 no warnings 'recursion';
 
-our $VERSION = '0.204';
+our $VERSION = '0.205';
 
 use Math::Symbolic::Custom::Base;
 BEGIN { *import = \&Math::Symbolic::Custom::Base::aggregate_import }
@@ -208,6 +208,7 @@ sub to_latex {
         50,    # U_COSINE_H
         50,    # U_AREASINE_H
         50,    # U_AREACOSINE_H
+        50,    # B_ARCTANGENT_TWO
     ];
 
     my $op_to_tex = [
@@ -293,6 +294,9 @@ sub to_latex {
 
         # U_AREACOSINE_H
         sub { "\\mathrm{arcosh}{$_[0]}" },
+
+        # B_ARCTANGENT_TWO
+        sub { "\\mathrm{atan2}{$_[0], $_[1]}" },
     ];
 
     my $tex = $self->descend(
