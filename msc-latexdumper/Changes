@@ -1,5 +1,8 @@
 Revision history for Perl extension Math::Symbolic::Custom::LaTeXDumper
 
+0.206 Sun Jan  6 2008
+  - 0.205 distribution was broken.
+
 0.205 Sat Jan  5 2008
   - Support for B_ARCTANGENT_TWO.
   - Thus requiring Math::Symbolic 0.509.
