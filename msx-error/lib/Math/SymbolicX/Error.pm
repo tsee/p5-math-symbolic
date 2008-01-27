@@ -133,4 +133,4 @@ details.
 Other parser extensions include big- and complex number support:
 L<Math::SymbolicX::BigNum>, L<Math::SymbolicX::Complex>
 
-=cuT
+=cut
