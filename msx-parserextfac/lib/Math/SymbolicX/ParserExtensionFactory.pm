@@ -12,7 +12,7 @@ our $Functions         = {};
 our $Order             = [];
 our $RegularExpression = qw//;
 
-our $VERSION = '2.00';
+our $VERSION = '2.01';
 
 sub import {
     my $package = shift;
@@ -71,7 +71,7 @@ sub _extend_parser_yapp {
 sub _extend_parser_recdescent {
     my $parser = shift;
     $parser->Extend(<<'EXTENSION');
-function: /$Math::SymbolicX::ParserExtensionFactory::RegularExpression/ {extract_bracketed($text, '(')}
+function: /$Math::SymbolicX::ParserExtensionFactory::RegularExpression(?=\s*\()/ {extract_bracketed($text, '(')}
 	{
 		warn 'function_msx_parser_extension_factory ' 
 		  if $Math::Symbolic::Parser::DEBUG;

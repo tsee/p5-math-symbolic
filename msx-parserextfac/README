@@ -1,4 +1,4 @@
-Math::SymbolicX::ParserExtensionFactory version 1.00
+Math::SymbolicX::ParserExtensionFactory version 2.01
 ====================================================
 
 This module provides a simple way to extend the Math::Symbolic parser with
@@ -36,9 +36,9 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-  Math::Symbolic (version 0.129 or up)
-  Test::More     (version 0.44 or up)
-  Memoize        (version 1.01 or up)
+  Math::Symbolic
+  Test::More
+  Memoize
   Data::Dumper
   Parse::RecDescent
 

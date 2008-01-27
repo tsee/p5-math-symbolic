@@ -1,5 +1,12 @@
 Revision history for Perl extension Math::SymbolicX::ParserExtensionFactory.
 
+2.01  Sun Jan 27 14:36 2007
+* This is a critical bug fix release for 2.00 *
+  - Fix bug in the extension regex that would trigger only if there are
+    extension names which are substrings of another extension.
+    The other extension would have to be added after the short one.
+    In those cases, the longer extension would never match.
+
 2.00  Fri Jan 19 16:47 2007
 * This release contains incompatible changes *
   - The extend-only-if-not-done-before logic now works even if the
