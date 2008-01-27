@@ -1,9 +1,12 @@
 Revision history for Perl extension Math::SymbolicX::Error.
 
-0.02  Fri Apr 21 17:40:05 2006
+1.00  Sun Jan 27 15:07 2008
+  - Add tests for YAPP based parser.
+
+0.02  Fri Apr 21 17:40 2006
 	- Downgraded erroneous version requirement for Number::WithError.
 	  (Sorry)
 
-0.01  Fri Apr 21 17:35:05 2006
+0.01  Fri Apr 21 17:35 2006
 	- original version as uploaded to CPAN
 

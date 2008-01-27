@@ -1,4 +1,4 @@
-Math::SymbolicX::Error version 0.02
+Math::SymbolicX::Error version 1.00
 ===================================
 
 Adds support for numbers with errors to the Math::Symbolic parser
@@ -17,10 +17,10 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-  Math::Symbolic                          (version 0.129 or up)
-  Number::WithError                       (version 0.04 or up)
-  Test::More                              (version 0.44 or up)
-  Math::SymbolicX::ParserExtensionFactory (version 0.01 or up)
+  Math::Symbolic
+  Number::WithError
+  Test::More
+  Math::SymbolicX::ParserExtensionFactory
   Parse::RecDescent
 
 SEE ALSO
@@ -41,7 +41,7 @@ Math::Symbolic and Math::Symbolic::Parser for the full scoop if info.
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2006 Steffen Mueller
+Copyright (C) 2006-2008 Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

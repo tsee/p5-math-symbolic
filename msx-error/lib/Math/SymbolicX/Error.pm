@@ -1,6 +1,6 @@
 package Math::SymbolicX::Error;
 
-our $VERSION = 0.02;
+our $VERSION = '1.00';
 
 use 5.006;
 use strict;
@@ -99,7 +99,7 @@ Math::BigFloat support. That is, arbitrary precision.
 
 =head1 AUTHOR
 
-Copyright (C) 2006 Steffen Mueller
+Copyright (C) 2006-2008 Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
@@ -133,4 +133,4 @@ details.
 Other parser extensions include big- and complex number support:
 L<Math::SymbolicX::BigNum>, L<Math::SymbolicX::Complex>
 
-=cut
+=cuT
