@@ -59,7 +59,7 @@ Math::Symbolic and Math::Symbolic::Parser for the full scoop if info.
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2003-2005 Steffen Mueller
+Copyright (C) 2003-2008 Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

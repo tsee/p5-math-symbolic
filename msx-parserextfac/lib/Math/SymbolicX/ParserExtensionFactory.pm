@@ -72,25 +72,23 @@ sub _extend_parser_recdescent {
     my $parser = shift;
     $parser->Extend(<<'EXTENSION');
 function: /$Math::SymbolicX::ParserExtensionFactory::RegularExpression(?=\s*\()/ {extract_bracketed($text, '(')}
-	{
-		warn 'function_msx_parser_extension_factory ' 
-		  if $Math::Symbolic::Parser::DEBUG;
-		my $function = $item[1];
+    {
+        warn 'function_msx_parser_extension_factory ' 
+          if $Math::Symbolic::Parser::DEBUG;
+        my $function = $item[1];
         my $argstring = substr($item[2], 1, length($item[2])-2);
-		die "Invalid extension function and/or arguments '$function$item[2]'".
-		  "(Math::SymbolicX::ParserExtensionFactory)"
-		  if not exists
-		     $Math::SymbolicX::ParserExtensionFactory::Functions
-		     ->{$function};
-		my $result =
-		  $Math::SymbolicX::ParserExtensionFactory::Functions
-		  ->{$function}->($argstring);
-		die "Invalid result of extension function application "
-		  ."('$item[1]($argstring)'). Also refer to the "
-		  ."Math::SymbolicX::ParserExtensionFactory manpage."
-		  if ref($result) !~ /^Math::Symbolic/;
-		$return = $result;
-	}
+        die "Invalid extension function and/or arguments '$function$item[2]'".
+            "(Math::SymbolicX::ParserExtensionFactory)"
+          if not exists
+             $Math::SymbolicX::ParserExtensionFactory::Functions->{$function};
+        my $result =
+          $Math::SymbolicX::ParserExtensionFactory::Functions->{$function}->($argstring);
+        die "Invalid result of extension function application "
+            ."('$item[1]($argstring)'). Also refer to the "
+            ."Math::SymbolicX::ParserExtensionFactory manpage."
+          if ref($result) !~ /^Math::Symbolic/;
+        $return = $result;
+    }
 EXTENSION
     return(1);
 }
@@ -189,7 +187,7 @@ Escaping of parenthesis in the argument string B<is no longer supported>.
 
 =head1 AUTHOR
 
-Copyright (C) 2003-2007 Steffen Mueller
+Copyright (C) 2003-2008 Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
