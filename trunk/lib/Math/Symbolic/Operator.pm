@@ -58,7 +58,7 @@ use Math::Symbolic::Derivative qw//;
 
 use base 'Math::Symbolic::Base';
 
-our $VERSION = '0.509';
+our $VERSION = '0.510';
 
 =head1 CLASS DATA
 
@@ -119,6 +119,7 @@ our @Op_Types = (
         infix_string  => '+',
         prefix_string => 'add',
         application   => '$_[0] + $_[1]',
+        commutative   => 1,
     },
 
     # B_DIFFERENCE
@@ -128,6 +129,7 @@ our @Op_Types = (
         infix_string  => '-',
         prefix_string => 'subtract',
         application   => '$_[0] - $_[1]',
+        #commutative   => 0,
     },
 
     # B_PRODUCT
@@ -137,6 +139,7 @@ our @Op_Types = (
         infix_string  => '*',
         prefix_string => 'multiply',
         application   => '$_[0] * $_[1]',
+        commutative   => 1,
     },
 
     # B_DIVISION
@@ -146,6 +149,7 @@ our @Op_Types = (
         infix_string  => '/',
         prefix_string => 'divide',
         application   => '$_[0] / $_[1]',
+        #commutative   => 0,
     },
 
     # U_MINUS
@@ -182,6 +186,7 @@ our @Op_Types = (
         infix_string  => '^',
         prefix_string => 'exponentiate',
         application   => '$_[0] ** $_[1]',
+        #commutative   => 0,
     },
 
     # B_LOG
@@ -191,6 +196,7 @@ our @Op_Types = (
         infix_string  => undef,
         prefix_string => 'log',
         application   => 'log($_[1]) / log($_[0])',
+        #commutative   => 0,
     },
 
     # U_SINE
@@ -317,6 +323,7 @@ our @Op_Types = (
         prefix_string => 'atan2',
         application   => 'atan2($_[0], $_[1])',
         #application   => 'Math::Symbolic::AuxFunctions::atan($_[0])',
+        #commutative   => 0,
     },
 
 );
