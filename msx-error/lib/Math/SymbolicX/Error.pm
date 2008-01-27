@@ -99,21 +99,15 @@ Math::BigFloat support. That is, arbitrary precision.
 
 =head1 AUTHOR
 
-Copyright (C) 2006-2008 Steffen Mueller
+Steffen Mueller, E<lt>symbolic-module at steffen-mueller dot net<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2006-2008 by Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
-
-You may contact the author at symbolic-module at steffen-mueller dot net
-
-Please send feedback, bug reports, and support requests to the Math::Symbolic
-support mailing list:
-math-symbolic-support at lists dot sourceforge dot net. Please
-consider letting us know how you use Math::Symbolic. Thank you.
-
-If you're interested in helping with the development or extending the
-module's functionality, please contact the developers' mailing list:
-math-symbolic-develop at lists dot sourceforge dot net.
+it under the same terms as Perl itself, either Perl version 5.8.8 or,
+at your option, any later version of Perl 5 you may have available.
 
 =head1 SEE ALSO
 
