@@ -13,6 +13,7 @@ WriteMakefile(
       Number::WithError => 0.03,
       Parse::RecDescent => 0,
     },    # e.g., Module::Name => 1.1
+    LICENSE => 'perl',
     (
         $] >= 5.005
         ?    ## Add these new keywords supported since 5.005
