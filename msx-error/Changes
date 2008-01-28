@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::SymbolicX::Error.
 
+1.01  Mon Jan 28 19:31 2008
+  - Dependency on Math::SymbolicX::ParserExtensionFactory 2.01
+    which fixes a relevant bug.
+
 1.00  Sun Jan 27 15:07 2008
   - Add tests for YAPP based parser.
 

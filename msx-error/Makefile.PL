@@ -8,7 +8,7 @@ WriteMakefile(
       'lib/Math/SymbolicX/Error.pm',    # finds $VERSION
     'PREREQ_PM' => {
       Test::More => 0.44,
-      Math::SymbolicX::ParserExtensionFactory => 0.01,
+      Math::SymbolicX::ParserExtensionFactory => 2.01,
       Math::Symbolic => 0.506,
       Number::WithError => 0.03,
       Parse::RecDescent => 0,
