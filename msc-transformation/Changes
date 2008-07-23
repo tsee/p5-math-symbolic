@@ -1,5 +1,8 @@
 Revision history for Perl extension Math::Symbolic::Custom::Transformation.
 
+2.01  Wed Jul 23 14:16 2008
+    - Documentation patches.
+
 2.00  Sat Jan 20 12:16 2007
     - Now works with the fast Math::Symbolic::Parser::Yapp parser!
       (With this, the tests go from > 4 seconds to about 1/2 second.
