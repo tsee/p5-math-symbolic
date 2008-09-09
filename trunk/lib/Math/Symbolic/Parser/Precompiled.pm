@@ -277,21 +277,21 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::exp
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'exp ' if $Math::Symbolic::Parser::DEBUG;
-				if (@{$item[1]} == 1) {
-					$item[1][0]
-				}
-				else {
-					my @it = reverse @{$item[1]};
-					my $tree = shift @it;
-					while (@it) {
-						$tree = Math::Symbolic::Operator->new(
-							'^', shift(@it), $tree
-						);
-					}
-					$tree;
-				}
-			};
+              #warn 'exp ' if $Math::Symbolic::Parser::DEBUG;
+              if (@{$item[1]} == 1) {
+                $item[1][0]
+              }
+              else {
+                my @it = reverse @{$item[1]};
+                my $tree = shift @it;
+                while (@it) {
+                  $tree = Math::Symbolic::Operator->new(
+                    '^', shift(@it), $tree
+                  );
+                }
+                $tree;
+              }
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -398,7 +398,7 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::variable
 	while (!$_matched && !$commit)
 	{
 		
-		Parse::RecDescent::_trace(q{Trying production: [/[a-zA-Z][a-zA-Z0-9_]*/ '(' identifier_list ')']},
+		Parse::RecDescent::_trace(q{Trying production: [/[a-zA-Z][a-zA-Z0-9_]*/ /\\'*/ '(' identifier_list ')']},
 					  Parse::RecDescent::_tracefirst($_[1]),
 					  q{variable},
 					  $tracelevel)
@@ -434,6 +434,31 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::variable
 						  Parse::RecDescent::_tracefirst($text))
 					if defined $::RD_TRACE;
 		push @item, $item{__PATTERN1__}=$&;
+		
+
+		Parse::RecDescent::_trace(q{Trying terminal: [/\\'*/]}, Parse::RecDescent::_tracefirst($text),
+					  q{variable},
+					  $tracelevel)
+						if defined $::RD_TRACE;
+		$lastsep = "";
+		$expectation->is(q{/\\'*/})->at($text);
+		
+
+		unless ($text =~ s/\A($skip)/$lastsep=$1 and ""/e and   $text =~ s/\A(?:\'*)//)
+		{
+			
+			$expectation->failed();
+			Parse::RecDescent::_trace(q{<<Didn't match terminal>>},
+						  Parse::RecDescent::_tracefirst($text))
+					if defined $::RD_TRACE;
+
+			last;
+		}
+		Parse::RecDescent::_trace(q{>>Matched terminal<< (return value: [}
+						. $& . q{])},
+						  Parse::RecDescent::_tracefirst($text))
+					if defined $::RD_TRACE;
+		push @item, $item{__PATTERN2__}=$&;
 		
 
 		Parse::RecDescent::_trace(q{Trying terminal: ['(']},
@@ -524,15 +549,31 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::variable
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'variable '
-				#  if $Math::Symbolic::Parser::DEBUG;
-				Math::Symbolic::Variable->new(
-				  {
-				    name => $item[1],
-				    signature => $item[3],
-				  }
-				);
-			};
+              #warn 'variable '
+              #  if $Math::Symbolic::Parser::DEBUG;
+              my $varname = $item[1];
+              my $ticks = $item[2];
+              if ($ticks) {
+                my $n = length($ticks);
+                my $sig = $item[4] || ['x'];
+                my $dep_var = $sig->[0];
+                my $return = Math::Symbolic::Variable->new(
+                  { name => $varname, signature => $sig }
+                );
+                foreach (1..$n) {
+                  $return = Math::Symbolic::Operator->new(
+                    'partial_derivative', 
+                     $return, $dep_var,
+                  );
+                }
+                $return;
+              }
+              else {
+                Math::Symbolic::Variable->new(
+                  { name => $varname, signature => $item[4] }
+                );
+              }
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -548,7 +589,7 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::variable
 		
 
 
-		Parse::RecDescent::_trace(q{>>Matched production: [/[a-zA-Z][a-zA-Z0-9_]*/ '(' identifier_list ')']<<},
+		Parse::RecDescent::_trace(q{>>Matched production: [/[a-zA-Z][a-zA-Z0-9_]*/ /\\'*/ '(' identifier_list ')']<<},
 					  Parse::RecDescent::_tracefirst($text),
 					  q{variable},
 					  $tracelevel)
@@ -561,7 +602,7 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::variable
 	while (!$_matched && !$commit)
 	{
 		
-		Parse::RecDescent::_trace(q{Trying production: [/[a-zA-Z][a-zA-Z0-9_]*/]},
+		Parse::RecDescent::_trace(q{Trying production: [/[a-zA-Z][a-zA-Z0-9_]*/ /\\'*/]},
 					  Parse::RecDescent::_tracefirst($_[1]),
 					  q{variable},
 					  $tracelevel)
@@ -599,6 +640,31 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::variable
 		push @item, $item{__PATTERN1__}=$&;
 		
 
+		Parse::RecDescent::_trace(q{Trying terminal: [/\\'*/]}, Parse::RecDescent::_tracefirst($text),
+					  q{variable},
+					  $tracelevel)
+						if defined $::RD_TRACE;
+		$lastsep = "";
+		$expectation->is(q{/\\'*/})->at($text);
+		
+
+		unless ($text =~ s/\A($skip)/$lastsep=$1 and ""/e and   $text =~ s/\A(?:\'*)//)
+		{
+			
+			$expectation->failed();
+			Parse::RecDescent::_trace(q{<<Didn't match terminal>>},
+						  Parse::RecDescent::_tracefirst($text))
+					if defined $::RD_TRACE;
+
+			last;
+		}
+		Parse::RecDescent::_trace(q{>>Matched terminal<< (return value: [}
+						. $& . q{])},
+						  Parse::RecDescent::_tracefirst($text))
+					if defined $::RD_TRACE;
+		push @item, $item{__PATTERN2__}=$&;
+		
+
 		Parse::RecDescent::_trace(q{Trying action},
 					  Parse::RecDescent::_tracefirst($text),
 					  q{variable},
@@ -607,10 +673,27 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::variable
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'variable '
-				#  if $Math::Symbolic::Parser::DEBUG;
-				Math::Symbolic::Variable->new( $item[1] );
-			};
+              #warn 'variable '
+              #  if $Math::Symbolic::Parser::DEBUG;
+              my $varname = $item[1];
+              my $ticks = $item[2];
+              if ($ticks) {
+                my $n = length($ticks);
+                my $return = Math::Symbolic::Variable->new(
+                  { name => $varname, signature => ['x'] }
+                );
+                foreach (1..$n) {
+                  $return = Math::Symbolic::Operator->new(
+                    'partial_derivative', 
+                     $return, 'x',
+                  );
+                }
+                $return;
+              }
+              else {
+                Math::Symbolic::Variable->new( $varname );
+              }
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -626,7 +709,7 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::variable
 		
 
 
-		Parse::RecDescent::_trace(q{>>Matched production: [/[a-zA-Z][a-zA-Z0-9_]*/]<<},
+		Parse::RecDescent::_trace(q{>>Matched production: [/[a-zA-Z][a-zA-Z0-9_]*/ /\\'*/]<<},
 					  Parse::RecDescent::_tracefirst($text),
 					  q{variable},
 					  $tracelevel)
@@ -848,31 +931,25 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::function
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'function ' 
-				#  if $Math::Symbolic::Parser::DEBUG;
-                my $fname = $item[1];
-				my $function;
-                if (exists($Math::Symbolic::Parser::Parser_Functions{$fname})) {
-                    $function = $Math::Symbolic::Parser::Parser_Functions{$fname}->($fname, @{$item[3]});
-				    die "Invalid function '$fname'!"
-    				  unless defined $function;
-                }
-                else {
-                    $function =
-	    			  $Math::Symbolic::Operator::Op_Symbols{
-		    		    $fname
-			    	  };
-				    die "Invalid function '$fname'!"
-    				  unless defined $function;
-				    $function = Math::Symbolic::Operator->new(
-    				  {
-	    			    type => $function,
-		    		    operands => $item[3],
-			    	  }
-				    );
-                }
-                $function
-			};
+              #warn 'function ' 
+              #  if $Math::Symbolic::Parser::DEBUG;
+              my $fname = $item[1];
+              my $function;
+              if (exists($Math::Symbolic::Parser::Parser_Functions{$fname})) {
+                $function = $Math::Symbolic::Parser::Parser_Functions{$fname}->($fname, @{$item[3]});
+                die "Invalid function '$fname'!"
+                  unless defined $function;
+              }
+              else {
+                $function = $Math::Symbolic::Operator::Op_Symbols{ $fname };
+                die "Invalid function '$fname'!"
+                  unless defined $function;
+                $function = Math::Symbolic::Operator->new(
+                  { type => $function, operands => $item[3] }
+                );
+              }
+              $function
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -1025,10 +1102,10 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::number
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'number '
-				#  if $Math::Symbolic::Parser::DEBUG;
-				Math::Symbolic::Constant->new($item[1])
-			};
+              #warn 'number '
+              #  if $Math::Symbolic::Parser::DEBUG;
+              Math::Symbolic::Constant->new($item[1])
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -1306,22 +1383,22 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::multiplication
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'multiplication '
-				#  if $Math::Symbolic::Parser::DEBUG;
-				if (@{$item[1]} == 1) {
-					$item[1][0]
-				}
-				else {
-					my @it = @{$item[1]};
-					my $tree = shift @it;
-					while (@it) {
-						$tree = Math::Symbolic::Operator->new(
-							shift(@it), $tree, shift(@it)
-						);
-					}
-					$tree;
-				}
-			};
+              #warn 'multiplication '
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if (@{$item[1]} == 1) {
+                $item[1][0]
+              }
+              else {
+                my @it = @{$item[1]};
+                my $tree = shift @it;
+                while (@it) {
+                  $tree = Math::Symbolic::Operator->new(
+                    shift(@it), $tree, shift(@it)
+                  );
+                }
+                $tree;
+              }
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -1504,8 +1581,8 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::parse
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				$return = $item[1]
-			};
+              $return = $item[1]
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -1857,22 +1934,22 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::addition
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'addition '
-				#  if $Math::Symbolic::Parser::DEBUG;
-				if (@{$item[1]} == 1) {
-					$item[1][0]
-				}
-				else {
-					my @it = @{$item[1]};
-					my $tree = shift @it;
-					while (@it) {
-						$tree = Math::Symbolic::Operator->new(
-							shift(@it), $tree, shift(@it)
-						);
-					}
-					$tree;
-				}
-			};
+              #warn 'addition '
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if (@{$item[1]} == 1) {
+                $item[1][0]
+              }
+              else {
+                my @it = @{$item[1]};
+                my $tree = shift @it;
+                while (@it) {
+                  $tree = Math::Symbolic::Operator->new(
+                    shift(@it), $tree, shift(@it)
+                  );
+                }
+                $tree;
+              }
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -2055,20 +2132,20 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::factor
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'unary_n '
-				#  if $Math::Symbolic::Parser::DEBUG;
-				if ($item[1]) {
-					my @it = split //, $item[1];
-					my $ret = $item[2];
-					foreach (grep {$_ eq '-'} @it) {
-						$ret = Math::Symbolic::Operator->new('neg',$ret);
-					}
-					$ret
-				}
-				else {
-					$item[2]
-				}
-			};
+              #warn 'unary_n '
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if ($item[1]) {
+                my @it = split //, $item[1];
+                my $ret = $item[2];
+                foreach (grep {$_ eq '-'} @it) {
+                  $ret = Math::Symbolic::Operator->new('neg',$ret);
+                }
+                $ret
+              }
+              else {
+                $item[2]
+              }
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -2173,20 +2250,20 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::factor
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'unary_f '
-				#  if $Math::Symbolic::Parser::DEBUG;
-				if ($item[1]) {
-					my @it = split //, $item[1];
-					my $ret = $item[2];
-					foreach (grep {$_ eq '-'} @it) {
-						$ret = Math::Symbolic::Operator->new('neg',$ret);
-					}
-					$ret
-				}
-				else {
-					$item[2]
-				}
-			};
+              #warn 'unary_f '
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if ($item[1]) {
+                my @it = split //, $item[1];
+                my $ret = $item[2];
+                foreach (grep {$_ eq '-'} @it) {
+                  $ret = Math::Symbolic::Operator->new('neg',$ret);
+                }
+                $ret
+              }
+              else {
+                $item[2]
+              }
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -2291,20 +2368,20 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::factor
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'unary_v '
-				#  if $Math::Symbolic::Parser::DEBUG;
-				if ($item[1]) {
-					my @it = split //, $item[1];
-					my $ret = $item[2];
-					foreach (grep {$_ eq '-'} @it) {
-						$ret = Math::Symbolic::Operator->new('neg',$ret);
-					}
-					$ret
-				}
-				else {
-					$item[2]
-				}
-			};
+              #warn 'unary_v '
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if ($item[1]) {
+                my @it = split //, $item[1];
+                my $ret = $item[2];
+                foreach (grep {$_ eq '-'} @it) {
+                  $ret = Math::Symbolic::Operator->new('neg',$ret);
+                }
+                $ret
+              }
+              else {
+                $item[2]
+              }
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -2459,20 +2536,20 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::factor
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'unary_expr '
-				#	if $Math::Symbolic::Parser::DEBUG;
-				if ($item[1]) {
-					my @it = split //, $item[1];
-					my $ret = $item[3];
-					foreach (grep {$_ eq '-'} @it) {
-						$ret = Math::Symbolic::Operator->new('neg',$ret);
-					}
-					$ret
-				}
-				else {
-					$item[3]
-				}
-			};
+              #warn 'unary_expr '
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if ($item[1]) {
+                my @it = split //, $item[1];
+                my $ret = $item[3];
+                foreach (grep {$_ eq '-'} @it) {
+                  $ret = Math::Symbolic::Operator->new('neg',$ret);
+                }
+                $ret
+              }
+              else {
+                $item[3]
+              }
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -2735,10 +2812,10 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::identifier_list
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'identifier_list '
-				#  if $Math::Symbolic::Parser::DEBUG;
-				$item[1]
-			};
+              #warn 'identifier_list '
+              #  if $Math::Symbolic::Parser::DEBUG;
+              $item[1]
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -2896,9 +2973,9 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::expr
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'expr ' if $Math::Symbolic::Parser::DEBUG;
-				$item[1]
-			};
+              #warn 'expr ' if $Math::Symbolic::Parser::DEBUG;
+              $item[1]
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -4549,10 +4626,10 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::expr_list
 		
 
 		$_tok = ($_noactions) ? 0 : do {
-				#warn 'expr_list '
-				#  if $Math::Symbolic::Parser::DEBUG;
-				$item[1]
-			};
+              #warn 'expr_list '
+              #  if $Math::Symbolic::Parser::DEBUG;
+              $item[1]
+            };
 		unless (defined $_tok)
 		{
 			Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -4685,21 +4762,21 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                             'lookahead' => 0,
                                                                                             'line' => 59,
                                                                                             'code' => '{
-				#warn \'exp \' if $Math::Symbolic::Parser::DEBUG;
-				if (@{$item[1]} == 1) {
-					$item[1][0]
-				}
-				else {
-					my @it = reverse @{$item[1]};
-					my $tree = shift @it;
-					while (@it) {
-						$tree = Math::Symbolic::Operator->new(
-							\'^\', shift(@it), $tree
-						);
-					}
-					$tree;
-				}
-			}'
+              #warn \'exp \' if $Math::Symbolic::Parser::DEBUG;
+              if (@{$item[1]} == 1) {
+                $item[1][0]
+              }
+              else {
+                my @it = reverse @{$item[1]};
+                my $tree = shift @it;
+                while (@it) {
+                  $tree = Math::Symbolic::Operator->new(
+                    \'^\', shift(@it), $tree
+                  );
+                }
+                $tree;
+              }
+            }'
                                                                                           }, 'Parse::RecDescent::Action' )
                                                                                  ],
                                                                       'line' => undef
@@ -4723,7 +4800,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                            'dircount' => 0,
                                                                            'uncommit' => undef,
                                                                            'error' => undef,
-                                                                           'patcount' => 1,
+                                                                           'patcount' => 2,
                                                                            'actcount' => 1,
                                                                            'items' => [
                                                                                         bless( {
@@ -4732,7 +4809,17 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                  'description' => '/[a-zA-Z][a-zA-Z0-9_]*/',
                                                                                                  'lookahead' => 0,
                                                                                                  'rdelim' => '/',
-                                                                                                 'line' => 206,
+                                                                                                 'line' => 200,
+                                                                                                 'mod' => '',
+                                                                                                 'ldelim' => '/'
+                                                                                               }, 'Parse::RecDescent::Token' ),
+                                                                                        bless( {
+                                                                                                 'pattern' => '\\\'*',
+                                                                                                 'hashname' => '__PATTERN2__',
+                                                                                                 'description' => '/\\\\\'*/',
+                                                                                                 'lookahead' => 0,
+                                                                                                 'rdelim' => '/',
+                                                                                                 'line' => 200,
                                                                                                  'mod' => '',
                                                                                                  'ldelim' => '/'
                                                                                                }, 'Parse::RecDescent::Token' ),
@@ -4741,7 +4828,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                  'hashname' => '__STRING1__',
                                                                                                  'description' => '\'(\'',
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 206
+                                                                                                 'line' => 200
                                                                                                }, 'Parse::RecDescent::Literal' ),
                                                                                         bless( {
                                                                                                  'subrule' => 'identifier_list',
@@ -4749,29 +4836,45 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                  'implicit' => undef,
                                                                                                  'argcode' => undef,
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 206
+                                                                                                 'line' => 200
                                                                                                }, 'Parse::RecDescent::Subrule' ),
                                                                                         bless( {
                                                                                                  'pattern' => ')',
                                                                                                  'hashname' => '__STRING2__',
                                                                                                  'description' => '\')\'',
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 206
+                                                                                                 'line' => 200
                                                                                                }, 'Parse::RecDescent::Literal' ),
                                                                                         bless( {
                                                                                                  'hashname' => '__ACTION1__',
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 207,
+                                                                                                 'line' => 201,
                                                                                                  'code' => '{
-				#warn \'variable \'
-				#  if $Math::Symbolic::Parser::DEBUG;
-				Math::Symbolic::Variable->new(
-				  {
-				    name => $item[1],
-				    signature => $item[3],
-				  }
-				);
-			}'
+              #warn \'variable \'
+              #  if $Math::Symbolic::Parser::DEBUG;
+              my $varname = $item[1];
+              my $ticks = $item[2];
+              if ($ticks) {
+                my $n = length($ticks);
+                my $sig = $item[4] || [\'x\'];
+                my $dep_var = $sig->[0];
+                my $return = Math::Symbolic::Variable->new(
+                  { name => $varname, signature => $sig }
+                );
+                foreach (1..$n) {
+                  $return = Math::Symbolic::Operator->new(
+                    \'partial_derivative\', 
+                     $return, $dep_var,
+                  );
+                }
+                $return;
+              }
+              else {
+                Math::Symbolic::Variable->new(
+                  { name => $varname, signature => $item[4] }
+                );
+              }
+            }'
                                                                                                }, 'Parse::RecDescent::Action' )
                                                                                       ],
                                                                            'line' => undef
@@ -4782,7 +4885,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                            'dircount' => 0,
                                                                            'uncommit' => undef,
                                                                            'error' => undef,
-                                                                           'patcount' => 1,
+                                                                           'patcount' => 2,
                                                                            'actcount' => 1,
                                                                            'items' => [
                                                                                         bless( {
@@ -4791,27 +4894,54 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                  'description' => '/[a-zA-Z][a-zA-Z0-9_]*/',
                                                                                                  'lookahead' => 0,
                                                                                                  'rdelim' => '/',
-                                                                                                 'line' => 218,
+                                                                                                 'line' => 228,
+                                                                                                 'mod' => '',
+                                                                                                 'ldelim' => '/'
+                                                                                               }, 'Parse::RecDescent::Token' ),
+                                                                                        bless( {
+                                                                                                 'pattern' => '\\\'*',
+                                                                                                 'hashname' => '__PATTERN2__',
+                                                                                                 'description' => '/\\\\\'*/',
+                                                                                                 'lookahead' => 0,
+                                                                                                 'rdelim' => '/',
+                                                                                                 'line' => 228,
                                                                                                  'mod' => '',
                                                                                                  'ldelim' => '/'
                                                                                                }, 'Parse::RecDescent::Token' ),
                                                                                         bless( {
                                                                                                  'hashname' => '__ACTION1__',
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 219,
+                                                                                                 'line' => 229,
                                                                                                  'code' => '{
-				#warn \'variable \'
-				#  if $Math::Symbolic::Parser::DEBUG;
-				Math::Symbolic::Variable->new( $item[1] );
-			}'
+              #warn \'variable \'
+              #  if $Math::Symbolic::Parser::DEBUG;
+              my $varname = $item[1];
+              my $ticks = $item[2];
+              if ($ticks) {
+                my $n = length($ticks);
+                my $return = Math::Symbolic::Variable->new(
+                  { name => $varname, signature => [\'x\'] }
+                );
+                foreach (1..$n) {
+                  $return = Math::Symbolic::Operator->new(
+                    \'partial_derivative\', 
+                     $return, \'x\',
+                  );
+                }
+                $return;
+              }
+              else {
+                Math::Symbolic::Variable->new( $varname );
+              }
+            }'
                                                                                                }, 'Parse::RecDescent::Action' )
                                                                                       ],
-                                                                           'line' => 218
+                                                                           'line' => 228
                                                                          }, 'Parse::RecDescent::Production' )
                                                                 ],
                                                      'name' => 'variable',
                                                      'vars' => '',
-                                                     'line' => 206
+                                                     'line' => 200
                                                    }, 'Parse::RecDescent::Rule' ),
                               'function' => bless( {
                                                      'impcount' => 0,
@@ -4866,31 +4996,25 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                  'lookahead' => 0,
                                                                                                  'line' => 152,
                                                                                                  'code' => '{
-				#warn \'function \' 
-				#  if $Math::Symbolic::Parser::DEBUG;
-                my $fname = $item[1];
-				my $function;
-                if (exists($Math::Symbolic::Parser::Parser_Functions{$fname})) {
-                    $function = $Math::Symbolic::Parser::Parser_Functions{$fname}->($fname, @{$item[3]});
-				    die "Invalid function \'$fname\'!"
-    				  unless defined $function;
-                }
-                else {
-                    $function =
-	    			  $Math::Symbolic::Operator::Op_Symbols{
-		    		    $fname
-			    	  };
-				    die "Invalid function \'$fname\'!"
-    				  unless defined $function;
-				    $function = Math::Symbolic::Operator->new(
-    				  {
-	    			    type => $function,
-		    		    operands => $item[3],
-			    	  }
-				    );
-                }
-                $function
-			}'
+              #warn \'function \' 
+              #  if $Math::Symbolic::Parser::DEBUG;
+              my $fname = $item[1];
+              my $function;
+              if (exists($Math::Symbolic::Parser::Parser_Functions{$fname})) {
+                $function = $Math::Symbolic::Parser::Parser_Functions{$fname}->($fname, @{$item[3]});
+                die "Invalid function \'$fname\'!"
+                  unless defined $function;
+              }
+              else {
+                $function = $Math::Symbolic::Operator::Op_Symbols{ $fname };
+                die "Invalid function \'$fname\'!"
+                  unless defined $function;
+                $function = Math::Symbolic::Operator->new(
+                  { type => $function, operands => $item[3] }
+                );
+              }
+              $function
+            }'
                                                                                                }, 'Parse::RecDescent::Action' )
                                                                                       ],
                                                                            'line' => undef
@@ -4930,10 +5054,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                'lookahead' => 0,
                                                                                                'line' => 145,
                                                                                                'code' => '{
-				#warn \'number \'
-				#  if $Math::Symbolic::Parser::DEBUG;
-				Math::Symbolic::Constant->new($item[1])
-			}'
+              #warn \'number \'
+              #  if $Math::Symbolic::Parser::DEBUG;
+              Math::Symbolic::Constant->new($item[1])
+            }'
                                                                                              }, 'Parse::RecDescent::Action' )
                                                                                     ],
                                                                          'line' => undef
@@ -4999,22 +5123,22 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                        'lookahead' => 0,
                                                                                                        'line' => 36,
                                                                                                        'code' => '{
-				#warn \'multiplication \'
-				#  if $Math::Symbolic::Parser::DEBUG;
-				if (@{$item[1]} == 1) {
-					$item[1][0]
-				}
-				else {
-					my @it = @{$item[1]};
-					my $tree = shift @it;
-					while (@it) {
-						$tree = Math::Symbolic::Operator->new(
-							shift(@it), $tree, shift(@it)
-						);
-					}
-					$tree;
-				}
-			}'
+              #warn \'multiplication \'
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if (@{$item[1]} == 1) {
+                $item[1][0]
+              }
+              else {
+                my @it = @{$item[1]};
+                my $tree = shift @it;
+                while (@it) {
+                  $tree = Math::Symbolic::Operator->new(
+                    shift(@it), $tree, shift(@it)
+                  );
+                }
+                $tree;
+              }
+            }'
                                                                                                      }, 'Parse::RecDescent::Action' )
                                                                                             ],
                                                                                  'line' => undef
@@ -5064,8 +5188,8 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                               'lookahead' => 0,
                                                                                               'line' => 2,
                                                                                               'code' => '{
-				$return = $item[1]
-			}'
+              $return = $item[1]
+            }'
                                                                                             }, 'Parse::RecDescent::Action' )
                                                                                    ],
                                                                         'line' => undef
@@ -5159,22 +5283,22 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                  'lookahead' => 0,
                                                                                                  'line' => 14,
                                                                                                  'code' => '{
-				#warn \'addition \'
-				#  if $Math::Symbolic::Parser::DEBUG;
-				if (@{$item[1]} == 1) {
-					$item[1][0]
-				}
-				else {
-					my @it = @{$item[1]};
-					my $tree = shift @it;
-					while (@it) {
-						$tree = Math::Symbolic::Operator->new(
-							shift(@it), $tree, shift(@it)
-						);
-					}
-					$tree;
-				}
-			}'
+              #warn \'addition \'
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if (@{$item[1]} == 1) {
+                $item[1][0]
+              }
+              else {
+                my @it = @{$item[1]};
+                my $tree = shift @it;
+                while (@it) {
+                  $tree = Math::Symbolic::Operator->new(
+                    shift(@it), $tree, shift(@it)
+                  );
+                }
+                $tree;
+              }
+            }'
                                                                                                }, 'Parse::RecDescent::Action' )
                                                                                       ],
                                                                            'line' => undef
@@ -5227,20 +5351,20 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                'lookahead' => 0,
                                                                                                'line' => 77,
                                                                                                'code' => '{
-				#warn \'unary_n \'
-				#  if $Math::Symbolic::Parser::DEBUG;
-				if ($item[1]) {
-					my @it = split //, $item[1];
-					my $ret = $item[2];
-					foreach (grep {$_ eq \'-\'} @it) {
-						$ret = Math::Symbolic::Operator->new(\'neg\',$ret);
-					}
-					$ret
-				}
-				else {
-					$item[2]
-				}
-			}'
+              #warn \'unary_n \'
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if ($item[1]) {
+                my @it = split //, $item[1];
+                my $ret = $item[2];
+                foreach (grep {$_ eq \'-\'} @it) {
+                  $ret = Math::Symbolic::Operator->new(\'neg\',$ret);
+                }
+                $ret
+              }
+              else {
+                $item[2]
+              }
+            }'
                                                                                              }, 'Parse::RecDescent::Action' )
                                                                                     ],
                                                                          'line' => undef
@@ -5277,20 +5401,20 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                'lookahead' => 0,
                                                                                                'line' => 94,
                                                                                                'code' => '{
-				#warn \'unary_f \'
-				#  if $Math::Symbolic::Parser::DEBUG;
-				if ($item[1]) {
-					my @it = split //, $item[1];
-					my $ret = $item[2];
-					foreach (grep {$_ eq \'-\'} @it) {
-						$ret = Math::Symbolic::Operator->new(\'neg\',$ret);
-					}
-					$ret
-				}
-				else {
-					$item[2]
-				}
-			}'
+              #warn \'unary_f \'
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if ($item[1]) {
+                my @it = split //, $item[1];
+                my $ret = $item[2];
+                foreach (grep {$_ eq \'-\'} @it) {
+                  $ret = Math::Symbolic::Operator->new(\'neg\',$ret);
+                }
+                $ret
+              }
+              else {
+                $item[2]
+              }
+            }'
                                                                                              }, 'Parse::RecDescent::Action' )
                                                                                     ],
                                                                          'line' => 93
@@ -5327,20 +5451,20 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                'lookahead' => 0,
                                                                                                'line' => 111,
                                                                                                'code' => '{
-				#warn \'unary_v \'
-				#  if $Math::Symbolic::Parser::DEBUG;
-				if ($item[1]) {
-					my @it = split //, $item[1];
-					my $ret = $item[2];
-					foreach (grep {$_ eq \'-\'} @it) {
-						$ret = Math::Symbolic::Operator->new(\'neg\',$ret);
-					}
-					$ret
-				}
-				else {
-					$item[2]
-				}
-			}'
+              #warn \'unary_v \'
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if ($item[1]) {
+                my @it = split //, $item[1];
+                my $ret = $item[2];
+                foreach (grep {$_ eq \'-\'} @it) {
+                  $ret = Math::Symbolic::Operator->new(\'neg\',$ret);
+                }
+                $ret
+              }
+              else {
+                $item[2]
+              }
+            }'
                                                                                              }, 'Parse::RecDescent::Action' )
                                                                                     ],
                                                                          'line' => 110
@@ -5391,20 +5515,20 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                'lookahead' => 0,
                                                                                                'line' => 128,
                                                                                                'code' => '{
-				#warn \'unary_expr \'
-				#	if $Math::Symbolic::Parser::DEBUG;
-				if ($item[1]) {
-					my @it = split //, $item[1];
-					my $ret = $item[3];
-					foreach (grep {$_ eq \'-\'} @it) {
-						$ret = Math::Symbolic::Operator->new(\'neg\',$ret);
-					}
-					$ret
-				}
-				else {
-					$item[3]
-				}
-			}'
+              #warn \'unary_expr \'
+              #  if $Math::Symbolic::Parser::DEBUG;
+              if ($item[1]) {
+                my @it = split //, $item[1];
+                my $ret = $item[3];
+                foreach (grep {$_ eq \'-\'} @it) {
+                  $ret = Math::Symbolic::Operator->new(\'neg\',$ret);
+                }
+                $ret
+              }
+              else {
+                $item[3]
+              }
+            }'
                                                                                              }, 'Parse::RecDescent::Action' )
                                                                                     ],
                                                                          'line' => 127
@@ -5441,7 +5565,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                                               'description' => '/[a-zA-Z][a-zA-Z0-9_]*/',
                                                                                                                               'lookahead' => 0,
                                                                                                                               'rdelim' => '/',
-                                                                                                                              'line' => 225,
+                                                                                                                              'line' => 252,
                                                                                                                               'mod' => '',
                                                                                                                               'ldelim' => '/'
                                                                                                                             }, 'Parse::RecDescent::Token' ),
@@ -5451,7 +5575,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                                                'description' => '/[a-zA-Z][a-zA-Z0-9_]*/',
                                                                                                                                'lookahead' => 0,
                                                                                                                                'rdelim' => '/',
-                                                                                                                               'line' => 225,
+                                                                                                                               'line' => 252,
                                                                                                                                'mod' => '',
                                                                                                                                'ldelim' => '/'
                                                                                                                              }, 'Parse::RecDescent::Token' ),
@@ -5462,18 +5586,18 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                                          'hashname' => '__STRING1__',
                                                                                                                          'description' => '\',\'',
                                                                                                                          'lookahead' => 0,
-                                                                                                                         'line' => 225
+                                                                                                                         'line' => 252
                                                                                                                        }, 'Parse::RecDescent::Literal' )
                                                                                                       }, 'Parse::RecDescent::Operator' ),
                                                                                                bless( {
                                                                                                         'hashname' => '__ACTION1__',
                                                                                                         'lookahead' => 0,
-                                                                                                        'line' => 226,
+                                                                                                        'line' => 253,
                                                                                                         'code' => '{
-				#warn \'identifier_list \'
-				#  if $Math::Symbolic::Parser::DEBUG;
-				$item[1]
-			}'
+              #warn \'identifier_list \'
+              #  if $Math::Symbolic::Parser::DEBUG;
+              $item[1]
+            }'
                                                                                                       }, 'Parse::RecDescent::Action' )
                                                                                              ],
                                                                                   'line' => undef
@@ -5481,7 +5605,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                        ],
                                                             'name' => 'identifier_list',
                                                             'vars' => '',
-                                                            'line' => 225
+                                                            'line' => 252
                                                           }, 'Parse::RecDescent::Rule' ),
                               'expr' => bless( {
                                                  'impcount' => 0,
@@ -5513,9 +5637,9 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                              'lookahead' => 0,
                                                                                              'line' => 8,
                                                                                              'code' => '{
-				#warn \'expr \' if $Math::Symbolic::Parser::DEBUG;
-				$item[1]
-			}'
+              #warn \'expr \' if $Math::Symbolic::Parser::DEBUG;
+              $item[1]
+            }'
                                                                                            }, 'Parse::RecDescent::Action' )
                                                                                   ],
                                                                        'line' => undef
@@ -5594,7 +5718,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'log\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 179
+                                                                                                      'line' => 173
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
                                                                                 'line' => undef
@@ -5613,10 +5737,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'partial_derivative\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 180
+                                                                                                      'line' => 174
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 180
+                                                                                'line' => 174
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '2',
@@ -5632,10 +5756,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'total_derivative\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 181
+                                                                                                      'line' => 175
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 181
+                                                                                'line' => 175
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '3',
@@ -5651,10 +5775,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'sinh\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 182
+                                                                                                      'line' => 176
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 182
+                                                                                'line' => 176
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '4',
@@ -5670,10 +5794,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'cosh\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 183
+                                                                                                      'line' => 177
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 183
+                                                                                'line' => 177
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '5',
@@ -5689,10 +5813,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'asinh\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 184
+                                                                                                      'line' => 178
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 184
+                                                                                'line' => 178
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '6',
@@ -5708,10 +5832,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'acosh\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 185
+                                                                                                      'line' => 179
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 185
+                                                                                'line' => 179
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '7',
@@ -5727,10 +5851,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'asin\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 186
+                                                                                                      'line' => 180
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 186
+                                                                                'line' => 180
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '8',
@@ -5746,10 +5870,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'acos\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 187
+                                                                                                      'line' => 181
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 187
+                                                                                'line' => 181
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '9',
@@ -5765,10 +5889,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'atan2\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 188
+                                                                                                      'line' => 182
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 188
+                                                                                'line' => 182
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '10',
@@ -5784,10 +5908,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'atan\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 189
+                                                                                                      'line' => 183
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 189
+                                                                                'line' => 183
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '11',
@@ -5803,10 +5927,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'acot\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 190
+                                                                                                      'line' => 184
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 190
+                                                                                'line' => 184
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '12',
@@ -5822,10 +5946,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'sin\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 191
+                                                                                                      'line' => 185
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 191
+                                                                                'line' => 185
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '13',
@@ -5841,10 +5965,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'cos\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 192
+                                                                                                      'line' => 186
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 192
+                                                                                'line' => 186
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '14',
@@ -5860,10 +5984,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'tan\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 193
+                                                                                                      'line' => 187
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 193
+                                                                                'line' => 187
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '15',
@@ -5879,10 +6003,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'cot\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 194
+                                                                                                      'line' => 188
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 194
+                                                                                'line' => 188
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '16',
@@ -5898,10 +6022,10 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'exp\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 195
+                                                                                                      'line' => 189
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 195
+                                                                                'line' => 189
                                                                               }, 'Parse::RecDescent::Production' ),
                                                                        bless( {
                                                                                 'number' => '17',
@@ -5917,15 +6041,15 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                       'hashname' => '__STRING1__',
                                                                                                       'description' => '\'sqrt\'',
                                                                                                       'lookahead' => 0,
-                                                                                                      'line' => 196
+                                                                                                      'line' => 190
                                                                                                     }, 'Parse::RecDescent::Literal' )
                                                                                            ],
-                                                                                'line' => 196
+                                                                                'line' => 190
                                                                               }, 'Parse::RecDescent::Production' )
                                                                      ],
                                                           'name' => 'function_name',
                                                           'vars' => '',
-                                                          'line' => 179
+                                                          'line' => 173
                                                         }, 'Parse::RecDescent::Rule' ),
                               'add_op' => bless( {
                                                    'impcount' => 0,
@@ -6005,7 +6129,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                                         'implicit' => undef,
                                                                                                                         'argcode' => undef,
                                                                                                                         'lookahead' => 0,
-                                                                                                                        'line' => 199
+                                                                                                                        'line' => 193
                                                                                                                       }, 'Parse::RecDescent::Subrule' ),
                                                                                                   'rightarg' => bless( {
                                                                                                                          'subrule' => 'expr',
@@ -6013,7 +6137,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                                          'implicit' => undef,
                                                                                                                          'argcode' => undef,
                                                                                                                          'lookahead' => 0,
-                                                                                                                         'line' => 199
+                                                                                                                         'line' => 193
                                                                                                                        }, 'Parse::RecDescent::Subrule' ),
                                                                                                   'hashname' => '__DIRECTIVE1__',
                                                                                                   'type' => 'leftop',
@@ -6022,18 +6146,18 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                                    'hashname' => '__STRING1__',
                                                                                                                    'description' => '\',\'',
                                                                                                                    'lookahead' => 0,
-                                                                                                                   'line' => 199
+                                                                                                                   'line' => 193
                                                                                                                  }, 'Parse::RecDescent::Literal' )
                                                                                                 }, 'Parse::RecDescent::Operator' ),
                                                                                          bless( {
                                                                                                   'hashname' => '__ACTION1__',
                                                                                                   'lookahead' => 0,
-                                                                                                  'line' => 200,
+                                                                                                  'line' => 194,
                                                                                                   'code' => '{
-				#warn \'expr_list \'
-				#  if $Math::Symbolic::Parser::DEBUG;
-				$item[1]
-			}'
+              #warn \'expr_list \'
+              #  if $Math::Symbolic::Parser::DEBUG;
+              $item[1]
+            }'
                                                                                                 }, 'Parse::RecDescent::Action' )
                                                                                        ],
                                                                             'line' => undef
@@ -6041,7 +6165,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                  ],
                                                       'name' => 'expr_list',
                                                       'vars' => '',
-                                                      'line' => 199
+                                                      'line' => 193
                                                     }, 'Parse::RecDescent::Rule' )
                             }
                }, 'Parse::RecDescent' );
