@@ -116,16 +116,33 @@ sub _Lexer {
                 elsif ($data->{INPUT} =~ /\G($predicates)(?=\{)/cg) {
                     return('PRED', $1);
                 }
-                elsif ($data->{INPUT} =~ /\G($Ident)(?:\(($Ident(?:,$Ident)*)\))?/cgo) {
+                elsif ($data->{INPUT} =~ /\G($Ident)((?>\'*))(?:\(($Ident(?:,$Ident)*)\))?/cgo) {
                     $data->{STATE} = OP;
-                    if (defined $2) {
+                    my $name  = $1;
+                    my $ticks = $2;
+                    my $sig   = $3;
+                    my $n;
+                    if (defined $ticks and ($n = length($ticks))) {
+                        my @sig = defined($sig) ? (split /,/, $sig) : ('x');
+                        my $return = Math::Symbolic::Variable->new(
+                          {name=>$name, signature=>\@sig}
+                        );
+                        my $var = $sig[0];
+                        foreach (1..$n) {
+                            $return = Math::Symbolic::Operator->new(
+                              'partial_derivative',
+                              $return, $var,
+                            );
+                        }
+                        return('VAR', $return);
+                    }
+                    elsif (defined $sig) {
                         return(
-                            'VAR',
-                            Math::Symbolic::Variable->new({name=>$1, signature=>[split /,/, $2]})
+                            'VAR', Math::Symbolic::Variable->new({name=>$name, signature=>[split /,/, $sig]})
                         );
                     }
                     else {
-                        return('VAR', Math::Symbolic::Variable->new({name=>$1}));
+                        return('VAR', Math::Symbolic::Variable->new($name));
                     }
                 }
                 elsif ($data->{INPUT} =~ /\G\(/cgo) {
@@ -178,16 +195,33 @@ sub _Lexer {
                     $data->{STATE} = OP;
                     return('EFUNC', $1);
                 }
-                elsif ($data->{INPUT} =~ /\G($Ident)(?:\(($Ident(?:,$Ident)*)\))?/cgo) {
+                elsif ($data->{INPUT} =~ /\G($Ident)((?>\'*))(?:\(($Ident(?:,$Ident)*)\))?/cgo) {
                     $data->{STATE} = OP;
-                    if (defined $2) {
+                    my $name  = $1;
+                    my $ticks = $2;
+                    my $sig   = $3;
+                    my $n;
+                    if (defined $ticks and ($n = length($ticks))) {
+                        my @sig = defined($sig) ? (split /,/, $sig) : ('x');
+                        my $return = Math::Symbolic::Variable->new(
+                          {name=>$name, signature=>\@sig}
+                        );
+                        my $var = $sig[0];
+                        foreach (1..$n) {
+                            $return = Math::Symbolic::Operator->new(
+                              'partial_derivative',
+                              $return, $var,
+                            );
+                        }
+                        return('VAR', $return);
+                    }
+                    elsif (defined $sig) {
                         return(
-                            'VAR',
-                            Math::Symbolic::Variable->new({name=>$1, signature=>[split /,/, $2]})
+                            'VAR', Math::Symbolic::Variable->new({name=>$name, signature=>[split /,/, $sig]})
                         );
                     }
                     else {
-                        return('VAR', Math::Symbolic::Variable->new({name=>$1}));
+                        return('VAR', Math::Symbolic::Variable->new($name));
                     }
                 }
                 elsif ($data->{INPUT} =~ /\G\(/cgo) {
