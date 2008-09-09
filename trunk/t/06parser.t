@@ -4,7 +4,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 23+15+9;
 
 BEGIN {
 	use_ok('Math::Symbolic');
@@ -125,6 +125,62 @@ $string = $res->to_string('prefix');
 ok( ($string =~ /^exponentiate\(multiply\(a,\s*b\), 0.5\)$/),
     'Parse of sqrt() turns it into ()^0.5'
 );
+
+
+# test the ' notation
+sub test_parse {
+  my ($str, $type, $cmpregex) = @_;
+  my $res;
+  eval <<HERE;
+      \$res = Math::Symbolic->parse_from_string(q{$str});
+HERE
+  ok( !$@, "parsing '$str' does not throw an error");
+  warn "Error was: $@" if $@;
+  isa_ok($res, "Math::Symbolic::$type", "parsing '$str' returns an operator");
+  my $string = $res->to_string('prefix');
+  ok( ($string =~ $cmpregex),
+      "Parse of '$str' turns it into $cmpregex"
+  );
+}
+
+my @testsets = (
+  [
+    "f'(x)", "Operator",
+    qr/^partial_derivative\(f,\s*x\)$/,
+  ],
+  [
+    "f'", "Operator",
+    qr/^partial_derivative\(f,\s*x\)$/,
+  ],
+  [
+    "f'(a)", "Operator",
+    qr/^partial_derivative\(f,\s*a\)$/,
+  ],
+  [
+    "f'(a, x)", "Operator",
+    qr/^partial_derivative\(f,\s*a\)$/,
+  ],
+  [
+    "f''(x)", "Operator",
+    qr/^partial_derivative\(partial_derivative\(f,\s*x\),\s*x\)$/,
+  ],
+  [
+    "f''", "Operator",
+    qr/^partial_derivative\(partial_derivative\(f,\s*x\),\s*x\)$/,
+  ],
+  [
+    "f''(a)", "Operator",
+    qr/^partial_derivative\(partial_derivative\(f,\s*a\),\s*a\)$/,
+  ],
+  [
+    "f''(a, x)", "Operator",
+    qr/^partial_derivative\(partial_derivative\(f,\s*a\),\s*a\)$/,
+  ],
+);
+
+foreach my $testset (@testsets) {
+  test_parse(@$testset);
+}
 
 
 
