@@ -373,20 +373,56 @@ our $Grammar = <<'GRAMMAR_END';
               $item[1]
             }
 
-  variable: /[a-zA-Z][a-zA-Z0-9_]*/ '(' identifier_list ')'
+  variable: /[a-zA-Z][a-zA-Z0-9_]*/ /\'*/ '(' identifier_list ')'
             {
               #warn 'variable '
               #  if $Math::Symbolic::Parser::DEBUG;
-              Math::Symbolic::Variable->new(
-                { name => $item[1], signature => $item[3] }
-              );
+              my $varname = $item[1];
+              my $ticks = $item[2];
+              if ($ticks) {
+                my $n = length($ticks);
+                my $sig = $item[4] || ['x'];
+                my $dep_var = $sig->[0];
+                my $return = Math::Symbolic::Variable->new(
+                  { name => $varname, signature => $sig }
+                );
+                foreach (1..$n) {
+                  $return = Math::Symbolic::Operator->new(
+                    'partial_derivative', 
+                     $return, $dep_var,
+                  );
+                }
+                $return;
+              }
+              else {
+                Math::Symbolic::Variable->new(
+                  { name => $varname, signature => $item[4] }
+                );
+              }
             }
 
-          | /[a-zA-Z][a-zA-Z0-9_]*/
+          | /[a-zA-Z][a-zA-Z0-9_]*/ /\'*/
             {
               #warn 'variable '
               #  if $Math::Symbolic::Parser::DEBUG;
-              Math::Symbolic::Variable->new( $item[1] );
+              my $varname = $item[1];
+              my $ticks = $item[2];
+              if ($ticks) {
+                my $n = length($ticks);
+                my $return = Math::Symbolic::Variable->new(
+                  { name => $varname, signature => ['x'] }
+                );
+                foreach (1..$n) {
+                  $return = Math::Symbolic::Operator->new(
+                    'partial_derivative', 
+                     $return, 'x',
+                  );
+                }
+                $return;
+              }
+              else {
+                Math::Symbolic::Variable->new( $varname );
+              }
             }
 
   identifier_list: <leftop:/[a-zA-Z][a-zA-Z0-9_]*/ ',' /[a-zA-Z][a-zA-Z0-9_]*/>
