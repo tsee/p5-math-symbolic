@@ -67,6 +67,9 @@ Math::Symbolic::Operator in the section on the new() constructor.
 In version 0.503, a function named C<exp(...)> is recognized and
 transformed into C<e^(...)> internally. In version 0.506, a function
 named C<sqrt(...)> was added which is transformed into C<(...)^0.5>.
+Version 0.511 added support for the typical C<f'(x)> syntax for
+derivatives. For details, refer to the section on parsing
+derivatives below.
 
 =head2 EXAMPLES
 
@@ -119,6 +122,22 @@ omega, t, and theta are all symbols without dependencies. So omega and theta
 would be treated as constants if you derived them in respect to t.
 Figuratively speaking, omega would be a frequency and theta would be a
 initial value.
+
+=head2 PARSING DERIVATIVES
+
+The traditional way of specifying a derivative for parsing was
+C<partial_derivative(EXPRESSION, VARIABLE)> where C<EXPRESSION>
+can be any valid expression and C<VARIABLE> is a variable name.
+The syntax denotes a partial derivative of the expression with respect
+to the variable. The same syntax is available for total derivatives.
+
+With version 0.511, a new syntax for specifying partial derivatives
+was added to the parser(s). C<f'(x)> denotes the first partial
+derivative of C<f> with respect to C<x>. If C<(x)> is omitted,
+C<f'> defaults to using C<x>. C<f''(a)> is the second order partial
+derivative with respect to C<a>. If there are multiple variables
+in the parenthesis, a la C<f'(b, a)>, the first variable is
+used for the derivatives.
 
 =head2 EXPORT
 
