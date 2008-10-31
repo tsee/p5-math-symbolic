@@ -1,8 +1,9 @@
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 BEGIN {use_ok('Math::SymbolicX::FastEvaluator'); }
+BEGIN {use_ok('Math::Symbolic::Custom::DumpToFastEval'); }
 use Math::Symbolic qw/:all/;
 
 my $fe = Math::SymbolicX::FastEvaluator->new();
@@ -30,6 +31,10 @@ foreach (1..1000-1) {
 }
 
 print 'v: ', $fe->Evaluate($exp, [1.3, 2.0]), "\n";
+my $t = parse_from_string("1.+cos(3.14159)*2.");
+print "v: " . $t->value,"\n";
+my $expr = $t->to_fasteval();
+print 'fe: ', $fe->Evaluate($expr), "\n";
 
 #use Benchmark qw/cmpthese/;
 #
