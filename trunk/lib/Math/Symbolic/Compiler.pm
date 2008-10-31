@@ -67,7 +67,7 @@ compilation.
 =head2 EXPORT
 
 None by default, but you may choose to import the compile(), compile_to_sub(),
-and compile_to_code() subroutines to your namespace using the standart
+and compile_to_code() subroutines to your namespace using the standard
 Exporter semantics including the ':all' tag.
 
 =head1 SUBROUTINES
