@@ -1,54 +1,74 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More;
+use vars '$tests';
+plan tests => $tests;
 
-BEGIN {use_ok('Math::SymbolicX::FastEvaluator'); }
-BEGIN {use_ok('Math::Symbolic::Custom::DumpToFastEval'); }
 use Math::Symbolic qw/:all/;
 
-my $fe = Math::SymbolicX::FastEvaluator->new();
-my $exp = Math::SymbolicX::FastEvaluator::Expression->new();
-my $op = Math::SymbolicX::FastEvaluator::Op->new();
+use aliased 'Math::SymbolicX::FastEvaluator';
+use aliased 'Math::SymbolicX::FastEvaluator::Expression';
+use aliased 'Math::SymbolicX::FastEvaluator::Op';
+use Math::Symbolic::Custom::DumpToFastEval;
 
-$op->SetValue(1.3);
-$op->SetNumber();
-$exp->AddOp($op);
+my $fe = FastEvaluator->new();
+isa_ok($fe, 'Math::SymbolicX::FastEvaluator');
+my $exp = Expression->new();
+isa_ok($exp, 'Math::SymbolicX::FastEvaluator::Expression');
+my $op = Op->new();
+isa_ok($op, 'Math::SymbolicX::FastEvaluator::Op');
+BEGIN {$tests += 3}
 
-$op->SetVariable();
-$op->SetValue(0.0);
-$exp->AddOp($op);
-
-$op->SetOpType(B_SUM);
-$exp->AddOp($op);
-
-foreach (1..1000-1) {
-  $op->SetValue(1.0);
-  $op->SetVariable();
-  $exp->AddOp($op);
-
-  $op->SetOpType(B_SUM);
-  $exp->AddOp($op);
+SCOPE: {
+  #diag('testing simple, constant tree');
+  my $tree = parse_from_string("1.+cos(3.14159)*2.");
+  can_ok($tree, 'to_fasteval');
+  my $expr = $tree->to_fasteval();
+  isa_ok($expr, 'Math::SymbolicX::FastEvaluator::Expression');
+  is($expr->GetNVars(), 0, 'no variables in simple expr');
+  ok(_eq($tree->value(), $fe->Evaluate($expr)), 'simple expr, value() eq fasteval');
+  eval { $fe->Evaluate($expr, [1,2,3,4,5]) };
+  ok($@, 'bad number of vars to Evaluate dies');
+  BEGIN {$tests += 5}
 }
 
-print 'v: ', $fe->Evaluate($exp, [1.3, 2.0]), "\n";
-my $t = parse_from_string("1.+cos(3.14159)*2.");
-print "v: " . $t->value,"\n";
-my $expr = $t->to_fasteval();
-print 'fe: ', $fe->Evaluate($expr), "\n";
+SCOPE: {
+  #diag('testing with variables');
+  my $tree = parse_from_string("1.+cos(3.14159)*2.+a/b");
+  can_ok($tree, 'to_fasteval');
+  my $expr = $tree->to_fasteval();
+  isa_ok($expr, 'Math::SymbolicX::FastEvaluator::Expression');
+  is($expr->GetNVars(), 2, 'two variables in var expr');
+  ok(_eq($tree->value(a=>3.,b=>1.), $fe->Evaluate($expr, [3., 1.])), 'var expr, value() eq fasteval');
+  eval { $fe->Evaluate($expr, []) };
+  ok($@, 'bad number of vars to Evaluate dies');
+  BEGIN {$tests += 5}
+}
 
-#use Benchmark qw/cmpthese/;
-#
-#my $ms = parse_from_string("1.3+a" . ("+b" x 999));
-#use Math::Symbolic::Compiler;
-#my ($sub, @stuff) = parse_from_string("1.3+a" . ("+b" x 999))->to_sub();
-#
-#cmpthese(-2, {
-#  fast => sub{$fe->Evaluate($exp, [1.3, 2.0]);},
-#  simple => sub{$ms->value(a => 1.3, b=> 2.0)},
-#  perl => sub{$sub->(1.3, 2.0)},
-#});
 
-=pod
+SCOPE: {
+  #diag('testing Expr->Evaluate');
+  my $tree = parse_from_string("1.+cos(3.14159)*2.+a/b");
+  can_ok($tree, 'to_fasteval');
+  my $expr = $tree->to_fasteval();
+  isa_ok($expr, 'Math::SymbolicX::FastEvaluator::Expression');
+  is($expr->GetNVars(), 2, 'two variables in var expr');
+  ok(_eq($tree->value(a=>3.,b=>1.), $expr->Evaluate([3., 1.])), 'var expr, value() eq fasteval');
+  eval { $expr->Evaluate([]) };
+  ok($@, 'bad number of vars to Evaluate dies');
+  BEGIN {$tests += 5}
+}
+
+
+sub _eq {
+  return (
+    @_ > 2
+      ? ($_[0]+$_[2] > $_[1] and $_[0]-$_[2] < $_[1])
+      : ($_[0]+1.e-9 > $_[1] and $_[0]-1.e-9 < $_[1])
+  );
+}
+
+__END__
 
 my $fe = Math::SymbolicX::FastEvaluator->new();
 
