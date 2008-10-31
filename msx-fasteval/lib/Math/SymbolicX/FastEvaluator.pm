@@ -53,7 +53,7 @@ evaluator (implemented in C/XS).
 The basic usage of this module is to generate the
 RPN data with a call to C<my $expr = $formula-E<gt>to_fasteval()> which returns
 a C<Math::SymbolicX::FastEvaluator::Expression> object. You can now
-get its value by calling C<$expr->Evaluate(\@variable_values)>. This will
+get its value by calling C<$expr-E<gt>Evaluate(\@variable_values)>. This will
 internally construct a C<Math::SymbolicX::FastEvaluator> object, use it to
 evaluate the expression and destroy it when it's done. This is a tiny overhead,
 but you can avoid it by constructing a C<FastEvaluator> object yourself
