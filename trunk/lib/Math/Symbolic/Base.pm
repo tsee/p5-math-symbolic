@@ -321,7 +321,7 @@ turned off.
 Returns a (modified) copy of the original tree. If in-place modification is
 turned on, the returned tree will not be a copy.
 
-Availlable parameters are:
+Available parameters are:
 
 =over 2
 

@@ -49,7 +49,7 @@ the vars omega times t plus phi.
 
 There are several modules in the distribution that contain subroutines
 related to calculus. These are not loaded by Math::Symbolic by default.
-Furthermore, there are several extensions to Math::Symbolic availlable
+Furthermore, there are several extensions to Math::Symbolic available
 from CPAN as separate distributions. Please refer to L<SEE ALSO>
 for an incomplete list of these.
 
@@ -57,7 +57,7 @@ For example, Math::Symbolic::MiscCalculus come with Math::Symbolic and
 contains routines to compute Taylor Polynomials and the associated errors.
 
 Routines related to vector calculus such as grad, div, rot, and Jacobi- and
-Hesse matrices are availlable through the Math::Symbolic::VectorCalculus
+Hesse matrices are available through the Math::Symbolic::VectorCalculus
 module. This module is also able to compute Taylor Polynomials of
 functions of two variables, directional derivatives, total differentials,
 and Wronskian Determinants.
@@ -288,7 +288,7 @@ That means you can introduce your own methods to extend Math::Symbolic's
 functionality. How this works in detail can be read in
 L<Math::Symbolic::Custom>.
 
-Some of the extensions availlable via CPAN right now are listed in the
+Some of the extensions available via CPAN right now are listed in the
 L<SEE ALSO> section.
 
 =head1 PERFORMANCE
@@ -437,7 +437,7 @@ trees are just as fast as hand-crafted, "performance tuned" subroutines.
 If you have extremely long formulas, you can choose to even resort to more
 extreme measures than generating Perl code. You can have Math::Symbolic
 generate C code for you, compile that and link it into your application at run
-time. It will then be availlable to you as a subroutine.
+time. It will then be available to you as a subroutine.
 
 This is not the most portable thing to do. (You need Inline::C which
 in turn needs the C compiler that was used to compile your perl.)
@@ -514,7 +514,7 @@ C<$x * 'y+z'>).
 Obviously, the parser gets blown to pieces, performance-wise. If you want to
 use it, but cannot accept its tranquility, you can ressort to
 Math::SymbolicX::Inline and have the formulas parsed at compile time. (Which
-isn't faster, but means that they are availlable when the program runs.)
+isn't faster, but means that they are available when the program runs.)
 All other methods are about the same speed. Note, that the ol_* tests
 are just the same as I<short> here, because in case of C<f(x) = x>, you cannot
 make use of the overloaded interface.
