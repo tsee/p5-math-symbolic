@@ -9,6 +9,7 @@ Math::Symbolic::Custom::DumpToFastEval - Compile Math::Symbolic trees fast RPN f
 
 =head1 DESCRIPTION
 
+FIXME documentation!
 
 =head2 EXPORT
 
