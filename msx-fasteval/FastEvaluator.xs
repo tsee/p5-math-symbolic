@@ -29,7 +29,7 @@ FastEval::Evaluator::Evaluate(expr, ...)
   FastEval::Expression* expr
   PREINIT:
     SV* values=NULL;
-    unsigned int pnum;
+    unsigned int pnum, nvars;
     bool isUndef = false;
     int i;
     double* cvalues;
@@ -39,18 +39,24 @@ FastEval::Evaluator::Evaluate(expr, ...)
     if( items > 2 )
       values = ST(2);
     else
-      isUndef = true; /*TODO check NVars against the passed array*/
+      isUndef = true;
 
     if ( isUndef || !SvOK(values) )
       isUndef = true;
     else if ( !(SvRV(values) && SvTYPE(SvRV(values)) == SVt_PVAV) )
       croak("Reference to an array expected as second argument"); 
+
+    nvars = expr->GetNVars();
+    if ( nvars != 0 && isUndef )
+      croak("No parameters (variable values) passed to Evaluate(expr, ...), but the expression contains variables!");
   CODE:
     if (isUndef)
       RETVAL = THIS->Evaluate(expr, NULL); /* kinda asking for trouble, ain't I */
     else {
       array = (AV*) SvRV(values);
       pnum = av_len(array)+1;
+      if ( pnum != nvars )
+        croak("Number of parameters passed to Evaluate(expr, ...) does not match the number of variables in the expressiom!");
       cvalues = (double*)safemalloc( pnum * sizeof( double ) );
       for (i = 0; i < pnum; ++i) {
         if ((item = av_fetch(array, i, 0)) && SvOK(*item))
