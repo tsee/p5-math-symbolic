@@ -77,24 +77,29 @@ namespace FastEval {
         st.push(sin(v1)); break;
       case U_COSINE:
         st.push(cos(v1)); break;
-      case U_TANGENT:
+      case U_TANGENT: // verify
         st.push(tan(v1)); break;
+      case U_COTANGENT:
+        st.push(cos(v1)/sin(v1)); break;
+      case U_ARCSINE: // verify
+        st.push(atan2( v1, sqrt(1.-v1*v1) )); break;
+      case U_ARCCOSINE: // verify
+        st.push(atan2( sqrt(1.-v1*v1), v1 )); break;
+      case U_ARCTANGENT: // verify
+        st.push(atan2(v1, 1.)); break;
+      case U_ARCCOTANGENT: // verify
+        st.push(atan2(1./v1, 1.)); break;
+      case U_SINE_H: // verify
+        st.push( 0.5 * (exp(v1) - exp(-v1)) ); break;
+      case U_COSINE_H: // verify
+        st.push( 0.5 * (exp(v1) + exp(-v1)) ); break;
+      case U_AREASINE_H: // verify
+        st.push( log( v1 + sqrt(v1*v1+1.) ) ); break;
+      case U_AREACOSINE_H: // verify
+        st.push( log( v1 + sqrt(v1*v1-1.) ) ); break;
+      case B_ARCTANGENT_TWO: // verify
+        st.push( atan2( v1, v2 ) ); break;
 
-/*  
-    1, // U_SINE,
-    1, // U_COSINE,
-    1, // U_TANGENT,
-    1, // U_COTANGENT,
-    1, // U_ARCSINE,
-    1, // U_ARCCOSINE,
-    1, // U_ARCTANGENT,
-    1, // U_ARCCOTANGENT,
-    1, // U_SINE_H,
-    1, // U_COSINE_H,
-    1, // U_AREASINE_H,
-    1, // U_AREACOSINE_H,
-    2, // B_ARCTANGENT_TWO,
-*/
       default:
         cerr << "funny op" << endl;
         break;
