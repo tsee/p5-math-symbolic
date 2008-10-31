@@ -39,7 +39,7 @@ FastEval::Evaluator::Evaluate(expr, ...)
     if( items > 2 )
       values = ST(2);
     else
-      isUndef = true;
+      isUndef = true; /*TODO check NVars against the passed array*/
 
     if ( isUndef || !SvOK(values) )
       isUndef = true;
@@ -82,7 +82,19 @@ FastEval::Expression::AddOp(op)
   CODE:
     THIS->AddOp(op);
 
- #    void SetNVars(const unsigned int nvars) {fNVars = nvars;}
+void
+FastEval::Expression::SetNVars(nvars)
+  int nvars
+  CODE:
+    THIS->SetNVars((unsigned int)nvars);
+
+unsigned int
+FastEval::Expression::GetNVars()
+  CODE:
+    RETVAL = THIS->GetNVars();
+  OUTPUT:
+    RETVAL
+
  #    void SetOps(const unsigned int nops, const op_t* ops);
  #    void SetOps(const std::vector<op_t>& ops) {fOps = ops;}
 
