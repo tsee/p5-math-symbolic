@@ -3,11 +3,11 @@ use ExtUtils::MakeMaker;
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 
-my $obj_files = join ' ', map {
-  my $c = $_;
-  $c =~ s/\.cc$/$Config::Config{_o}/;
-  $c;
-} glob("*.cc");
+#my $obj_files = join ' ', map {
+#  my $c = $_;
+#  $c =~ s/\.cc$/$Config::Config{_o}/;
+#  $c;
+#} glob("*.cc");
 
 my $CC = 'g++';
 
