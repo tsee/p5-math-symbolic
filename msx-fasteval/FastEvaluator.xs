@@ -104,11 +104,57 @@ FastEval::Expression::GetNVars()
  #    void SetOps(const unsigned int nops, const op_t* ops);
  #    void SetOps(const std::vector<op_t>& ops) {fOps = ops;}
 
- #    unsigned int GetNVars() const {return fNVars;}
  #    unsigned int GetNOps() const {return fOps.size();}
  #    const op_t* GetOps() const {return &fOps.front();}
 
+double
+FastEval::Expression::Evaluate(...)
+  PREINIT:
+    /* FIXME this whole mess is a duplication of the Evaluator::Evaluate method. Not good */
+    SV* values=NULL;
+    unsigned int pnum, nvars;
+    bool isUndef = false;
+    int i;
+    double* cvalues;
+    SV **item;
+    AV* array;
+    FastEval::Evaluator eval;
+  INIT:
+    if( items > 1 )
+      values = ST(1);
+    else
+      isUndef = true;
 
+    if ( isUndef || !SvOK(values) )
+      isUndef = true;
+    else if ( !(SvRV(values) && SvTYPE(SvRV(values)) == SVt_PVAV) )
+      croak("Reference to an array expected as argument to Evaluate"); 
+
+    nvars = THIS->GetNVars();
+    if ( nvars != 0 && isUndef )
+      croak("No parameters (variable values) passed to Evaluate(...), but the expression contains variables!");
+  CODE:
+    if (isUndef)
+      RETVAL = eval.Evaluate(THIS, NULL); /* kinda asking for trouble, ain't I */
+    else {
+      array = (AV*) SvRV(values);
+      pnum = av_len(array)+1;
+      if ( pnum != nvars )
+        croak("Number of parameters passed to Evaluate(...) does not match the number of variables in the expressiom!");
+      cvalues = (double*)safemalloc( pnum * sizeof( double ) );
+      for (i = 0; i < pnum; ++i) {
+        if ((item = av_fetch(array, i, 0)) && SvOK(*item))
+          cvalues[i] = SvNV(*item);
+        else {
+          safefree((char*)cvalues);
+          croak("Value not defined or not a double");
+        }
+      }
+      RETVAL = eval.Evaluate(THIS, cvalues);
+      safefree((char*)cvalues);
+    }
+  OUTPUT:
+    RETVAL
 
 
 MODULE = Math::SymbolicX::FastEvaluator		PACKAGE = Math::SymbolicX::FastEvaluator::Op
