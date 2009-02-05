@@ -10,92 +10,93 @@ use Text::Balanced;
 our $BeenUsedBefore    = {};
 our $Functions         = {};
 our $Order             = [];
-our $RegularExpression = qw//;
+our $RegularExpression = qr//;
 
 our $VERSION = '2.01';
 
 sub import {
-    my $package = shift;
-    croak "Uneven number of arguments in usage of "
+  my $package = shift;
+  croak "Uneven number of arguments in usage of "
+    . "Math::SymbolicX::ParserExtensionFactory"
+    if @_ % 2;
+
+  my %args = @_;
+
+  _extend_parser();
+
+  foreach my $key ( keys %args ) {
+    croak "Invalid keys => value pairs as arguments in usage of "
       . "Math::SymbolicX::ParserExtensionFactory"
-      if @_ % 2;
-
-    my %args = @_;
-
-    _extend_parser();
-
-    foreach my $key ( keys %args ) {
-        croak "Invalid keys => value pairs as arguments in usage of "
-          . "Math::SymbolicX::ParserExtensionFactory"
-          if not ref( $args{$key} ) eq 'CODE';
-        if ( not exists $Functions->{$key} ) {
-            push @$Order, $key;
-        }
-        $Functions->{$key} = $args{$key};
+      if not ref( $args{$key} ) eq 'CODE';
+    if ( not exists $Functions->{$key} ) {
+      push @$Order, $key;
     }
+    $Functions->{$key} = $args{$key};
+  }
 
-    _regenerate_regex();
+  _regenerate_regex();
 
-    return ();
+  return ();
 }
 
 sub _extend_parser {
 
-    my $parser = $Math::Symbolic::Parser;
+  my $parser = $Math::Symbolic::Parser;
 
-    # make sure there is a parser
-    if (not defined $parser) {
-        $parser = $Math::Symbolic::Parser = Math::Symbolic::Parser->new();
-    }
+  # make sure there is a parser
+  if (not defined $parser) {
+    $parser = $Math::Symbolic::Parser = Math::Symbolic::Parser->new();
+  }
 
-    if ( not exists $BeenUsedBefore->{"$parser"} ) {
-        if ($parser->isa('Parse::RecDescent')) {
-            _extend_parser_recdescent($parser)
-        }
-        elsif ($parser->isa('Math::Symbolic::Parser::Yapp')) {
-            _extend_parser_yapp($parser);
-        }
-        else {
-        }
-        $BeenUsedBefore->{"$parser"} = 1;
+  if ( not exists $BeenUsedBefore->{"$parser"} ) {
+    if ($parser->isa('Parse::RecDescent')) {
+      _extend_parser_recdescent($parser)
     }
+    elsif ($parser->isa('Math::Symbolic::Parser::Yapp')) {
+      _extend_parser_yapp($parser);
+    }
+    else {
+      die "Unsupported parser type!";
+    }
+    $BeenUsedBefore->{"$parser"} = 1;
+  }
 }
 
 sub _extend_parser_yapp {
-    # This is a no-op since ::Parser::Yapp has built-in support for
-    # ::ParserExtensionFactory. This would probably not be possible
-    # otherwise.
-    return(1);
+  # This is a no-op since ::Parser::Yapp has built-in support for
+  # ::ParserExtensionFactory. This would probably not be possible
+  # otherwise.
+  return(1);
 }
 
 sub _extend_parser_recdescent {
-    my $parser = shift;
-    $parser->Extend(<<'EXTENSION');
+  my $parser = shift;
+  $parser->Extend(<<'EXTENSION');
 function: /$Math::SymbolicX::ParserExtensionFactory::RegularExpression(?=\s*\()/ {extract_bracketed($text, '(')}
-    {
-        warn 'function_msx_parser_extension_factory ' 
-          if $Math::Symbolic::Parser::DEBUG;
-        my $function = $item[1];
-        my $argstring = substr($item[2], 1, length($item[2])-2);
-        die "Invalid extension function and/or arguments '$function$item[2]'".
-            "(Math::SymbolicX::ParserExtensionFactory)"
-          if not exists
-             $Math::SymbolicX::ParserExtensionFactory::Functions->{$function};
-        my $result =
-          $Math::SymbolicX::ParserExtensionFactory::Functions->{$function}->($argstring);
-        die "Invalid result of extension function application "
-            ."('$item[1]($argstring)'). Also refer to the "
-            ."Math::SymbolicX::ParserExtensionFactory manpage."
-          if ref($result) !~ /^Math::Symbolic/;
-        $return = $result;
-    }
+  {
+    warn 'function_msx_parser_extension_factory ' 
+      if $Math::Symbolic::Parser::DEBUG;
+    my $function = $item[1];
+    my $argstring = substr($item[2], 1, length($item[2])-2);
+    die "Invalid extension function and/or arguments '$function$item[2]'".
+        "(Math::SymbolicX::ParserExtensionFactory)"
+      if not exists
+         $Math::SymbolicX::ParserExtensionFactory::Functions->{$function};
+    my $result =
+      $Math::SymbolicX::ParserExtensionFactory::Functions->{$function}->($argstring);
+    die "Invalid result of extension function application "
+        ."('$item[1]($argstring)'). Also refer to the "
+        ."Math::SymbolicX::ParserExtensionFactory manpage."
+      if ref($result) !~ /^Math::Symbolic/;
+    $return = $result;
+  }
 EXTENSION
-    return(1);
+  return(1);
 }
 
 sub _regenerate_regex {
-    my $string = join '|', map {"\Q$_\E"} @$Order;
-    $RegularExpression = qr/(?:$string)/;
+  my $string = join '|', map {"\Q$_\E"} @$Order;
+  $RegularExpression = qr/(?:$string)/;
 }
 
 1;
