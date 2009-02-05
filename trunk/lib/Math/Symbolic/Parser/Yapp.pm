@@ -501,13 +501,14 @@ sub new {
 [
 	{#State 0
 		ACTIONS => {
-			'NUM' => 5,
 			"-" => 1,
-			"(" => 6,
 			'PRED' => 3,
-			'VAR' => 8,
-			'EFUNC' => 7,
-			'FUNC' => 4
+			'PRIVEFUNC' => 4,
+			'FUNC' => 5,
+			'NUM' => 6,
+			"(" => 7,
+			'EFUNC' => 8,
+			'VAR' => 9
 		},
 		GOTOS => {
 			'exp' => 2
@@ -515,107 +516,100 @@ sub new {
 	},
 	{#State 1
 		ACTIONS => {
-			'NUM' => 5,
 			"-" => 1,
-			"(" => 6,
 			'PRED' => 3,
-			'EFUNC' => 7,
-			'VAR' => 8,
-			'FUNC' => 4
+			'PRIVEFUNC' => 4,
+			'FUNC' => 5,
+			'NUM' => 6,
+			"(" => 7,
+			'VAR' => 9,
+			'EFUNC' => 8
 		},
 		GOTOS => {
-			'exp' => 9
+			'exp' => 10
 		}
 	},
 	{#State 2
 		ACTIONS => {
-			'' => 11,
-			"-" => 10,
-			"^" => 14,
-			"*" => 15,
-			"+" => 12,
-			"/" => 13
+			'' => 12,
+			"-" => 11,
+			"^" => 15,
+			"*" => 16,
+			"+" => 13,
+			"/" => 14
 		}
 	},
 	{#State 3
 		ACTIONS => {
-			"{" => 16
+			"{" => 17
 		}
 	},
 	{#State 4
-		ACTIONS => {
-			"(" => 17
-		}
-	},
-	{#State 5
-		DEFAULT => -1
-	},
-	{#State 6
-		ACTIONS => {
-			'NUM' => 5,
-			"-" => 1,
-			"(" => 6,
-			'PRED' => 3,
-			'EFUNC' => 7,
-			'VAR' => 8,
-			'FUNC' => 4
-		},
-		GOTOS => {
-			'exp' => 18
-		}
-	},
-	{#State 7
 		DEFAULT => -4
 	},
-	{#State 8
-		DEFAULT => -5
-	},
-	{#State 9
+	{#State 5
 		ACTIONS => {
-			"^" => 14
-		},
-		DEFAULT => -10
+			"(" => 18
+		}
 	},
-	{#State 10
+	{#State 6
+		DEFAULT => -1
+	},
+	{#State 7
 		ACTIONS => {
-			'NUM' => 5,
 			"-" => 1,
-			"(" => 6,
 			'PRED' => 3,
-			'EFUNC' => 7,
-			'VAR' => 8,
-			'FUNC' => 4
+			'PRIVEFUNC' => 4,
+			'FUNC' => 5,
+			'NUM' => 6,
+			"(" => 7,
+			'VAR' => 9,
+			'EFUNC' => 8
 		},
 		GOTOS => {
 			'exp' => 19
 		}
 	},
-	{#State 11
-		DEFAULT => 0
+	{#State 8
+		DEFAULT => -5
 	},
-	{#State 12
+	{#State 9
+		DEFAULT => -6
+	},
+	{#State 10
 		ACTIONS => {
-			'NUM' => 5,
+			"^" => 15
+		},
+		DEFAULT => -11
+	},
+	{#State 11
+		ACTIONS => {
 			"-" => 1,
-			"(" => 6,
 			'PRED' => 3,
-			'EFUNC' => 7,
-			'VAR' => 8,
-			'FUNC' => 4
+			'PRIVEFUNC' => 4,
+			'FUNC' => 5,
+			'NUM' => 6,
+			"(" => 7,
+			'VAR' => 9,
+			'EFUNC' => 8
 		},
 		GOTOS => {
 			'exp' => 20
 		}
 	},
+	{#State 12
+		DEFAULT => 0
+	},
 	{#State 13
 		ACTIONS => {
-			'NUM' => 5,
 			"-" => 1,
-			"(" => 6,
 			'PRED' => 3,
-			'EFUNC' => 7,
-			'VAR' => 8,
-			'FUNC' => 4
+			'PRIVEFUNC' => 4,
+			'FUNC' => 5,
+			'NUM' => 6,
+			"(" => 7,
+			'VAR' => 9,
+			'EFUNC' => 8
 		},
 		GOTOS => {
 			'exp' => 21
@@ -623,13 +617,14 @@ sub new {
 	},
 	{#State 14
 		ACTIONS => {
-			'NUM' => 5,
 			"-" => 1,
-			"(" => 6,
 			'PRED' => 3,
-			'EFUNC' => 7,
-			'VAR' => 8,
-			'FUNC' => 4
+			'PRIVEFUNC' => 4,
+			'FUNC' => 5,
+			'NUM' => 6,
+			"(" => 7,
+			'VAR' => 9,
+			'EFUNC' => 8
 		},
 		GOTOS => {
 			'exp' => 22
@@ -637,13 +632,14 @@ sub new {
 	},
 	{#State 15
 		ACTIONS => {
-			'NUM' => 5,
 			"-" => 1,
-			"(" => 6,
 			'PRED' => 3,
-			'EFUNC' => 7,
-			'VAR' => 8,
-			'FUNC' => 4
+			'PRIVEFUNC' => 4,
+			'FUNC' => 5,
+			'NUM' => 6,
+			"(" => 7,
+			'VAR' => 9,
+			'EFUNC' => 8
 		},
 		GOTOS => {
 			'exp' => 23
@@ -651,13 +647,14 @@ sub new {
 	},
 	{#State 16
 		ACTIONS => {
-			'NUM' => 5,
 			"-" => 1,
-			"(" => 6,
 			'PRED' => 3,
-			'EFUNC' => 7,
-			'VAR' => 8,
-			'FUNC' => 4
+			'PRIVEFUNC' => 4,
+			'FUNC' => 5,
+			'NUM' => 6,
+			"(" => 7,
+			'VAR' => 9,
+			'EFUNC' => 8
 		},
 		GOTOS => {
 			'exp' => 24
@@ -665,115 +662,132 @@ sub new {
 	},
 	{#State 17
 		ACTIONS => {
-			'NUM' => 5,
 			"-" => 1,
-			"(" => 6,
 			'PRED' => 3,
-			'EFUNC' => 7,
-			'VAR' => 8,
-			'FUNC' => 4
+			'PRIVEFUNC' => 4,
+			'FUNC' => 5,
+			'NUM' => 6,
+			"(" => 7,
+			'VAR' => 9,
+			'EFUNC' => 8
 		},
 		GOTOS => {
-			'exp' => 25,
-			'list' => 26
+			'exp' => 25
 		}
 	},
 	{#State 18
 		ACTIONS => {
-			"-" => 10,
-			"^" => 14,
-			"*" => 15,
-			"+" => 12,
-			"/" => 13,
-			")" => 27
+			"-" => 1,
+			'PRED' => 3,
+			'PRIVEFUNC' => 4,
+			'FUNC' => 5,
+			'NUM' => 6,
+			"(" => 7,
+			'VAR' => 9,
+			'EFUNC' => 8
+		},
+		GOTOS => {
+			'exp' => 26,
+			'list' => 27
 		}
 	},
 	{#State 19
 		ACTIONS => {
-			"/" => 13,
-			"^" => 14,
-			"*" => 15
-		},
-		DEFAULT => -7
+			"-" => 11,
+			"^" => 15,
+			"*" => 16,
+			"+" => 13,
+			"/" => 14,
+			")" => 28
+		}
 	},
 	{#State 20
 		ACTIONS => {
-			"/" => 13,
-			"^" => 14,
-			"*" => 15
-		},
-		DEFAULT => -6
-	},
-	{#State 21
-		ACTIONS => {
-			"^" => 14
-		},
-		DEFAULT => -9
-	},
-	{#State 22
-		ACTIONS => {
-			"^" => 14
-		},
-		DEFAULT => -11
-	},
-	{#State 23
-		ACTIONS => {
-			"^" => 14
+			"/" => 14,
+			"^" => 15,
+			"*" => 16
 		},
 		DEFAULT => -8
 	},
+	{#State 21
+		ACTIONS => {
+			"/" => 14,
+			"^" => 15,
+			"*" => 16
+		},
+		DEFAULT => -7
+	},
+	{#State 22
+		ACTIONS => {
+			"^" => 15
+		},
+		DEFAULT => -10
+	},
+	{#State 23
+		ACTIONS => {
+			"^" => 15
+		},
+		DEFAULT => -12
+	},
 	{#State 24
 		ACTIONS => {
-			"}" => 28,
-			"-" => 10,
-			"^" => 14,
-			"*" => 15,
-			"+" => 12,
-			"/" => 13
-		}
+			"^" => 15
+		},
+		DEFAULT => -9
 	},
 	{#State 25
 		ACTIONS => {
-			"-" => 10,
-			"^" => 14,
-			"*" => 15,
-			"+" => 12,
-			"/" => 13,
-			"," => 29
-		},
-		DEFAULT => -14
+			"}" => 29,
+			"-" => 11,
+			"^" => 15,
+			"*" => 16,
+			"+" => 13,
+			"/" => 14
+		}
 	},
 	{#State 26
 		ACTIONS => {
-			")" => 30
-		}
+			"-" => 11,
+			"^" => 15,
+			"*" => 16,
+			"+" => 13,
+			"/" => 14,
+			"," => 30
+		},
+		DEFAULT => -15
 	},
 	{#State 27
-		DEFAULT => -12
-	},
-	{#State 28
-		DEFAULT => -3
-	},
-	{#State 29
 		ACTIONS => {
-			'NUM' => 5,
-			"-" => 1,
-			"(" => 6,
-			'PRED' => 3,
-			'EFUNC' => 7,
-			'VAR' => 8,
-			'FUNC' => 4
-		},
-		GOTOS => {
-			'exp' => 25,
-			'list' => 31
+			")" => 31
 		}
 	},
+	{#State 28
+		DEFAULT => -13
+	},
+	{#State 29
+		DEFAULT => -3
+	},
 	{#State 30
-		DEFAULT => -2
+		ACTIONS => {
+			"-" => 1,
+			'PRED' => 3,
+			'PRIVEFUNC' => 4,
+			'FUNC' => 5,
+			'NUM' => 6,
+			"(" => 7,
+			'VAR' => 9,
+			'EFUNC' => 8
+		},
+		GOTOS => {
+			'exp' => 26,
+			'list' => 32
+		}
 	},
 	{#State 31
-		DEFAULT => -13
+		DEFAULT => -2
+	},
+	{#State 32
+		DEFAULT => -14
 	}
 ],
                                   yyrules  =>
@@ -809,46 +823,53 @@ sub {
 		 'exp', 1,
 sub {
                 $_[1] =~ /^([^(]+)\((.+)\)$/o or die;
-                $Math::SymbolicX::ParserExtensionFactory::Functions->{$1}->($2)
+                $_[0]->{__PRIV_EXT_FUNCTIONS}->{$1}->($2);
             }
 	],
 	[#Rule 5
 		 'exp', 1,
-sub { $_[1] }
+sub {
+                $_[1] =~ /^([^(]+)\((.+)\)$/o or die;
+                $Math::SymbolicX::ParserExtensionFactory::Functions->{$1}->($2)
+            }
 	],
 	[#Rule 6
-		 'exp', 3,
-sub { Math::Symbolic::Operator->new('+', $_[1], $_[3]) }
+		 'exp', 1,
+sub { $_[1] }
 	],
 	[#Rule 7
 		 'exp', 3,
-sub { Math::Symbolic::Operator->new('-', $_[1], $_[3]) }
+sub { Math::Symbolic::Operator->new('+', $_[1], $_[3]) }
 	],
 	[#Rule 8
 		 'exp', 3,
-sub { Math::Symbolic::Operator->new('*', $_[1], $_[3]) }
+sub { Math::Symbolic::Operator->new('-', $_[1], $_[3]) }
 	],
 	[#Rule 9
 		 'exp', 3,
-sub { Math::Symbolic::Operator->new('/', $_[1], $_[3]) }
+sub { Math::Symbolic::Operator->new('*', $_[1], $_[3]) }
 	],
 	[#Rule 10
+		 'exp', 3,
+sub { Math::Symbolic::Operator->new('/', $_[1], $_[3]) }
+	],
+	[#Rule 11
 		 'exp', 2,
 sub { Math::Symbolic::Operator->new('neg', $_[2]) }
 	],
-	[#Rule 11
+	[#Rule 12
 		 'exp', 3,
 sub { Math::Symbolic::Operator->new('^', $_[1], $_[3]) }
 	],
-	[#Rule 12
+	[#Rule 13
 		 'exp', 3,
 sub { $_[2] }
 	],
-	[#Rule 13
+	[#Rule 14
 		 'list', 3,
 sub { unshift @{$_[3]}, $_[1]; $_[3] }
 	],
-	[#Rule 14
+	[#Rule 15
 		 'list', 1,
 sub { [$_[1]] }
 	]
@@ -866,9 +887,9 @@ use constant DAT => 0;
 use constant OP  => 1;
 
 sub _Error {
-        exists $_[0]->YYData->{ERRMSG}
+    exists $_[0]->YYData->{ERRMSG}
     and do {
-		my $x = $_[0]->YYData->{ERRMSG};
+        my $x = $_[0]->YYData->{ERRMSG};
         delete $_[0]->YYData->{ERRMSG};
         die $x;
     };
@@ -887,31 +908,31 @@ $balanced_parens_re = qr{\((?:(?>[^()]+)|(??{$balanced_parens_re}))*\)};
 
 # This is a hack so we can hook into the new() method.
 {
-	no warnings; no strict;
-	*real_new = \&new;
-	*new = sub {
+    no warnings; no strict;
+    *real_new = \&new;
+    *new = sub {
         my $class = shift;
         my %args = @_;
         my $predicates = $args{predicates};
         delete $args{predicates};
-		my $parser = real_new($class, %args);
+        my $parser = real_new($class, %args);
         if ($predicates) {
             $parser->{__PREDICATES} = $predicates;
         }
         return $parser;
-	};
+    };
 }
 
 sub _Lexer {
     my($parser)=shift;
 
-    my $ExtFunc = $Math::SymbolicX::ParserExtensionFactory::RegularExpression
-                    || qr/(?!)/o;
+    my $ExtFunc     = $Math::SymbolicX::ParserExtensionFactory::RegularExpression || qr/(?!)/o;
+    my $PrivExtFunc = $parser->{__PRIV_EXT_FUNC_REGEX};
 
-	my $data = $parser->{USER};
+    my $data = $parser->{USER};
     my $predicates = $parser->{__PREDICATES};
 
-	pos($data->{INPUT}) < length($data->{INPUT})
+    pos($data->{INPUT}) < length($data->{INPUT})
     or  return('',undef);
 
     # This is a huge hack
@@ -920,6 +941,10 @@ sub _Lexer {
             if ($data->{STATE} == DAT) {
                 if ($data->{INPUT} =~ /\G($Func)(?=\()/cg) {
                     return('FUNC', $1);
+                }
+                elsif ($PrivExtFunc ? $data->{INPUT} =~ /\G($PrivExtFunc$balanced_parens_re)/cg : 0) {
+                    $data->{STATE} = OP;
+                    return('PRIVEFUNC', $1);
                 }
                 elsif ($data->{INPUT} =~ /\G($ExtFunc$balanced_parens_re)/cg) {
                     $data->{STATE} = OP;
@@ -1003,6 +1028,10 @@ sub _Lexer {
                 if ($data->{INPUT} =~ /\G($Func)(?=\()/cg) {
                     return('FUNC', $1);
                 }
+                elsif ($PrivExtFunc ? $data->{INPUT} =~ /\G($PrivExtFunc$balanced_parens_re)/cg : 0) {
+                    $data->{STATE} = OP;
+                    return('PRIVEFUNC', $1);
+                }
                 elsif ($data->{INPUT} =~ /\G($ExtFunc$balanced_parens_re)/cg) {
                     $data->{STATE} = OP;
                     return('EFUNC', $1);
@@ -1075,21 +1104,21 @@ sub _Lexer {
 
 sub parse {
     my($self)=shift;
-	my $in = shift;
-	$in =~ s/\s+//g;
-	$self->{USER}{STATE} = DAT;
-	$self->{USER}{INPUT} = $in;
-	pos($self->{USER}{INPUT}) = 0;
+    my $in = shift;
+    $in =~ s/\s+//g;
+    $self->{USER}{STATE} = DAT;
+    $self->{USER}{INPUT} = $in;
+    pos($self->{USER}{INPUT}) = 0;
     return $self->YYParse( yylex => \&_Lexer, yyerror => \&_Error );
 }
 
 sub parsedebug {
     my($self)=shift;
-	my $in = shift;
-	$in =~ s/\s+//g;
-	$self->{USER}{STATE} = DAT;
-	$self->{USER}{INPUT} = $in;
-	pos($self->{USER}{INPUT}) = 0;
+    my $in = shift;
+    $in =~ s/\s+//g;
+    $self->{USER}{STATE} = DAT;
+    $self->{USER}{INPUT} = $in;
+    pos($self->{USER}{INPUT}) = 0;
     return $self->YYParse( yydebug => 0x1F, yylex => \&_Lexer, yyerror => \&_Error );
 }
 

@@ -166,7 +166,7 @@ use Math::Symbolic::ExportConstants qw/:all/;
 #use Parse::RecDescent;
 my $Required_Parse_RecDescent = 0;
 
-our $VERSION = '0.510';
+our $VERSION = '0.601';
 our $DEBUG   = 0;
 
 # Functions that are parsed and translated to specific M::S trees
@@ -512,14 +512,17 @@ sub _new_recdescent {
 
     if ( $args->{recompile} ) {
         $parser = Parse::RecDescent->new($Grammar);
+        $parser->{__PRIV_EXT_FUNC_REGEX} = qr/(?!)/;
     }
     else {
         eval 'require Math::Symbolic::Parser::Precompiled;';
         if ($@) {
             $parser = Parse::RecDescent->new($Grammar);
+            $parser->{__PRIV_EXT_FUNC_REGEX} = qr/(?!)/;
         }
         else {
             $parser = Math::Symbolic::Parser::Precompiled->new();
+            $parser->{__PRIV_EXT_FUNC_REGEX} = qr/(?!)/;
         }
     }
     return $parser;
