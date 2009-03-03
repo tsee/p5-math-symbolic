@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Carp qw/croak/;
-use Test::More tests => 7;
+use Test::More tests => 10;
 BEGIN {
     use_ok('Math::Symbolic');
 }
@@ -51,5 +51,30 @@ foreach my $ref (@f) {
     die "parse of '$ref->[1]' failed" if not defined $deriv;
     my $d = partial_derivative($f, 'x');
     ok($d->test_num_equiv($deriv, limits => $limits), "$d == $deriv");
+}
+
+# Test for regression RT #43783
+{
+  my $formula1    = parse_from_string('K-C*exp(-L*x)');
+  my $formula2    = parse_from_string('K+-C*exp(-L*x)');
+
+  my %parameters = ( C => 0.8, K => 1., L => 1. );
+
+  my $deriv1 = partial_derivative($formula1, 'C')->apply_derivatives()->simplify();
+  my $deriv2 = partial_derivative($formula2, 'C')->apply_derivatives()->simplify();
+
+  foreach (1, 2, 3) {
+    ok(
+      float_eq( 
+        $deriv1->value(%parameters, x => $_),
+        $deriv2->value(%parameters, x => $_)
+      ),
+      "Derivatives of semantically equivalent formulas equivalent at x=$_"
+    );
+  }
+}
+
+sub float_eq {
+  $_[0] + 1.e-6 > $_[1] and $_[0] - 1.e-6 < $_[1]
 }
 
