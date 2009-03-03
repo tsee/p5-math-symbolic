@@ -46,7 +46,7 @@ L<Math::Symbolic::Parser>
 =cut
 
 package Math::Symbolic::Parser::Precompiled;
-our $VERSION = '0.601';
+our $VERSION = '0.602';
 use Parse::RecDescent;
 
 { my $ERRORS;
