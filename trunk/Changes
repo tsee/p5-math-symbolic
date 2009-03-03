@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.602  Tue Mar  3 17:05 2009
+    - Fix RT #43783: Bug in the term simplification of constants in derivatives
+      of differences. (Reported by Alexander Platt)
+
 0.601  Thu Feb  5 21:50 2009
     - Support for object-private parser extensions via
       Math::SymbolicX::ParserExtensionFactory.
