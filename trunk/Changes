@@ -1,5 +1,8 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.603  Wed Mar  4 18:21 2009
+    - Fix regression in the Yapp-parser parser extension mechanism.
+
 0.602  Tue Mar  3 17:05 2009
     - Fix RT #43783: Bug in the term simplification of constants in derivatives
       of differences. (Reported by Alexander Platt)
