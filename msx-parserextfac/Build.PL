@@ -8,7 +8,7 @@ my $b = Module::Build->new
    requires => {
                 'Memoize' => '1.01',
                 'Data::Dumper' => '0',
-                'Math::Symbolic' => '0.506',
+                'Math::Symbolic' => '0.603',
                 'Parse::RecDescent' => '0',
                 'Text::Balanced' => '0',
                },

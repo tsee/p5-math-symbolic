@@ -8,3 +8,4 @@ README
 t/00pod.t
 t/00podcover.t
 t/01basic.t
+t/02private.t

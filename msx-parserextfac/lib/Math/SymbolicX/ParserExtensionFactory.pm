@@ -10,14 +10,14 @@ use Text::Balanced;
 our $BeenUsedBefore    = {};
 our $Functions         = {};
 our $Order             = [];
-our $RegularExpression = qr//;
+our $RegularExpression = qr/(?!)/;
 
-our $VERSION = '2.01';
+our $VERSION = '3.02';
 
 sub import {
   my $package = shift;
-  croak "Uneven number of arguments in usage of "
-    . "Math::SymbolicX::ParserExtensionFactory"
+  croak("Uneven number of arguments in usage of "
+    . "Math::SymbolicX::ParserExtensionFactory")
     if @_ % 2;
 
   my %args = @_;
@@ -25,8 +25,8 @@ sub import {
   _extend_parser();
 
   foreach my $key ( keys %args ) {
-    croak "Invalid keys => value pairs as arguments in usage of "
-      . "Math::SymbolicX::ParserExtensionFactory"
+    croak("Invalid keys => value pairs as arguments in usage of "
+      . "Math::SymbolicX::ParserExtensionFactory")
       if not ref( $args{$key} ) eq 'CODE';
     if ( not exists $Functions->{$key} ) {
       push @$Order, $key;
@@ -34,14 +34,15 @@ sub import {
     $Functions->{$key} = $args{$key};
   }
 
-  _regenerate_regex();
+  $RegularExpression = _regenerate_regex($Order);
 
   return ();
 }
 
 sub _extend_parser {
 
-  my $parser = $Math::Symbolic::Parser;
+  my $parser = shift;
+  $parser = $Math::Symbolic::Parser if not defined $parser;
 
   # make sure there is a parser
   if (not defined $parser) {
@@ -71,32 +72,71 @@ sub _extend_parser_yapp {
 
 sub _extend_parser_recdescent {
   my $parser = shift;
+  $parser->{__PRIV_EXT_FUNC_REGEX} = qr/(?!)/;
   $parser->Extend(<<'EXTENSION');
-function: /$Math::SymbolicX::ParserExtensionFactory::RegularExpression(?=\s*\()/ {extract_bracketed($text, '(')}
+function: /$thisparser->{__PRIV_EXT_FUNC_REGEX}\s*(?=\()/ {extract_bracketed($text, '(')}
   {
-    warn 'function_msx_parser_extension_factory ' 
+    warn 'function_private_msx_parser_extension_factory ' 
       if $Math::Symbolic::Parser::DEBUG;
     my $function = $item[1];
+    $function =~ s/\s+$//;
     my $argstring = substr($item[2], 1, length($item[2])-2);
-    die "Invalid extension function and/or arguments '$function$item[2]'".
+    die "Invalid extension function and/or arguments '$function$item[2]' ".
         "(Math::SymbolicX::ParserExtensionFactory)"
       if not exists
-         $Math::SymbolicX::ParserExtensionFactory::Functions->{$function};
-    my $result =
-      $Math::SymbolicX::ParserExtensionFactory::Functions->{$function}->($argstring);
+         $thisparser->{__PRIV_EXT_FUNCTIONS}{$function};
+    my $result = $thisparser->{__PRIV_EXT_FUNCTIONS}{$function}->($argstring);
     die "Invalid result of extension function application "
         ."('$item[1]($argstring)'). Also refer to the "
         ."Math::SymbolicX::ParserExtensionFactory manpage."
       if ref($result) !~ /^Math::Symbolic/;
     $return = $result;
   }
+
+  | /$Math::SymbolicX::ParserExtensionFactory::RegularExpression\s*(?=\()/ {extract_bracketed($text, '(')}
+  {
+    warn 'function_global_msx_parser_extension_factory ' 
+      if $Math::Symbolic::Parser::DEBUG;
+    my $function = $item[1];
+    $function =~ s/\s+$//;
+    my $argstring = substr($item[2], 1, length($item[2])-2);
+    die "Invalid extension function and/or arguments '$function$item[2]' ".
+        "(Math::SymbolicX::ParserExtensionFactory)"
+      if not exists
+         $Math::SymbolicX::ParserExtensionFactory::Functions->{$function};
+    my $result = $Math::SymbolicX::ParserExtensionFactory::Functions->{$function}->($argstring);
+    die "Invalid result of extension function application "
+        ."('$item[1]($argstring)'). Also refer to the "
+        ."Math::SymbolicX::ParserExtensionFactory manpage."
+      if ref($result) !~ /^Math::Symbolic/;
+    $return = $result;
+  }
+
 EXTENSION
   return(1);
 }
 
 sub _regenerate_regex {
-  my $string = join '|', map {"\Q$_\E"} @$Order;
-  $RegularExpression = qr/(?:$string)/;
+  my @arrays = @_;
+  my $string = join '|', map {"\Q$_\E"} map {@$_} @arrays;
+  return qr/(?!)/ if $string eq '';
+  return qr/(?:$string)/;
+}
+
+sub add_private_functions {
+  shift if not ref $_[0] and $_[0] eq __PACKAGE__;
+  my $parser = shift;
+  croak("Invalid number of arguments!") if @_ % 2;
+
+  $parser->{__PRIV_EXT_FUNCTIONS}  ||= {};
+  $parser->{__PRIV_EXT_FUNC_ORDER} ||= [];
+  while (@_) {
+    my $name = shift;
+    push @{$parser->{__PRIV_EXT_FUNC_ORDER}}, $name;
+    $parser->{__PRIV_EXT_FUNCTIONS}{$name} = shift;
+  }
+
+  $parser->{__PRIV_EXT_FUNC_REGEX} = _regenerate_regex( $parser->{__PRIV_EXT_FUNC_ORDER} );
 }
 
 1;
@@ -110,6 +150,7 @@ Math::SymbolicX::ParserExtensionFactory - Generate parser extensions
 
   use Math::Symbolic qw/parse_from_string/;
   
+  # This will extend all parser objects in your program:
   use Math::SymbolicX::ParserExtensionFactory (
   
     functionname => sub {
@@ -134,6 +175,17 @@ Math::SymbolicX::ParserExtensionFactory - Generate parser extensions
   # support through the Math::Big* modules) or to
   # Math::SymbolicX::ComplexNumbers (complex number support) for examples.
   
+  
+  # Alternative: modify a single parser object only:
+  my $parser = Math::Symbolic::Parser->new();
+  
+  Math::SymbolicX::ParserExtensionFactory->add_private_functions(
+    $parser,
+    fun_function => sub {...},
+    my_function  => sub {...},
+    ...
+  );
+
 =head1 DESCRIPTION
 
 This module provides a simple way to extend the Math::Symbolic parser with
@@ -173,6 +225,18 @@ because it has to regenerate the complete Math::Symbolic parser the first
 time you use this module in your code. The run time performance penalty
 should be low, however.
 
+=head1 FUNCTIONS
+
+=head2 add_private_functions
+
+Callable as class method or function. First argument must be the parser
+object to modify (either a Parse::RecDescent or a Parse::Yapp based
+Math::Symbolic parser), followed by key/value pairs of function names
+and code refs (implementations).
+
+Modifies only the parser passed in as first argument. For an example,
+see synopsis above.
+
 =head1 CAVEATS
 
 Since version 2.00 of this module, the old, broken parsing of the argument
@@ -188,7 +252,7 @@ Escaping of parenthesis in the argument string B<is no longer supported>.
 
 =head1 AUTHOR
 
-Copyright (C) 2003-2008 Steffen Mueller
+Copyright (C) 2003-2009 Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

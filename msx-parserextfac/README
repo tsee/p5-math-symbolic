@@ -1,5 +1,5 @@
-Math::SymbolicX::ParserExtensionFactory version 2.01
-====================================================
+Math::SymbolicX::ParserExtensionFactory
+=======================================
 
 This module provides a simple way to extend the Math::Symbolic parser with
 arbitrary functions that return any valid Math::Symbolic tree.
@@ -59,7 +59,7 @@ Math::Symbolic and Math::Symbolic::Parser for the full scoop if info.
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2003-2008 Steffen Mueller
+Copyright (C) 2003-2009 Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
