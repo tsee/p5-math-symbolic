@@ -8,7 +8,7 @@ WriteMakefile
           'VERSION_FROM' => 'lib/Math/SymbolicX/ParserExtensionFactory.pm',
           'PREREQ_PM' => {
                            'Test::More' => 0,
-                           'Math::Symbolic' => '0.601',
+                           'Math::Symbolic' => '0.603',
                            'Text::Balanced' => '0',
                            'Memoize' => '1.01',
                            'Data::Dumper' => '0',
