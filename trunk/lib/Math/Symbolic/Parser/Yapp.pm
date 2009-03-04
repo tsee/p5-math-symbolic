@@ -822,14 +822,14 @@ sub {
 	[#Rule 4
 		 'exp', 1,
 sub {
-                $_[1] =~ /^([^(]+)\((.+)\)$/o or die;
+                $_[1] =~ /^([^(]+)\((.*)\)$/ or die "invalid per-object parser extension function: '$_[1]'";
                 $_[0]->{__PRIV_EXT_FUNCTIONS}->{$1}->($2);
             }
 	],
 	[#Rule 5
 		 'exp', 1,
 sub {
-                $_[1] =~ /^([^(]+)\((.+)\)$/o or die;
+                $_[1] =~ /^([^(]+)\((.*)\)$/ or die "invalid global parser extension function: '$_[1]'";
                 $Math::SymbolicX::ParserExtensionFactory::Functions->{$1}->($2)
             }
 	],
@@ -926,7 +926,7 @@ $balanced_parens_re = qr{\((?:(?>[^()]+)|(??{$balanced_parens_re}))*\)};
 sub _Lexer {
     my($parser)=shift;
 
-    my $ExtFunc     = $Math::SymbolicX::ParserExtensionFactory::RegularExpression || qr/(?!)/o;
+    my $ExtFunc     = $Math::SymbolicX::ParserExtensionFactory::RegularExpression || qr/(?!)/;
     my $PrivExtFunc = $parser->{__PRIV_EXT_FUNC_REGEX};
 
     my $data = $parser->{USER};
@@ -1028,11 +1028,11 @@ sub _Lexer {
                 if ($data->{INPUT} =~ /\G($Func)(?=\()/cg) {
                     return('FUNC', $1);
                 }
-                elsif ($PrivExtFunc ? $data->{INPUT} =~ /\G($PrivExtFunc$balanced_parens_re)/cg : 0) {
+                elsif ($PrivExtFunc ? $data->{INPUT} =~ /\G($PrivExtFunc\s*$balanced_parens_re)/cg : 0) {
                     $data->{STATE} = OP;
                     return('PRIVEFUNC', $1);
                 }
-                elsif ($data->{INPUT} =~ /\G($ExtFunc$balanced_parens_re)/cg) {
+                elsif ($data->{INPUT} =~ /\G($ExtFunc\s*$balanced_parens_re)/cg) {
                     $data->{STATE} = OP;
                     return('EFUNC', $1);
                 }
