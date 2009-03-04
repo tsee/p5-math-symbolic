@@ -44,7 +44,6 @@ lib/Math/Symbolic/VectorCalculus.pm
 Makefile.PL
 MANIFEST			This list of files
 META.yml
-precompile_recdescent_grammar.pl
 README
 t/00dist.t
 t/00pod.t
