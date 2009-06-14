@@ -406,9 +406,9 @@ sub new {
 
     my %args;
     %args = %{ $_[0] } if @_;
-	# and ref( $_[0] ) eq 'HASH';
-	# above condition isn't necessary since that'd otherwise have been
-	# the above branch.
+    # and ref( $_[0] ) eq 'HASH';
+    # above condition isn't necessary since that'd otherwise have been
+    # the above branch.
 
     my $operands = [];
     if ( ref $proto ) {
@@ -753,7 +753,7 @@ sub simplify {
             my @todo = ( $o1, $o2 );
             my %vars;
             while (@todo) {
-				my $this = shift @todo;
+                my $this = shift @todo;
 
                 if ( $this->term_type() == T_OPERATOR ) {
                     my $t = $this->type();
@@ -792,25 +792,25 @@ sub simplify {
                                   Math::Symbolic::Operator->new( 'neg',
                                     $op->op1() );
                             }
-							else {
-								push @ops, $this;
-							}
-						}
-					}
-					elsif ( $t == B_PRODUCT ) {
-						my ($o1, $o2) = @{$this->{operands}};
-						my $tl = $o1->term_type();
-						my $tr = $o2->term_type();
-						
-						if ($tl == T_VARIABLE and $tr == T_CONSTANT) {
-							$vars{$o1->name}+= $o2->value();
-						}
-						elsif ($tr == T_VARIABLE and $tl == T_CONSTANT) {
-							$vars{$o2->name}+= $o1->value();
-						}
-						else {
-                        	push @ops, $this;
-						}
+                            else {
+                                push @ops, $this;
+                            }
+                        }
+                    }
+                    elsif ( $t == B_PRODUCT ) {
+                        my ($o1, $o2) = @{$this->{operands}};
+                        my $tl = $o1->term_type();
+                        my $tr = $o2->term_type();
+                        
+                        if ($tl == T_VARIABLE and $tr == T_CONSTANT) {
+                            $vars{$o1->name}+= $o2->value();
+                        }
+                        elsif ($tr == T_VARIABLE and $tl == T_CONSTANT) {
+                            $vars{$o2->name}+= $o1->value();
+                        }
+                        else {
+                            push @ops, $this;
+                        }
                     }
                     else {
                         push @ops, $this;
@@ -824,36 +824,36 @@ sub simplify {
                 }
             }
 
-			my @vars = ();
-			foreach (keys %vars) {
-				my $num  = $vars{$_};
-				if (!$num) { next; }
-				
-				if ($num == 1) {
-					push @vars, Math::Symbolic::Variable->new($_);
-					next;
-				}
-				my $mul = Math::Symbolic::Operator->new(
-					'*',
-					Math::Symbolic::Constant->new($num),
-					Math::Symbolic::Variable->new($_)
-				);
-				push @ops, $num < 0
-					? Math::Symbolic::Operator->new('neg', $mul)
-					: $mul;				
-			}
+            my @vars = ();
+            foreach (keys %vars) {
+                my $num  = $vars{$_};
+                if (!$num) { next; }
+                
+                if ($num == 1) {
+                    push @vars, Math::Symbolic::Variable->new($_);
+                    next;
+                }
+                my $mul = Math::Symbolic::Operator->new(
+                    '*',
+                    Math::Symbolic::Constant->new($num),
+                    Math::Symbolic::Variable->new($_)
+                );
+                push @ops, $num < 0
+                    ? Math::Symbolic::Operator->new('neg', $mul)
+                    : $mul;                
+            }
             
-			my $const;
+            my $const;
             $const = Math::Symbolic::Constant->new($const) if defined $const and $const != 0;
 
-			$const = shift @vars if not defined $const;
+            $const = shift @vars if not defined $const;
             foreach ( @vars ) {
-				$const = Math::Symbolic::Operator->new('+', $const, $_);
+                $const = Math::Symbolic::Operator->new('+', $const, $_);
             }
-			
-			@ops = map {$_->simplify(1)} @ops;
+            
+            @ops = map {$_->simplify(1)} @ops;
             my @newops;
-			push @newops, $const if defined $const;
+            push @newops, $const if defined $const;
             foreach my $out ( 0 .. $#ops ) {
                 next if not defined $ops[$out];
                 my $identical = 0;
@@ -873,13 +873,13 @@ sub simplify {
                         $ops[$out] );
                 }
             }
-			
-			my $sumops;
+            
+            my $sumops;
             if (@newops) {
                 $sumops = shift @newops;
                 $sumops += $_ foreach @newops;
             }
-			else {return Math::Symbolic::Constant->zero()}
+            else {return Math::Symbolic::Constant->zero()}
 
             return $sumops;
         }
