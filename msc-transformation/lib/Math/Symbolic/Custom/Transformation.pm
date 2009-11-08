@@ -29,7 +29,7 @@ Math::Symbolic::Custom::Transformation - Transform Math::Symbolic trees
   my $modified = $trafo->apply($math_symbolic_tree);
   if (defined $modified) {
     print "Outermost operator is a sum of two identical trees.\n";
-	print "Transformed it into a product. ($modified)\n";
+    print "Transformed it into a product. ($modified)\n";
   }
   else {
     print "Transformation could not be applied.\n";
@@ -173,8 +173,8 @@ Perl distribution these days.
 
   sub apply_some_trafo {
     my $source = shift;
-	my $trafo = new_trafo(...some pattern... => ...some transformation...);
-	return $trafo->apply($source);
+    my $trafo = new_trafo(...some pattern... => ...some transformation...);
+    return $trafo->apply($source);
   }
 
 This usage has the advantage of putting the transformation source strings
@@ -203,7 +203,7 @@ simplification routines on C<EXPR> when the transformation is being applied
 =cut
 
 our %EXPORT_TAGS = ( 'all' => [ qw(
-	new_trafo new_trafo_group
+    new_trafo new_trafo_group
 ) ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
@@ -230,23 +230,23 @@ if ($Parser->isa('Parse::RecDescent')) {
     my $pred = join '|', @$Predicates;
     $Parser->Extend(<<"HERE");
 function: /(?:$pred)\{/ expr '}'
-	{
-				my \$function_name = \$item[1];
-				\$function_name =~ s/\{\$//;
+    {
+                my \$function_name = \$item[1];
+                \$function_name =~ s/\{\$//;
 
-				my \$inner = \$item[2];
+                my \$inner = \$item[2];
 
-				my \$name = 'TRANSFORMATION_HOOK';
+                my \$name = 'TRANSFORMATION_HOOK';
 
-				# Since we need to evaluate both 'simplify' and 'value'
-				# at the time we apply the transformation, we just replace
-				# the function occurrance with a special variable that is
-				# recognized later. The function name and argument is stored
-				# in an array as the value of the special variable.
-				Math::Symbolic::Variable->new(
-					\$name, [\$function_name, \$inner]
-				);
-	}
+                # Since we need to evaluate both 'simplify' and 'value'
+                # at the time we apply the transformation, we just replace
+                # the function occurrance with a special variable that is
+                # recognized later. The function name and argument is stored
+                # in an array as the value of the special variable.
+                Math::Symbolic::Variable->new(
+                    \$name, [\$function_name, \$inner]
+                );
+    }
 HERE
 }
 elsif ($Parser->isa('Math::Symbolic::Parser::Yapp')) {
@@ -280,55 +280,55 @@ string to be parsed as such.
 =cut
 
 sub new {
-	my $proto = shift;
-	my $class = ref($proto)||$proto;
+    my $proto = shift;
+    my $class = ref($proto)||$proto;
 
-	my $pattern = shift;
-	my $replacement = shift;
+    my $pattern = shift;
+    my $replacement = shift;
 
-	# parameter checking
-	if (not defined $pattern or not defined $replacement) {
-		croak("Arguments to ".__PACKAGE__."->new() must be a valid pattern and a replacement for matched patterns.");
-	}
+    # parameter checking
+    if (not defined $pattern or not defined $replacement) {
+        croak("Arguments to ".__PACKAGE__."->new() must be a valid pattern and a replacement for matched patterns.");
+    }
 
-	if (not ref($pattern)) {
-		my $copy = $pattern;
-		$pattern = parse_from_string($pattern);
-		if (not ref($pattern)) {
-			croak("Failed to parse pattern '$copy' as a Math::Symbolic tree.");
-		}
-	}
+    if (not ref($pattern)) {
+        my $copy = $pattern;
+        $pattern = parse_from_string($pattern);
+        if (not ref($pattern)) {
+            croak("Failed to parse pattern '$copy' as a Math::Symbolic tree.");
+        }
+    }
 
-	if (not $pattern->isa('Math::Symbolic::Custom::Pattern')) {
-		eval {$pattern = Math::Symbolic::Custom::Pattern->new($pattern);};
-		if ( $@ or not ref($pattern)
-			 or not $pattern->isa('Math::Symbolic::Custom::Pattern')	)
-		{
-			croak(
-				"Could not transform pattern source into a pattern object."
-				. ($@?" Error: $@":"")
-			);
-		}
-	}
+    if (not $pattern->isa('Math::Symbolic::Custom::Pattern')) {
+        eval {$pattern = Math::Symbolic::Custom::Pattern->new($pattern);};
+        if ( $@ or not ref($pattern)
+             or not $pattern->isa('Math::Symbolic::Custom::Pattern')    )
+        {
+            croak(
+                "Could not transform pattern source into a pattern object."
+                . ($@?" Error: $@":"")
+            );
+        }
+    }
 
-	if (not ref($replacement) =~ /^Math::Symbolic/) {
-		my $copy = $replacement;
-		$replacement = $Parser->parse($replacement);
-		if (not ref($replacement) =~ /^Math::Symbolic/) {
-			croak(
-				"Failed to parse replacement '$copy' as a Math::Symbolic tree."
-			);
-		}
-	}
+    if (not ref($replacement) =~ /^Math::Symbolic/) {
+        my $copy = $replacement;
+        $replacement = $Parser->parse($replacement);
+        if (not ref($replacement) =~ /^Math::Symbolic/) {
+            croak(
+                "Failed to parse replacement '$copy' as a Math::Symbolic tree."
+            );
+        }
+    }
 
-	my $self = {
-		pattern => $pattern,
-		replacement => $replacement,
-	};
+    my $self = {
+        pattern => $pattern,
+        replacement => $replacement,
+    };
 
-	bless $self => $class;
+    bless $self => $class;
 
-	return $self;
+    return $self;
 }
 
 
@@ -348,116 +348,116 @@ On errors, it throws a fatal error.
 =cut
 
 sub apply {
-	my $self = shift;
-	my $tree = shift;
+    my $self = shift;
+    my $tree = shift;
 
     if (not ref($tree) =~ /^Math::Symbolic/) {
-		croak("First argument to apply() must be a Math::Symbolic tree.");
-	}
+        croak("First argument to apply() must be a Math::Symbolic tree.");
+    }
 
-	my $pattern = $self->{pattern};
-	my $repl = $self->{replacement};
+    my $pattern = $self->{pattern};
+    my $repl = $self->{replacement};
 
-	my $matched = $pattern->match($tree);
+    my $matched = $pattern->match($tree);
 
     return undef if not $matched;
 
-	my $match_vars = $matched->{vars};
-	my $match_trees = $matched->{trees};
-	my $match_consts = $matched->{constants};
+    my $match_vars = $matched->{vars};
+    my $match_trees = $matched->{trees};
+    my $match_consts = $matched->{constants};
 
-	my $new = $repl->new();
+    my $new = $repl->new();
 
-	no warnings 'recursion';
-	
-	my $subroutine;
-	my @descend_options;
+    no warnings 'recursion';
+    
+    my $subroutine;
+    my @descend_options;
 
-	$subroutine = sub {
-		my $tree = shift;
-		if ($tree->term_type() == T_VARIABLE) {
-			my $name = $tree->{name};
-			if ($name eq 'TRANSFORMATION_HOOK') {
+    $subroutine = sub {
+        my $tree = shift;
+        if ($tree->term_type() == T_VARIABLE) {
+            my $name = $tree->{name};
+            if ($name eq 'TRANSFORMATION_HOOK') {
 
-                my $hook = $tree->value();
-				if (not ref($hook) eq 'ARRAY' and @$hook == 2) {
-					croak("Found invalid transformation hook in replacement tree. Did you use a variable named 'TRANSFORMATION_HOOK'? If so, please change its name since that name is used internally.");
-				}
-				else {
-					my $type = $hook->[0];
-					my $operand = $hook->[1]->new();
-					$operand->descend(
-						@descend_options
-					);
+        my $hook = $tree->value();
+                if (not ref($hook) eq 'ARRAY' and @$hook == 2) {
+                    croak("Found invalid transformation hook in replacement tree. Did you use a variable named 'TRANSFORMATION_HOOK'? If so, please change its name since that name is used internally.");
+                }
+                else {
+                    my $type = $hook->[0];
+                    my $operand = $hook->[1]->new();
+                    $operand->descend(
+                        @descend_options
+                    );
 
-					if ($type eq 'simplify') {
-						my $simplified = $operand->simplify();
-						$tree->replace($simplified);
-						return undef;
-					}
-					elsif ($type eq 'value') {
-						my $value = $operand->value();
-						if (not defined $value) {
-							croak("Tried to evaluate transformation subroutine value() but it evaluated to an undefined value.");
-						}
-						$value = Math::Symbolic::Constant->new($value);
-						$tree->replace($value);
-						return undef;
-					}
-					else {
-						die("Invalid TRANSFORMATION_HOOK type '$type'.");
-					}
-				}
-			}
-			elsif ($name =~ /^(VAR|CONST|TREE)_(\w+)/) {
-				my $type = $1;
-				my $name = $2;
-				if ($type eq 'VAR') {
-					if (exists $match_vars->{$name}) {
-						$tree->replace(
+                    if ($type eq 'simplify') {
+                        my $simplified = $operand->simplify();
+                        $tree->replace($simplified);
+                        return undef;
+                    }
+                    elsif ($type eq 'value') {
+                        my $value = $operand->value();
+                        if (not defined $value) {
+                            croak("Tried to evaluate transformation subroutine value() but it evaluated to an undefined value.");
+                        }
+                        $value = Math::Symbolic::Constant->new($value);
+                        $tree->replace($value);
+                        return undef;
+                    }
+                    else {
+                        die("Invalid TRANSFORMATION_HOOK type '$type'.");
+                    }
+                }
+            }
+            elsif ($name =~ /^(VAR|CONST|TREE)_(\w+)/) {
+                my $type = $1;
+                my $name = $2;
+                if ($type eq 'VAR') {
+                    if (exists $match_vars->{$name}) {
+                        $tree->replace(
                             Math::Symbolic::Variable->new(
                                 $match_vars->{$name}
                             )
                         );
-					}
-				}
-				elsif ($type eq 'TREE') {
-					if (exists $match_trees->{$name}) {
-						$tree->replace($match_trees->{$name});
-					}
-				}
-				else {
-					if (exists $match_consts->{$name}) {
-						$tree->replace(
-							Math::Symbolic::Constant->new(
-								$match_consts->{$name}
-							)
-						);
-					}
-				}
-				
-				return undef;
-			}
-			return();
-		}
-		else {
-			return();
-		}
-	};
-	@descend_options = (
-		in_place => 1,
-		operand_finder => sub {
-			if ($_[0]->term_type == T_OPERATOR) {
-				return @{$_[0]->{operands}};
-			}
-			else {
-				return();
-			}
-		},
-		before => $subroutine,
-	);
-	$new->descend(@descend_options);
-	return $new;
+                    }
+                }
+                elsif ($type eq 'TREE') {
+                    if (exists $match_trees->{$name}) {
+                        $tree->replace($match_trees->{$name});
+                    }
+                }
+                else {
+                    if (exists $match_consts->{$name}) {
+                        $tree->replace(
+                            Math::Symbolic::Constant->new(
+                                $match_consts->{$name}
+                            )
+                        );
+                    }
+                }
+                
+                return undef;
+            }
+            return();
+        }
+        else {
+            return();
+        }
+    };
+    @descend_options = (
+        in_place => 1,
+        operand_finder => sub {
+            if ($_[0]->term_type == T_OPERATOR) {
+                return @{$_[0]->{operands}};
+            }
+            else {
+                return();
+            }
+        },
+        before => $subroutine,
+    );
+    $new->descend(@descend_options);
+    return $new;
 }
 
 =item apply_recursive
@@ -583,8 +583,8 @@ of new transformation groups. See L<Math::Symbolic::Custom::Transformation::Grou
 *new_trafo_group = *Math::Symbolic::Custom::Transformation::Group::new_trafo_group;
 
 sub new_trafo {
-	unshift @_, __PACKAGE__;
-	goto &new;
+    unshift @_, __PACKAGE__;
+    goto &new;
 }
 
 1;
