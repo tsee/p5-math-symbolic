@@ -186,9 +186,9 @@ sub new {
   my %opt = @_;
 
   my $info = {
-    vars => {},
-    constants => {},
-    trees => {},
+    vars        => {},
+    constants   => {},
+    trees       => {},
     commutation => $opt{commutation},
   };
   
@@ -198,8 +198,8 @@ sub new {
 
   my $self = {
     pattern => $pattern,
-    info => $info,
-    string => $proto->to_string(),
+    info    => $info,
+    string  => $proto->to_string(),
   };
 
   return bless $self => $class;
@@ -473,7 +473,7 @@ sub _permute (&@) {
     my $q = $p or return;
     push @idx, reverse splice @idx, $p;
     ++$q while $idx[$p-1] > $idx[$q];
-    @idx[$p-1,$q]=@idx[$q,$p-1];
+    @idx[$p-1, $q] = @idx[$q, $p-1];
   }
 }
 
@@ -544,7 +544,7 @@ Steffen Müller, E<lt>symbolic-module at steffen-mueller dot netE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2005-2008 by Steffen Müller
+Copyright (C) 2005-2009 by Steffen Müller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.4 or,
