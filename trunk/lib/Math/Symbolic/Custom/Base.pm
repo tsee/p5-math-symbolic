@@ -53,7 +53,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.603';
+our $VERSION = '0.604';
 our $AUTOLOAD;
 
 =head2 aggregate_import

@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.604  Fri Jun 11 18:30 2010
+    - Fix regression in the quotient rule of derivatives (#58319)
+    - Fix problem with the atan2 derivative.
+
 0.603  Wed Mar  4 18:21 2009
     - Fix regression in the Yapp-parser parser extension mechanism.
 
