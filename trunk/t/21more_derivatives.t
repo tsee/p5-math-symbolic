@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Carp qw/croak/;
-use Test::More tests => 10;
+use Test::More tests => 12;
 BEGIN {
     use_ok('Math::Symbolic');
 }
@@ -40,6 +40,16 @@ my @f = (
     [
         q{x/x^2},
         q{-1/x^2},
+        { x => sub {$_[0] > 0} },
+    ],
+    [
+        q{2/x},
+        q{-2/x^2},
+        { x => sub {$_[0] > 0} },
+    ],
+    [
+        q{c/x},
+        q{-c/x^2},
         { x => sub {$_[0] > 0} },
     ],
 );

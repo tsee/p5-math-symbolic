@@ -262,7 +262,7 @@ sub _quotient_rule {
         }
         return $tree->new('*', Math::Symbolic::Constant->new(1/$val), $do1);
     }
-    # y = c/f(x)
+    # y = c/f(x) => y' = -c*f'(x)/f^2(x)
     elsif ($op1->is_simple_constant()) {
         $do2 = $d_sub->( $op2, $var, 0 );
         my $val = $op1->value();
@@ -274,13 +274,16 @@ sub _quotient_rule {
         my $tdo2 = $do2->term_type();
         if ($tdo2 == T_CONSTANT) {
             return $do2->zero() if $do2->{value} == 0; # c*0/f
-            return $tree->new('*', $do2->new($val*$do2->{value}), $op1);
+            return $tree->new(
+                '/', $do2->new(-1.*$val*$do2->{value}),
+                     $tree->new('^', $op2, 2)
+            );
         }
         else {
             return $tree->new(
-                '*', Math::Symbolic::Constant->new($val),
-                $tree->new('/', $do2, $op1)
-            );
+                '*', Math::Symbolic::Constant->new(-1*$val),
+                $tree->new('/', $do2, $tree->new('^', $op2, Math::Symbolic::Constant->new(2)))
+            )
         }
     }
 
@@ -320,7 +323,9 @@ sub _quotient_rule {
     }
 
     my $m3 = $tree->new('^', $op2, Math::Symbolic::Constant->new(2));
-    $upper = Math::Symbolic::Operator->new( '-', $m1, $m2 );
+    if (not defined $upper) {
+      $upper = Math::Symbolic::Operator->new( '-', $m1, $m2 );
+    }
     return Math::Symbolic::Operator->new( '/', $upper, $m3 );
 }
 
