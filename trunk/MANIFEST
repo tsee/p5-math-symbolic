@@ -70,5 +70,6 @@ t/19misccalc.t
 t/20miscalgebra.t
 t/21more_derivatives.t
 t/22dumpers.t
+t/90regression.t
 TODO
 Yapp.yp
