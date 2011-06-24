@@ -1,5 +1,15 @@
 Revision history for Perl extension Math::Symbolic::Custom::LaTeXDumper
 
+0.207 Fri Jun 24 2011
+  - If generating TeX for something like
+    x * -1
+    we need to add parenthesis to the constant:
+    x * (-1)
+    While mathematically, the prefered way to print this
+    example would be -x, the expression itself is kept the same
+    by design. The same rule applies to unary minus operators
+    and negative constants within sums, differences, and products.
+
 0.206 Sun Jan  6 2008
   - 0.205 distribution was broken.
 
