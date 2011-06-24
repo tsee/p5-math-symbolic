@@ -37,7 +37,7 @@ use strict;
 use warnings;
 no warnings 'recursion';
 
-our $VERSION = '0.206';
+our $VERSION = '0.207';
 
 use Math::Symbolic::Custom::Base;
 BEGIN { *import = \&Math::Symbolic::Custom::Base::aggregate_import }
@@ -151,41 +151,41 @@ sub to_latex {
     $config{implicit_multiplication} = 1
       unless defined $config{implicit_multiplication};
     $config{no_fractions}      = 0 unless defined $config{no_fractions};
-	$config{max_fractions}     = 2 if not exists $config{max_fractions};
+    $config{max_fractions}     = 2 if not exists $config{max_fractions};
     $config{exclude_signature} = 0 unless defined $config{exclude_signature};
     $config{no_sqrt} = 0 unless defined $config{no_sqrt};
     $config{replace_default_greek} = 0
       unless defined $config{replace_default_greek};
 
-	$config{subscript} = 1 if not exists $config{subscript};
+    $config{subscript} = 1 if not exists $config{subscript};
 
     $config{variable_mappings} = {}
       if not exists $config{variable_mappings}
       or not ref( $config{variable_mappings} ) eq 'HASH';
 
     my $default_greek = qr/(?<![a-zA-Z])
-         alpha|beta|gamma|delta|epsilon|zeta|eta|theta
-         |iota|kappa|lambda|mu|nu|xi|pi|rho|sigma|tau|upsilon
-	 |phi|chi|psi|omega
-	 |varepsilon|vartheta|varpi|varrho|varsigma|varphi
-	 |Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Upsilon|Phi|Psi|Omega
-	 (?![a-zA-Z])
-	/x;
+        alpha|beta|gamma|delta|epsilon|zeta|eta|theta
+        |iota|kappa|lambda|mu|nu|xi|pi|rho|sigma|tau|upsilon
+        |phi|chi|psi|omega
+        |varepsilon|vartheta|varpi|varrho|varsigma|varphi
+        |Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Upsilon|Phi|Psi|Omega
+        (?![a-zA-Z])
+    /x;
 
     my $greekify = sub {
         my $s = $_[0];
         $s =~ s/($default_greek)/\\$1/g if $config{replace_default_greek};
         return $s;
     };
-	
+    
     my $subscriptify;
-   	$subscriptify = sub {
+       $subscriptify = sub {
         my $s = $_[0];
-		$s = '' if not defined $s;
-		$s =~ s{_(.*)$}/length($1) == 1 ? "_$1" : '_{'.$subscriptify->($1).'}'/e if $config{subscript};
+        $s = '' if not defined $s;
+        $s =~ s{_(.*)$}/length($1) == 1 ? "_$1" : '_{'.$subscriptify->($1).'}'/e if $config{subscript};
         return $s;
     };
-	
+    
     my $precedence = [
         1,     # B_SUM
         1,     # B_DIFFERENCE
@@ -228,15 +228,15 @@ sub to_latex {
 
         # B_DIVISION
         sub {
-			if ( $config{no_fractions} ) {
-				"$_[0] / $_[1]"
-			}
-			elsif (!$config{max_fractions} or $config{max_fractions} > $_[2]) {
-				"\\frac{$_[0]}{$_[1]}"
-			}
-			else {
-				"$_[0] / $_[1]"
-			}
+            if ( $config{no_fractions} ) {
+                "$_[0] / $_[1]"
+            }
+            elsif (!$config{max_fractions} or $config{max_fractions} > $_[2]) {
+                "\\frac{$_[0]}{$_[1]}"
+            }
+            else {
+                "$_[0] / $_[1]"
+            }
         },
 
         # U_MINUS
@@ -250,11 +250,11 @@ sub to_latex {
 
         # B_EXP
         sub {
-			if (!$config{no_sqrt} and length($_[1]) > 2 and $_[1] !~ /\{|\}|\^|_|\-|\\|[A-DF-Za-df-z]/ and $_[1] - 0.5 < 1e-28) {
-				return "\\sqrt{$_[0]}";
-			}
-			length($_[1]) == 1 ? "$_[0]^$_[1]" : "$_[0]^{$_[1]}"
-		},
+            if (!$config{no_sqrt} and length($_[1]) > 2 and $_[1] !~ /\{|\}|\^|_|\-|\\|[A-DF-Za-df-z]/ and $_[1] - 0.5 < 1e-28) {
+                return "\\sqrt{$_[0]}";
+            }
+            length($_[1]) == 1 ? "$_[0]^$_[1]" : "$_[0]^{$_[1]}"
+        },
 
         # B_LOG
         sub { "\\log_{$_[0]}$_[1]" },
@@ -300,6 +300,7 @@ sub to_latex {
     ];
 
     my $tex = $self->descend(
+        in_place       => 0,
         operand_finder => sub { $_[0]->descending_operands('all') },
         before         => sub {
             $_[0]->{__precedences} = [
@@ -314,31 +315,31 @@ sub to_latex {
                     elsif ( $ttype == T_CONSTANT ) {
                         100;
                     }
-                    else { die; }
+                    else { die "Should not be reached"; }
                   } @{ $_[0]->{operands} }
             ];
-			my $fraction_depth = $_[0]->{__fract_depth} || 0;
-			$fraction_depth++ if $_[0]->term_type() == T_OPERATOR and $_[0]->type() == B_DIVISION;
-			for (@{ $_[0]->{operands} }) {
-				$_->{__fract_depth} = $fraction_depth;
-			}
+            my $fraction_depth = $_[0]->{__fract_depth} || 0;
+            $fraction_depth++ if $_[0]->term_type() == T_OPERATOR and $_[0]->type() == B_DIVISION;
+            for (@{ $_[0]->{operands} }) {
+                $_->{__fract_depth} = $fraction_depth;
+            }
             return ();
         },
         after => sub {
-            my $self  = \$_[0];
-            my $ttype = $$self->term_type();
+            my $self  = $_[0];
+            my $ttype = $self->term_type();
             if ( $ttype == T_CONSTANT ) {
-                $$self = { text => $$self->value() };
+                $self->{text} = $self->value();
             }
             elsif ( $ttype == T_VARIABLE ) {
-                my $name        = $$self->name();
+                my $name        = $self->name();
                 my $edited_name = $name;
                 if ( exists $config{variable_mappings}{$name} ) {
                     $edited_name = $config{variable_mappings}{$name};
                 }
-				else {
+                else {
                     $edited_name = $greekify->($name);
-					$edited_name = $subscriptify->($edited_name);
+                    $edited_name = $subscriptify->($edited_name);
                 }
                 unless ( $config{exclude_signature} ) {
                     my @sig =
@@ -348,44 +349,48 @@ sub to_latex {
                             $config{variable_mappings}{$_};
                         }
                         else {
-							$_ = $subscriptify->($_);
+                            $_ = $subscriptify->($_);
                             s/_/\_/g;
                             $greekify->($_);
                         }
                       }
-                      grep { $_ ne $name } $$self->signature();
+                      grep $_ ne $name, $self->signature();
                     if (@sig) {
-                        $$self =
-                          {     text => "$edited_name("
-                              . join( ', ', @sig )
-                              . ')' };
+                        $self->{text} = "$edited_name(" . join( ', ', @sig ) . ')';
                     }
                     else {
-                        $$self = { text => $edited_name };
+                        $self->{text} = $edited_name;
                     }
                 }
                 else {
-                    $$self = { text => $edited_name };
+                    $self->{text} = $edited_name;
                 }
             }
             elsif ( $ttype == T_OPERATOR ) {
-                my $type  = $$self->type();
+                my $type  = $self->type();
                 my $prec  = $precedence->[$type];
-                my $precs = $$self->{__precedences};
-                my @ops   = map { $_->{text} } @{ $$self->{operands} };
-				unless ( $type == B_DIVISION and !$config{no_fractions} ) {
-	                for ( my $i = 0 ; $i < @ops ; $i++ ) {
-    	            	if ( $precs->[$i] < $prec or $precs->[$i] == $prec && $prec == 50 ) {
-        	            	$ops[$i] = '\\left(' . $ops[$i] . '\\right)'
-						}
-                	}
-				}
-				my $fraction_depth = $$self->{__fract_depth}||0;
-                my $text = $op_to_tex->[$type]->(@ops, $fraction_depth);
-                $$self = { text => $text };
+                my $precs = $self->{__precedences};
+                my @ops   = @{ $self->{operands} };
+                unless ( $type == B_DIVISION and !$config{no_fractions} ) {
+                    for ( my $i = 0 ; $i < @ops ; $i++ ) {
+                        my $obj = $ops[$i];
+                        if ( $precs->[$i] < $prec
+                             or $precs->[$i] == $prec && $prec == 50 # prec == 50 is a function call
+                             or $i == 1 # second operand
+                                && ($type == B_PRODUCT||$type == B_SUM||$type==B_DIFFERENCE)
+                                && ($obj->term_type == T_CONSTANT && $obj->value < 0)
+                                   || ($obj->term_type == T_OPERATOR && $obj->type == U_MINUS) )
+                        {
+                            $ops[$i]->{text} = '\\left(' . $ops[$i]->{text} . '\\right)'
+                        }
+                    }
+                }
+                my $fraction_depth = $self->{__fract_depth}||0;
+                my $text = $op_to_tex->[$type]->((map $_->{text}, @ops), $fraction_depth);
+                $self->{text} = $text;
             }
             else {
-                die;
+                die "Should never be reached";
             }
         },
     );
@@ -395,19 +400,6 @@ sub to_latex {
 
 1;
 __END__
-
-=head1 AUTHOR
-
-Please send feedback, bug reports, and support requests to the Math::Symbolic
-support mailing list:
-math-symbolic-support at lists dot sourceforge dot net. Please
-consider letting us know how you use Math::Symbolic. Thank you.
-
-If you're interested in helping with the development or extending the
-module's functionality, please contact the developers' mailing list:
-math-symbolic-develop at lists dot sourceforge dot net.
-
-Steffen Müller, symbolic-module at steffen-mueller dot net
 
 =head1 SEE ALSO
 
@@ -420,5 +412,17 @@ L<Math::Symbolic::Custom::DefaultMods>
 L<Math::Symbolic::Custom::DefaultDumpers>
 L<Math::Symbolic::Custom::DefaultTests>
 L<Math::Symbolic>
+
+=head1 AUTHOR
+
+Steffen Müller, C<smueller@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2006, 2008, 2011 by Steffen Mueller
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.0 or,
+at your option, any later version of Perl 5 you may have available.
 
 =cut
