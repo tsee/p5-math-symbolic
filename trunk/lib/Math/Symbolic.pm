@@ -39,11 +39,11 @@ Perl operators (and functions, see L<OVERLOADED OPERATORS>) to existing
 Math::Symbolic trees and standard Perl expressions.
 
 Possibly the most convenient way of constructing Math::Symbolic trees is
-using the builtin parser to generate trees from expressions such as '2 * x^5'.
-You may use the Math::Symbolic->parse_from_string() class method for this.
+using the builtin parser to generate trees from expressions such as C<2 * x^5>.
+You may use the C<Math::Symbolic-E<gt>parse_from_string()> class method for this.
 
 Of course, you may combine the overloaded interface with the parser to
-generate trees with Perl code such as "$term * 5 * 'sin(omega*t+phi)'" which
+generate trees with Perl code such as C<$term * 5 * 'sin(omega*t+phi)'> which
 will create a tree of the existing tree $term times 5 times the sine of
 the vars omega times t plus phi.
 
@@ -53,18 +53,18 @@ Furthermore, there are several extensions to Math::Symbolic available
 from CPAN as separate distributions. Please refer to L<SEE ALSO>
 for an incomplete list of these.
 
-For example, Math::Symbolic::MiscCalculus come with Math::Symbolic and
+For example, L<Math::Symbolic::MiscCalculus> come with C<Math::Symbolic> and
 contains routines to compute Taylor Polynomials and the associated errors.
 
 Routines related to vector calculus such as grad, div, rot, and Jacobi- and
-Hesse matrices are available through the Math::Symbolic::VectorCalculus
+Hesse matrices are available through the L<Math::Symbolic::VectorCalculus>
 module. This module is also able to compute Taylor Polynomials of
 functions of two variables, directional derivatives, total differentials,
 and Wronskian Determinants.
 
 Some basic support for linear algebra can be found in
-Math::Symbolic::MiscAlgebra. This includes a routine to compute
-the determinant of a matrix of Math::Symbolic trees.
+L<Math::Symbolic::MiscAlgebra>. This includes a routine to compute
+the determinant of a matrix of C<Math::Symbolic> trees.
 
 =head2 EXPORT
 
@@ -277,6 +277,11 @@ some complex calculation to each object in the loop body before adding it to
 the sum, you'd have to either split the code into two loops or replicate the
 code required for the complex calculation when shift()ing the first object
 into $sum.
+
+B<Warning:> The operator to use for exponentiation is the normal Perl
+operator for exponentiation C<**>, NOT the caret C<^> which denotes
+exponentiation in the notation that is recognized by the Math::Symbolic
+parsers! The C<^> operator will be interpreted as the normal binary xor.
 
 =head1 EXTENDING THE MODULE
 
@@ -512,7 +517,7 @@ C<$x * 'y+z'>).
   proto    147119/s 57023%    54%     3%       1%        1%     --
 
 Obviously, the parser gets blown to pieces, performance-wise. If you want to
-use it, but cannot accept its tranquility, you can ressort to
+use it, but cannot accept its tranquility, you can resort to
 Math::SymbolicX::Inline and have the formulas parsed at compile time. (Which
 isn't faster, but means that they are available when the program runs.)
 All other methods are about the same speed. Note, that the ol_* tests
@@ -543,23 +548,6 @@ I<ol_long> should, however, be faster than I<ol_parse>. I'll refine the
 benchmark somewhen. The three other construction methods are still about
 the same speed. I omitted the long version in the last benchmark because
 the typing work involved was unnerving.
-
-=head1 AUTHOR
-
-Please send feedback, bug reports, and support requests to the Math::Symbolic
-support mailing list:
-math-symbolic-support at lists dot sourceforge dot net. Please
-consider letting us know how you use Math::Symbolic. Thank you.
-
-If you're interested in helping with the development or extending the
-module's functionality, please contact the developers' mailing list:
-math-symbolic-develop at lists dot sourceforge dot net.
-
-List of contributors:
-
-  Steffen Müller, symbolic-module at steffen-mueller dot net
-  Stray Toaster, mwk at users dot sourceforge dot net
-  Oliver Ebenhöh
 
 =head1 SEE ALSO
 
@@ -618,5 +606,31 @@ L<Math::SymbolicX::Statistics::Distributions> (Statistical Distributions as
 Math::Symbolic functions)
 
 L<Math::SymbolicX::NoSimplification> (Turns off Math::Symbolic simplifications)
+
+=head1 AUTHOR
+
+Please send feedback, bug reports, and support requests to the Math::Symbolic
+support mailing list:
+math-symbolic-support at lists dot sourceforge dot net. Please
+consider letting us know how you use Math::Symbolic. Thank you.
+
+If you're interested in helping with the development or extending the
+module's functionality, please contact the developers' mailing list:
+math-symbolic-develop at lists dot sourceforge dot net.
+
+List of contributors:
+
+  Steffen Müller, smueller at cpan dot org
+  Stray Toaster, mwk at users dot sourceforge dot net
+  Oliver Ebenhöh
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 by Steffen Mueller
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.6.1 or,
+at your option, any later version of Perl 5 you may have available.
+
 
 =cut
