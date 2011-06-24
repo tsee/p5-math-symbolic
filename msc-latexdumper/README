@@ -38,7 +38,7 @@ http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Math-Symbolic-Custom-LaTeXDumper
 
 COPYRIGHT AND LICENCE
 
-Copyright (c) 2006 Steffen Mueller
+Copyright (C) 2006, 2008, 2011 by Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
