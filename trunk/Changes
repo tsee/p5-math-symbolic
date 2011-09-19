@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.607  Mon Sep 19 09:03 2011
+    - Documentation change: Add warning about confusing ^ and **
+      for overloaded operations.
+
 0.606  Fri Dec 31 19:30 2010
     - Distribution fix
 
