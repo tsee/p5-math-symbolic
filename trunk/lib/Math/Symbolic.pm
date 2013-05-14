@@ -152,7 +152,7 @@ our %EXPORT_TAGS = (
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT    = qw();
 
-our $VERSION = '0.607';
+our $VERSION = '0.608';
 
 =head1 CLASS DATA
 
@@ -626,7 +626,8 @@ List of contributors:
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 by Steffen Mueller
+Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011,
+2013 by Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.6.1 or,

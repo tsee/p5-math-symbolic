@@ -46,8 +46,6 @@ MANIFEST			This list of files
 META.yml
 README
 t/00dist.t
-t/00pod.t
-t/00podcover.t
 t/01basic.t
 t/02basic.t
 t/03exp.t
@@ -72,4 +70,6 @@ t/21more_derivatives.t
 t/22dumpers.t
 t/90regression.t
 TODO
+xt/00pod.t
+xt/00podcover.t
 Yapp.yp
