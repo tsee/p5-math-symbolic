@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Symbolic::Custom::LaTeXDumper
 
+0.208 Tue May 14 2013
+  - Move POD tests from t/ to xt/
+  - POD encoding fix (RT #85276, Andreas Koenig)
+
 0.207 Fri Jun 24 2011
   - If generating TeX for something like
     x * -1
