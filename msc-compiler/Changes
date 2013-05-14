@@ -1,6 +1,9 @@
 Revision history for Perl extension Math::Symbolic::Custom::CCompiler.
 
-1.01  Sat Jan  5 11:53 2008
+1.03  Tue May 14 19:00 2013
+  - Move POD tests to xt/
+
+1.02  Sat Jan  5 11:53 2008
   - Added support for Math::Symbolic 0.509's B_ARCTANGENT_TWO op.
 
 1.01  Wed Sep 14 10:47 2006

@@ -5,6 +5,6 @@ META.yml
 Makefile.PL
 README
 lib/Math/Symbolic/Custom/CCompiler.pm
-t/00pod.t
-t/00podcover.t
 t/01sanity.t
+xt/00pod.t
+xt/00podcover.t

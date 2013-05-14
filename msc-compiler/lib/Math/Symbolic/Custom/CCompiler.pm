@@ -10,7 +10,7 @@ use Math::Symbolic::Custom::Base;
 BEGIN {*import = \&Math::Symbolic::Custom::Base::aggregate_import}
 
 use Math::Symbolic::ExportConstants qw/:all/;
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 our $Aggregate_Export = [qw/to_c to_compiled_c/];
 
@@ -300,7 +300,7 @@ L<Math::Symbolic::Custom::Base>,
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2003-2006 by Steffen Müller
+Copyright (C) 2003-2006, 2008, 2013 by Steffen Müller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.6 or,
