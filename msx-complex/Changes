@@ -1,5 +1,8 @@
 Revision history for Perl extension Math::SymbolicX::Complex.
 
+1.01  Tue May 14 19:00 2013
+    - Move POD tests to xt/
+
 1.00  Fri Jan 19 18:27 2007
     - Various distribution upgrades. Also, this is quite stable now.
 

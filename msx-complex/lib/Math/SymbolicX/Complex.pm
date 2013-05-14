@@ -13,7 +13,7 @@ use Math::Complex;
 
 package Math::SymbolicX::Complex;
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 # Regular expression for floating point numbers.
 # Stolen from Math::Complex version 1.34, but since this will be released
@@ -165,7 +165,7 @@ the C<==> operator will break.
 
 =head1 AUTHOR
 
-Copyright (C) 2004-2007 Steffen Mueller
+Copyright (C) 2004-2007, 2013 Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
