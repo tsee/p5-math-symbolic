@@ -1,4 +1,6 @@
 
+=encoding utf8
+
 =head1 NAME
 
 Math::Symbolic::Custom::LaTeXDumper - Math::Symbolic LaTeX output
@@ -419,7 +421,7 @@ Steffen Müller, C<smueller@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2006, 2008, 2011 by Steffen Mueller
+Copyright (C) 2006, 2008, 2011, 2013 by Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.0 or,
