@@ -1,4 +1,6 @@
 
+=encoding utf8
+
 =head1 NAME
 
 Math::Symbolic::Custom::DefaultMods - Default Math::Symbolic transformations

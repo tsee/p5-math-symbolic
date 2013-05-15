@@ -1,3 +1,8 @@
+
+=encoding utf8
+
+=cut
+
 package Math::Symbolic::ExportConstants;
 
 use 5.006;

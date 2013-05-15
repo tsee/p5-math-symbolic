@@ -1,4 +1,6 @@
 
+=encoding utf8
+
 =head1 NAME
 
 Math::Symbolic::MiscAlgebra - Miscellaneous algebra routines like det()

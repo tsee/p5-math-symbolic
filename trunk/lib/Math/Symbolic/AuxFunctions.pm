@@ -1,4 +1,6 @@
 
+=encoding utf8
+
 =head1 NAME
 
 Math::Symbolic::AuxFunctions - Auxiliary functions for Math::Symbolic hierarchy

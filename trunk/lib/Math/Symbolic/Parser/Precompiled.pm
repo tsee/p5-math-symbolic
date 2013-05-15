@@ -1,6 +1,8 @@
 
 use strict;
 
+=encoding utf8
+
 =head1 NAME
 
 Math::Symbolic::Parser::Precompiled - Precompiled Math::Symbolic Parser
