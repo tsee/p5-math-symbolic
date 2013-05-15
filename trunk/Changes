@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.609  Wed May 14 07:20 2013
+    - Move POD tests to xt/
+    - POD/encoding fixes.
+
 0.608  Tue May 14 19:00 2013
     - Move POD tests to xt/
 
