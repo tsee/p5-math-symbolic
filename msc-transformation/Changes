@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Symbolic::Custom::Transformation.
 
+2.02  Sun May 26 11:30 2013
+    - Do not run POD tests by default.
+    - POD encoding fixes.
+
 2.01  Wed Jul 23 14:16 2008
     - Documentation patches.
 

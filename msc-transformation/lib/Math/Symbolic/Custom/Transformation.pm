@@ -13,7 +13,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '2.01';
+our $VERSION = '2.02';
 
 =encoding utf8
 
