@@ -1,0 +1,7 @@
+*/blib/
+*/_build/
+*/Build
+*/MYMETA.*
+*/META.*
+.*.swp
+.*.swo
