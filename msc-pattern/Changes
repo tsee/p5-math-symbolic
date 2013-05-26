@@ -1,5 +1,9 @@
 Revision history for Perl extension Math::Symbolic::Custom::Pattern.
 
+2.01  Sun May 26 11:15 2013
+  - Move POD tests to author tests.
+  - POD encoding fixes.
+
 2.00  Sun Jan 27 19:56 2008
   - Added commutative matching. Requires Math::Symbolic 0.510.
 
