@@ -10,10 +10,12 @@ use Math::Symbolic ();
 use Math::Symbolic::Custom::Transformation;
 require Math::SymbolicX::Calculator::Command;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use vars qw/$Identifier_Regex/;
 $Identifier_Regex = qr/[a-zA-Z][a-zA-Z_0-9]*/;
+
+=encoding utf8
 
 =head1 NAME
 
@@ -176,7 +178,7 @@ Steffen Müller, E<lt>smueller@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2006 by Steffen Müller
+Copyright (C) 2006, 2013 by Steffen Müller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.6 or,

@@ -7,7 +7,9 @@ use warnings;
 use Math::SymbolicX::Calculator;
 use Params::Util qw/_INSTANCE/;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
+
+=encoding utf8
 
 =head1 NAME
 
@@ -377,7 +379,7 @@ Steffen Müller, E<lt>smueller@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2006 by Steffen Mueller
+Copyright (C) 2006, 2013 by Steffen Mueller
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.6 or,
