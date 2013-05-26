@@ -11,16 +11,10 @@ my $b = Module::Build->new
        'Params::Util' => '0',
        'Carp' => '0',
                },
-   recommends => {
-                  'Test::Pod' => '1.0',
-                  'Test::Pod::Coverage' => '1.0',
-                 },
    build_requires => {
                       'Test::More' => 0,
                      },
    create_makefile_pl => 'traditional',
-#   conflicts => {},
-#   script_files => [],
   );
 
 $b->create_build_script;
