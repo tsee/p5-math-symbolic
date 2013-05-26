@@ -29,3 +29,5 @@
 \.bak$
 \#$
 \b\.#
+^MYMETA\.yml$
+^MYMETA\.json$
