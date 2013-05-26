@@ -12,3 +12,6 @@ README
 t/01basic.t
 xt/00pod.t
 xt/00podcover.t
+Makefile.PL
+META.yml
+META.json
