@@ -8,3 +8,5 @@ README
 t/01basic.t
 xt/00pod.t
 xt/00podcover.t
+META.yml
+META.json

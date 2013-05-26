@@ -9,10 +9,6 @@ my $b = Module::Build->new
                 'Math::Symbolic' => '0.510',
                 'Clone'          => '0',
                },
-   recommends => {
-                  'Test::Pod' => '1.0',
-                  'Test::Pod::Coverage' => '1.0',
-                 },
    build_requires => {
                       'Test::More' => 0,
                      },
