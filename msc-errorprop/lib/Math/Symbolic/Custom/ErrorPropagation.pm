@@ -32,6 +32,8 @@ sub apply_error_propagation {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::Symbolic::Custom::ErrorPropagation - Calculate Gaussian Error Propagation
