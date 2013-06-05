@@ -35,7 +35,7 @@ use strict;
 use warnings;
 no warnings 'recursion';
 
-our $VERSION = '0.609';
+our $VERSION = '0.610';
 
 use Math::Symbolic::Custom::Base;
 BEGIN { *import = \&Math::Symbolic::Custom::Base::aggregate_import }

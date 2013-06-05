@@ -83,7 +83,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw(
 );
-our $VERSION = '0.609';
+our $VERSION = '0.610';
 
 1;
 __END__
