@@ -43,6 +43,8 @@ sub contains_operator {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::Symbolic::Custom::Contains - Find subtrees in Math::Symbolic expressions
