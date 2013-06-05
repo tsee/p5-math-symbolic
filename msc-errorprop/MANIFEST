@@ -1,0 +1,6 @@
+Changes
+lib/Math/Symbolic/Custom/ErrorPropagation.pm
+Makefile.PL
+MANIFEST			This list of files
+README
+t/00basic.t
