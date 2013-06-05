@@ -1,5 +1,8 @@
 Revision history for Perl extension Math::Symbolic::Custom::CCompiler.
 
+1.04  Wed Jun 05 07:48 2013
+  - POD encoding fix
+
 1.03  Tue May 14 19:00 2013
   - Move POD tests to xt/
 
