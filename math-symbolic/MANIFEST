@@ -73,3 +73,4 @@ xt/00dist.t
 xt/00pod.t
 xt/00podcover.t
 Yapp.yp
+META.json
