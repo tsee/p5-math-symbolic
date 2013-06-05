@@ -1,10 +1,9 @@
 Changes
-MANIFEST
-MANIFEST.SKIP
-META.yml
-Makefile.PL
-README
 lib/Math/Symbolic/Custom/CCompiler.pm
+Makefile.PL
+MANIFEST
+META.yml
+README
 t/01sanity.t
 xt/00pod.t
 xt/00podcover.t
