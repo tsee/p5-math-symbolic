@@ -100,7 +100,7 @@ sub _faculty {
 This function (symbolically) computes the nth-degree Taylor Polynomial
 of a given function. Generally speaking, the Taylor Polynomial is an
 n-th degree polynomial that approximates the original function. It does
-so particularily well in the proximity of a certain point x0.
+so particularly well in the proximity of a certain point x0.
 (Since my mathematical English jargon is lacking, I strongly suggest you
 read up on what this is in a book.)
 

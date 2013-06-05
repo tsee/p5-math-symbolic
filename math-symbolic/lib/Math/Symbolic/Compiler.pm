@@ -27,7 +27,7 @@ Math::Symbolic::Compiler - Compile Math::Symbolic trees to Perl code
 
 =head1 DESCRIPTION
 
-This module allows to compile Math::Symbolic trees to Perl code and/or
+This module allows one to compile Math::Symbolic trees to Perl code and/or
 anonymous subroutines whose arguments will be positionally mapped to the
 variables of the compiled Math::Symbolic tree.
 
