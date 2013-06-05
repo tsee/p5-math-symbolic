@@ -8,10 +8,6 @@ my $b = Module::Build->new
    requires => {
        Math::Symbolic => '0.129',
                },
-   recommends => {
-                  'Test::Pod' => '1.0',
-                  'Test::Pod::Coverage' => '1.0',
-                 },
    build_requires => {
                       'Test::More' => 0,
                      },
