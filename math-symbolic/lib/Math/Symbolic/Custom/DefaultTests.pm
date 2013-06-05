@@ -37,7 +37,7 @@ use Data::Dumper; # for numerical equivalence test
 
 no warnings 'recursion';
 
-our $VERSION = '0.610';
+our $VERSION = '0.611';
 
 use Math::Symbolic::Custom::Base;
 BEGIN { *import = \&Math::Symbolic::Custom::Base::aggregate_import }

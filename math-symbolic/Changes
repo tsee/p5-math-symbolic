@@ -1,5 +1,8 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.611  Wed Jun 05 08:10 2013
+    - Attempt to fix versioning issues.
+
 0.610  Wed Jun 05 07:10 2013
     - More POD/encoding fixes (Gregor Herrmann).
     - POD spelling fixes (Jonathan Yu).
