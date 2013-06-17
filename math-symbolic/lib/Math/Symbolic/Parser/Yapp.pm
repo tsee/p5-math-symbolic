@@ -1,3 +1,7 @@
+package Math::Symbolic::Parser::Yapp::Driver;
+use strict;
+our $VERSION = '1.05';
+
 ####################################################################
 #
 #    This file was generated using Parse::Yapp version 1.05.
@@ -748,11 +752,11 @@ sub new {
 	{#State 26
 		ACTIONS => {
 			"-" => 11,
-			"^" => 15,
-			"*" => 16,
 			"+" => 13,
 			"/" => 14,
-			"," => 30
+			"," => 30,
+			"^" => 15,
+			"*" => 16
 		},
 		DEFAULT => -15
 	},

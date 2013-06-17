@@ -29,6 +29,12 @@ seek $fh, 0, 0;
 truncate $fh, 0;
 $code =~ s/(?<!# Module )Parse::Yapp::Driver/Math::Symbolic::Parser::Yapp::Driver/g;
 
+print $fh <<HERE;
+package Math::Symbolic::Parser::Yapp::Driver;
+use strict;
+our \$VERSION = '1.05';
+
+HERE
 print $fh $code;
 close $fh;
 
