@@ -41,22 +41,14 @@ else {
     my ( $th, $filename ) = tempfile( 'XXXXXXXX', UNLINK => 1 );
     my $line;
 
+    print $th "package Math::Symbolic::Parser::Precompiled;\n";
+    print $th "our \$VERSION = '$version';\n";
+
     while ( $line = <DATA> ) {
         print $th $line;
     }
-	my $matched_once = 0;
-    while ($line = <$fh>) {
-        if (not $matched_once and $line =~ /^(\s*package Math::Symbolic::Parser::Precompiled;\s*)/) {
-            my $match = $1;
-		$matched_once++;
-            my $qr = qr/\Q$match\E/;
-
-            my $add = qq{our \$VERSION = '$version';\n};
-            $line =~ s/^$qr/$match$add/ or die; 
-        }
-	$line =~ s/use\s+strict\s*;//;
-        print $th $line;
-    }    
+    my $matched_once = 0;
+    print $th $_ for <$fh>;
     print $th "\n1;\n";
     close $th or die "Could not write to temporary file: $!";
     close $fh;
@@ -73,6 +65,8 @@ HERE
 __DATA__
 
 use strict;
+
+=encoding utf8
 
 =head1 NAME
 
