@@ -1,5 +1,8 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.612  Mon Jun 17 08:10 2013
+    - Attempt to fix versioning issues, take two.
+
 0.611  Wed Jun 05 08:10 2013
     - Attempt to fix versioning issues.
 

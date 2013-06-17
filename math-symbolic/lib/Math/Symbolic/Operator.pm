@@ -60,7 +60,7 @@ use Math::Symbolic::Derivative qw//;
 
 use base 'Math::Symbolic::Base';
 
-our $VERSION = '0.611';
+our $VERSION = '0.612';
 
 =head1 CLASS DATA
 
