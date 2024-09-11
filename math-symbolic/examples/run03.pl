@@ -12,8 +12,7 @@ my $a   = $var->new( 'a' => 2 );
 
 print "Vars: a=" . $a->value() . " (Value is optional)\n\n";
 
-my $const = Math::Symbolic::Constant->new();
-my $ten   = $const->new(10);
+my $ten = Math::Symbolic::Constant->new(10);
 
 my $op   = Math::Symbolic::Operator->new();
 my $mul1 = $op->new( '*', $a, $a );
