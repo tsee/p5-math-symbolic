@@ -24,9 +24,11 @@ use Math::Complex;
 # Applying Kirchhoff's rules, one quickly ends up with the
 # following differential equation for the current:
 #     (L * dI/dt) + (R * I)  =  U
-
+# U (voltage) and I (current) are specified as functions of time t
 my $left  = parse_from_string('L * total_derivative(I(t), t) + R * I(t)');
 my $right = parse_from_string('U(t)');
+
+print "Voltage/Current relation for circuit: $left = $right\n";
 
 # If we understand current and voltage to be complex functions,
 # we'll be able to derive. ("'" denoting complex here)
@@ -39,18 +41,26 @@ my $argument = parse_from_string('e^(i*omega*t)');
 my $current  = parse_from_string('I_max') * $argument;
 my $voltage  = parse_from_string('U_max') * $argument;
 
+print "\n";
+print "Current = $current\n";
+print "Voltage = $voltage\n";
+print "\n";
+
 # Putting it into the equation:
 $left->implement( I  => $current );
 $right->implement( U => $voltage );
-
 $left = $left->apply_derivatives()->simplify();
+
+print "Voltage/Current relation for circuit: $left = $right\n\n";
 
 # Now, we can solve the equation to get a complex function for
 # the current:
 
 $left  /= $argument;
 $right /= $argument;
+
 my $quotient = parse_from_string('R + i*omega*L');
+
 $left  /= $quotient;
 $right /= $quotient;
 
@@ -63,25 +73,10 @@ $right /= $quotient;
 # Making the symbolic i a "literal" Math::Complex i
 $right->implement(
     e => Math::Symbolic::Constant->euler(),
-    i => Math::Symbolic::Constant->new(i),    # Math::Complex magic
+    i => Math::Symbolic::Constant->new(i),      # Math::Complex magic
 );
 
-print <<'HERE';
-Sample of complex maximum current with the following values:
-  U_max => 100
-  R     => 10
-  L     => 10
-  omega => 1
-HERE
-
-print "Computed to: "
-  . $right->value(
-    U_max => 100,
-    R     => 10,
-    L     => 10,
-    omega => 1,
-  ),
-  "\n\n";
+print "RHS of circuit equation: $right\n\n";
 
 # Now, we're dealing with alternating current and voltage.
 # So let's make a generator that generates nice current
@@ -105,10 +100,10 @@ sub generate_current {
     return sub { Re( $current->value( t => $_[0] ) ) };
 }
 
-print "Sample current function with: 230V, 2Ohms, 0.1H, 50Hz, PI/4\n";
-my $current_of_time = generate_current( 230, 2, 0.1, 50, PI / 4 );
+print "Sample current function with: 230 V, 200 Ohms, 0.1 H, 50 Hz, PI/4\n";
 
-print "The current at 0 seconds:   " . $current_of_time->(0) . "\n";
-print "The current at 0.1 seconds: " . $current_of_time->(0.1) . "\n";
-print "The current at 1 second:    " . $current_of_time->(1) . "\n";
-
+my $current_of_time = generate_current( 230, 200, 0.1, 50, PI / 4 );
+    
+for (my $t = 0; $t < 0.16; $t += 0.001) {
+    print "Current at ", sprintf("%.3f", $t), " seconds:\t", $current_of_time->($t) . "\n";
+}
