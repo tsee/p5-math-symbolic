@@ -104,6 +104,6 @@ print "Sample current function with: 230 V, 200 Ohms, 0.1 H, 50 Hz, PI/4\n";
 
 my $current_of_time = generate_current( 230, 200, 0.1, 50, PI / 4 );
     
-for (my $t = 0; $t < 0.16; $t += 0.001) {
+for (my $t = 0; $t < 0.03; $t += 0.001) {
     print "Current at ", sprintf("%.3f", $t), " seconds:\t", $current_of_time->($t) . "\n";
 }
