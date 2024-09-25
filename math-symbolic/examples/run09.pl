@@ -10,8 +10,7 @@ use Math::Symbolic qw/:all/;
 my $var = Math::Symbolic::Variable->new();
 my $a   = $var->new( 'x' => 3.14159 );
 
-my $c   = Math::Symbolic::Constant->new();
-my $two = $c->new(2);
+my $two = Math::Symbolic::Constant->new(2);
 
 print "Vars: x=" . $a->value() . " (Value is optional)\n\n";
 

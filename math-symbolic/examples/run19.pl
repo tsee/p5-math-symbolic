@@ -4,6 +4,7 @@ use warnings;
 
 use lib '../lib';
 use Math::Symbolic qw/:all/;
+use Math::Symbolic::Custom::LaTeXDumper;
 
 my $latex_str = "\\documentclass[12pt]{article}\n\\begin{document}\n";
 
