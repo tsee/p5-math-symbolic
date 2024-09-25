@@ -1,6 +1,7 @@
 Build.PL
 Changes
 compile_yapp_parser.pl
+compile_recdescent_grammar.pl
 examples/run01.pl
 examples/run02.pl
 examples/run03.pl
@@ -20,7 +21,6 @@ examples/run16.pl
 examples/run17.pl
 examples/run18.pl
 examples/run19.pl
-examples/run20.pl
 lib/Math/Symbolic.pm
 lib/Math/Symbolic/AuxFunctions.pm
 lib/Math/Symbolic/Base.pm

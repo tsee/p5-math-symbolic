@@ -4,7 +4,7 @@ our $VERSION = '1.05';
 
 ####################################################################
 #
-#    This file was generated using Parse::Yapp version 1.05.
+#    This file was generated using Parse::Yapp version 1.21.
 #
 #        Don't edit this file, use source file instead.
 #
@@ -29,7 +29,8 @@ use strict;
 #
 # This notice should remain unchanged.
 #
-# (c) Copyright 1998-2001 Francois Desarmenien, all rights reserved.
+# Copyright © 1998, 1999, 2000, 2001, Francois Desarmenien.
+# Copyright © 2017 William N. Braswell, Jr.
 # (see the pod text in Parse::Yapp module for use and distribution rights)
 #
 
@@ -41,7 +42,8 @@ use strict;
 
 use vars qw ( $VERSION $COMPATIBLE $FILENAME );
 
-$VERSION = '1.05';
+# CORRELATION #py001: $VERSION must be changed in both Parse::Yapp & Math::Symbolic::Parser::Yapp::Driver
+$VERSION = '1.21';
 $COMPATIBLE = '0.07';
 $FILENAME=__FILE__;
 
@@ -500,295 +502,295 @@ sub new {
         ref($class)
     and $class=ref($class);
 
-    my($self)=$class->SUPER::new( yyversion => '1.05',
+    my($self)=$class->SUPER::new( yyversion => '1.21',
                                   yystates =>
 [
 	{#State 0
 		ACTIONS => {
-			"-" => 1,
-			'PRED' => 3,
-			'PRIVEFUNC' => 4,
-			'FUNC' => 5,
-			'NUM' => 6,
+			'NUM' => 8,
+			'PRIVEFUNC' => 6,
 			"(" => 7,
-			'EFUNC' => 8,
-			'VAR' => 9
+			'PRED' => 3,
+			'VAR' => 4,
+			'EFUNC' => 5,
+			"-" => 2,
+			'FUNC' => 1
 		},
 		GOTOS => {
-			'exp' => 2
+			'exp' => 9
 		}
 	},
 	{#State 1
 		ACTIONS => {
-			"-" => 1,
-			'PRED' => 3,
-			'PRIVEFUNC' => 4,
-			'FUNC' => 5,
-			'NUM' => 6,
-			"(" => 7,
-			'VAR' => 9,
-			'EFUNC' => 8
-		},
-		GOTOS => {
-			'exp' => 10
+			"(" => 10
 		}
 	},
 	{#State 2
 		ACTIONS => {
-			'' => 12,
-			"-" => 11,
-			"^" => 15,
-			"*" => 16,
-			"+" => 13,
-			"/" => 14
+			'PRIVEFUNC' => 6,
+			"(" => 7,
+			'NUM' => 8,
+			'PRED' => 3,
+			'VAR' => 4,
+			'EFUNC' => 5,
+			'FUNC' => 1,
+			"-" => 2
+		},
+		GOTOS => {
+			'exp' => 11
 		}
 	},
 	{#State 3
 		ACTIONS => {
-			"{" => 17
+			"{" => 12
 		}
 	},
 	{#State 4
-		DEFAULT => -4
+		DEFAULT => -6
 	},
 	{#State 5
-		ACTIONS => {
-			"(" => 18
-		}
+		DEFAULT => -5
 	},
 	{#State 6
-		DEFAULT => -1
+		DEFAULT => -4
 	},
 	{#State 7
 		ACTIONS => {
-			"-" => 1,
-			'PRED' => 3,
-			'PRIVEFUNC' => 4,
-			'FUNC' => 5,
-			'NUM' => 6,
 			"(" => 7,
-			'VAR' => 9,
-			'EFUNC' => 8
+			'PRIVEFUNC' => 6,
+			'NUM' => 8,
+			'FUNC' => 1,
+			"-" => 2,
+			'EFUNC' => 5,
+			'VAR' => 4,
+			'PRED' => 3
 		},
 		GOTOS => {
-			'exp' => 19
+			'exp' => 13
 		}
 	},
 	{#State 8
-		DEFAULT => -5
+		DEFAULT => -1
 	},
 	{#State 9
-		DEFAULT => -6
+		ACTIONS => {
+			'' => 14,
+			"+" => 15,
+			"^" => 16,
+			"*" => 17,
+			"/" => 18,
+			"-" => 19
+		}
 	},
 	{#State 10
 		ACTIONS => {
-			"^" => 15
+			'NUM' => 8,
+			'PRIVEFUNC' => 6,
+			"(" => 7,
+			'PRED' => 3,
+			'VAR' => 4,
+			'EFUNC' => 5,
+			"-" => 2,
+			'FUNC' => 1
 		},
-		DEFAULT => -11
+		GOTOS => {
+			'exp' => 21,
+			'list' => 20
+		}
 	},
 	{#State 11
 		ACTIONS => {
-			"-" => 1,
-			'PRED' => 3,
-			'PRIVEFUNC' => 4,
-			'FUNC' => 5,
-			'NUM' => 6,
-			"(" => 7,
-			'VAR' => 9,
-			'EFUNC' => 8
+			"^" => 16
 		},
-		GOTOS => {
-			'exp' => 20
-		}
+		DEFAULT => -11
 	},
 	{#State 12
-		DEFAULT => 0
-	},
-	{#State 13
 		ACTIONS => {
-			"-" => 1,
-			'PRED' => 3,
-			'PRIVEFUNC' => 4,
-			'FUNC' => 5,
-			'NUM' => 6,
+			'PRIVEFUNC' => 6,
 			"(" => 7,
-			'VAR' => 9,
-			'EFUNC' => 8
-		},
-		GOTOS => {
-			'exp' => 21
-		}
-	},
-	{#State 14
-		ACTIONS => {
-			"-" => 1,
+			'NUM' => 8,
+			'FUNC' => 1,
+			"-" => 2,
 			'PRED' => 3,
-			'PRIVEFUNC' => 4,
-			'FUNC' => 5,
-			'NUM' => 6,
-			"(" => 7,
-			'VAR' => 9,
-			'EFUNC' => 8
+			'EFUNC' => 5,
+			'VAR' => 4
 		},
 		GOTOS => {
 			'exp' => 22
 		}
 	},
-	{#State 15
+	{#State 13
 		ACTIONS => {
-			"-" => 1,
-			'PRED' => 3,
-			'PRIVEFUNC' => 4,
-			'FUNC' => 5,
-			'NUM' => 6,
-			"(" => 7,
-			'VAR' => 9,
-			'EFUNC' => 8
-		},
-		GOTOS => {
-			'exp' => 23
+			")" => 23,
+			"^" => 16,
+			"-" => 19,
+			"+" => 15,
+			"/" => 18,
+			"*" => 17
 		}
 	},
-	{#State 16
+	{#State 14
+		DEFAULT => 0
+	},
+	{#State 15
 		ACTIONS => {
-			"-" => 1,
-			'PRED' => 3,
-			'PRIVEFUNC' => 4,
-			'FUNC' => 5,
-			'NUM' => 6,
+			'NUM' => 8,
+			'PRIVEFUNC' => 6,
 			"(" => 7,
-			'VAR' => 9,
-			'EFUNC' => 8
+			"-" => 2,
+			'FUNC' => 1,
+			'PRED' => 3,
+			'VAR' => 4,
+			'EFUNC' => 5
 		},
 		GOTOS => {
 			'exp' => 24
 		}
 	},
-	{#State 17
+	{#State 16
 		ACTIONS => {
-			"-" => 1,
-			'PRED' => 3,
-			'PRIVEFUNC' => 4,
-			'FUNC' => 5,
-			'NUM' => 6,
+			'NUM' => 8,
 			"(" => 7,
-			'VAR' => 9,
-			'EFUNC' => 8
+			'PRIVEFUNC' => 6,
+			"-" => 2,
+			'FUNC' => 1,
+			'EFUNC' => 5,
+			'VAR' => 4,
+			'PRED' => 3
 		},
 		GOTOS => {
 			'exp' => 25
 		}
 	},
-	{#State 18
+	{#State 17
 		ACTIONS => {
-			"-" => 1,
-			'PRED' => 3,
-			'PRIVEFUNC' => 4,
-			'FUNC' => 5,
-			'NUM' => 6,
+			'PRIVEFUNC' => 6,
 			"(" => 7,
-			'VAR' => 9,
-			'EFUNC' => 8
+			'NUM' => 8,
+			'PRED' => 3,
+			'VAR' => 4,
+			'EFUNC' => 5,
+			'FUNC' => 1,
+			"-" => 2
 		},
 		GOTOS => {
-			'exp' => 26,
-			'list' => 27
+			'exp' => 26
+		}
+	},
+	{#State 18
+		ACTIONS => {
+			'VAR' => 4,
+			'EFUNC' => 5,
+			'PRED' => 3,
+			"-" => 2,
+			'FUNC' => 1,
+			'NUM' => 8,
+			"(" => 7,
+			'PRIVEFUNC' => 6
+		},
+		GOTOS => {
+			'exp' => 27
 		}
 	},
 	{#State 19
 		ACTIONS => {
-			"-" => 11,
-			"^" => 15,
-			"*" => 16,
-			"+" => 13,
-			"/" => 14,
-			")" => 28
+			'NUM' => 8,
+			'PRIVEFUNC' => 6,
+			"(" => 7,
+			'PRED' => 3,
+			'EFUNC' => 5,
+			'VAR' => 4,
+			"-" => 2,
+			'FUNC' => 1
+		},
+		GOTOS => {
+			'exp' => 28
 		}
 	},
 	{#State 20
 		ACTIONS => {
-			"/" => 14,
-			"^" => 15,
-			"*" => 16
-		},
-		DEFAULT => -8
+			")" => 29
+		}
 	},
 	{#State 21
 		ACTIONS => {
-			"/" => 14,
-			"^" => 15,
-			"*" => 16
-		},
-		DEFAULT => -7
-	},
-	{#State 22
-		ACTIONS => {
-			"^" => 15
-		},
-		DEFAULT => -10
-	},
-	{#State 23
-		ACTIONS => {
-			"^" => 15
-		},
-		DEFAULT => -12
-	},
-	{#State 24
-		ACTIONS => {
-			"^" => 15
-		},
-		DEFAULT => -9
-	},
-	{#State 25
-		ACTIONS => {
-			"}" => 29,
-			"-" => 11,
-			"^" => 15,
-			"*" => 16,
-			"+" => 13,
-			"/" => 14
-		}
-	},
-	{#State 26
-		ACTIONS => {
-			"-" => 11,
-			"+" => 13,
-			"/" => 14,
+			"^" => 16,
+			"+" => 15,
 			"," => 30,
-			"^" => 15,
-			"*" => 16
+			"-" => 19,
+			"/" => 18,
+			"*" => 17
 		},
 		DEFAULT => -15
 	},
-	{#State 27
+	{#State 22
 		ACTIONS => {
-			")" => 31
+			"-" => 19,
+			"*" => 17,
+			"/" => 18,
+			"}" => 31,
+			"+" => 15,
+			"^" => 16
 		}
 	},
-	{#State 28
+	{#State 23
 		DEFAULT => -13
 	},
+	{#State 24
+		ACTIONS => {
+			"^" => 16,
+			"*" => 17,
+			"/" => 18
+		},
+		DEFAULT => -7
+	},
+	{#State 25
+		ACTIONS => {
+			"^" => 16
+		},
+		DEFAULT => -12
+	},
+	{#State 26
+		ACTIONS => {
+			"^" => 16
+		},
+		DEFAULT => -9
+	},
+	{#State 27
+		ACTIONS => {
+			"^" => 16
+		},
+		DEFAULT => -10
+	},
+	{#State 28
+		ACTIONS => {
+			"*" => 17,
+			"/" => 18,
+			"^" => 16
+		},
+		DEFAULT => -8
+	},
 	{#State 29
-		DEFAULT => -3
+		DEFAULT => -2
 	},
 	{#State 30
 		ACTIONS => {
-			"-" => 1,
-			'PRED' => 3,
-			'PRIVEFUNC' => 4,
-			'FUNC' => 5,
-			'NUM' => 6,
+			'NUM' => 8,
+			'PRIVEFUNC' => 6,
 			"(" => 7,
-			'VAR' => 9,
-			'EFUNC' => 8
+			'PRED' => 3,
+			'EFUNC' => 5,
+			'VAR' => 4,
+			"-" => 2,
+			'FUNC' => 1
 		},
 		GOTOS => {
-			'exp' => 26,
+			'exp' => 21,
 			'list' => 32
 		}
 	},
 	{#State 31
-		DEFAULT => -2
+		DEFAULT => -3
 	},
 	{#State 32
 		DEFAULT => -14
@@ -903,7 +905,7 @@ sub _Error {
 my $Num = qr/[+-]?(?=\d|\.\d)\d*(?:\.\d*)?(?:[Ee]([+-]?\d+))?/o;
 my $Ident = qr/[a-zA-Z][a-zA-Z0-9_]*/o;
 my $Op =  qr/\+|\-|\*|\/|\^/o;
-my $Func = qr/log|partial_derivative|total_derivative|a?(?:sin|sinh|cos|cosh|tan|cot)|exp|sqrt/;
+my $Func = qr/log|partial_derivative|total_derivative|a?(?:sin|sinh|cos|cosh|tan|cot)|exp|sqrt|ln/;
 my $Unary = qr/\+|\-/o;
 
 # taken from perlre
