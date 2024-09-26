@@ -192,6 +192,15 @@ our %Parser_Functions = (
             Math::Symbolic::Constant->new(0.5)
         );
     },
+    'ln' => sub {
+        my $func = shift;
+        my $arg = shift;
+        return Math::Symbolic::Operator->new(
+            'log',
+            Math::Symbolic::Constant->euler(),
+            $arg
+        );
+    },
 );
 
 our $Grammar = <<'GRAMMAR_END';
@@ -385,6 +394,7 @@ our $Grammar = <<'GRAMMAR_END';
                | 'cot'
                | 'exp'
                | 'sqrt'
+               | 'ln'
 
 
   expr_list: <leftop:expr ',' expr>

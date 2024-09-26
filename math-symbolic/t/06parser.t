@@ -4,7 +4,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23+15+9;
+use Test::More tests => 23+15+9+3;
 
 BEGIN {
 	use_ok('Math::Symbolic');
@@ -124,6 +124,16 @@ isa_ok($res, 'Math::Symbolic::Operator', 'parsing sqrt() returns an operator');
 $string = $res->to_string('prefix');
 ok( ($string =~ /^exponentiate\(multiply\(a,\s*b\), 0.5\)$/),
     'Parse of sqrt() turns it into ()^0.5'
+);
+
+eval {
+    $res = Math::Symbolic->parse_from_string('ln(a*b)');
+};
+ok( !$@, 'parsing ln() does not throw an error');
+isa_ok($res, 'Math::Symbolic::Operator', 'parsing ln() returns an operator');
+$string = $res->to_string('prefix');
+ok( ($string =~ /^log\(2\.7\d*,\s*multiply\(a,\s*b\)\)$/),
+    'Parse of ln(x) turns it into log(e,x)'
 );
 
 
