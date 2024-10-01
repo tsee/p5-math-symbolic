@@ -109,6 +109,37 @@ sub to_sub {
     return Math::Symbolic::Compiler->compile_to_sub( $self, $args );
 }
 
+=head2 to_text_tree
+
+Text::Tree is a module that can display a nicely formatted tree using text 
+strings. This method will export a Math::Symbolic expression tree in a format 
+that can be used by the Text::Tree constructor.
+
+See the tree_dump.pl example and L<Text::Tree>.
+
+=cut
+
+sub to_text_tree  {
+    my $t = shift;
+    my @e;
+
+    if ( ($t->term_type() == T_VARIABLE) || ($t->term_type() == T_CONSTANT) ) {
+        push @e, $t->to_string();
+    }
+    else {
+        my $op_info = $Math::Symbolic::Operator::Op_Types[$t->type()];
+        my $op_str = defined($op_info->{infix_string}) ? $op_info->{infix_string} : $op_info->{prefix_string};
+
+        push @e, $op_str;
+        foreach my $c ( $t->children() ) {
+            push @e, [ to_text_tree($c) ];
+        }
+    }
+
+    return @e;
+}
+
+
 1;
 __END__
 

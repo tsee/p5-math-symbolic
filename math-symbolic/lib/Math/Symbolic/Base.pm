@@ -618,6 +618,28 @@ sub set_value {
 
 =begin comment
 
+We define methods "children()" and "tid()" to facilitate tree dumping
+with Tree::Dump, and even better, with Tree::To::TextLines. See 
+tree_dump.pl in the examples.
+
+These methods are implemented in Operator.pm but not in Variable.pm and
+Constant.pm, as they can use these methods from the base class.
+
+=end comment
+
+=cut
+
+sub children {
+    return undef;
+}
+
+sub tid {
+    my $self = shift;
+    return $self->to_string();
+}
+
+=begin comment
+
 Since version 0.102, there are several overloaded operators. The overloaded
 interface is documented below. For more info, please have a look at the
 Math::Symbolic man page.
