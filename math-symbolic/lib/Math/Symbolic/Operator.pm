@@ -1070,6 +1070,46 @@ sub explicit_signature {
     return sort keys %sig;
 }
 
+=head2 Method differentiate
+
+Differentiate an expression. Uses "partial_derivative()" from Derivative.pm.
+
+Optional parameter: variable of differentiation. This can be a 
+Math::Symbolic::Variable or just a text string (e.g. "x"). If the variable is 
+not specified, it will use explicit_signature() to find variables within the 
+expression. If the expression contains only one variable, it will use that 
+variable to differentiate (convenient for simpler expressions).
+Otherwise it will return undef.
+
+Example:
+
+    my $vel = parse_from_string("u+a*t");
+    my $acc = $vel->differentiate("t");
+    print "$acc\n"; # prints "a".
+
+Also see "Newton-Raphson.pl" in the examples.
+
+=cut
+
+sub differentiate {
+    my $self = shift;
+    my $var = shift;
+
+    if ( not defined $var ) {
+
+        my @vars = $self->explicit_signature();
+        if ( scalar(@vars) == 1 ) {
+            $var = $vars[0];
+        }
+        else {
+            return undef;
+        }
+    }
+
+    $var = Math::Symbolic::Variable->new($var) unless ref($var) =~ /^Math::Symbolic::Variable/;
+    return Math::Symbolic::Derivative::partial_derivative($self, $var);
+}
+
 =head2 Methods children and tid
 
 children() and tid() are implemented here to facilitate tree dumping

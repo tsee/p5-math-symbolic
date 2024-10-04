@@ -268,6 +268,16 @@ Returns the type of the term. (T_CONSTANT)
 
 sub term_type { T_CONSTANT }
 
+=head2 Method differentiate
+
+Returns 0.
+
+=cut
+
+sub differentiate {
+    return Math::Symbolic::Constant->zero();
+}
+
 1;
 __END__
 

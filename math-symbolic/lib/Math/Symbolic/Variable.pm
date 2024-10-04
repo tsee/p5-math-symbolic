@@ -41,6 +41,7 @@ use strict;
 use warnings;
 
 use Math::Symbolic::ExportConstants qw/:all/;
+use Math::Symbolic::Derivative qw//;
 
 use base 'Math::Symbolic::Base';
 
@@ -234,6 +235,28 @@ Returns the type of the term. (T_VARIABLE)
 
 sub term_type {
     return T_VARIABLE;
+}
+
+=head2 Method differentiate
+
+Included for completeness. As in Operator.pm. uses "partial_derivative()" from 
+Derivative.pm (for consistency).
+
+Optional parameter: variable of differentiation. If not provided, assumes you 
+want to differentiate the variable itself.
+
+=cut
+
+sub differentiate {
+    my $self = shift;
+    my $var = shift;
+    
+    if ( not defined $var ) {
+        $var = $self->new();
+    }
+
+    $var = Math::Symbolic::Variable->new($var) unless ref($var) =~ /^Math::Symbolic::Variable/;
+    return Math::Symbolic::Derivative::partial_derivative($self, $var);
 }
 
 1;
