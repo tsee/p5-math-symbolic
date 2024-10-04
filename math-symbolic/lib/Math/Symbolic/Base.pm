@@ -616,6 +616,16 @@ sub set_value {
     return $self;
 }
 
+=head2 Method differentiate
+
+A stub to be overriden.
+
+=cut
+
+sub differentiate {
+    croak "differentiate not defined for " . __PACKAGE__;
+}
+
 =begin comment
 
 We define methods "children()" and "tid()" to facilitate tree dumping
