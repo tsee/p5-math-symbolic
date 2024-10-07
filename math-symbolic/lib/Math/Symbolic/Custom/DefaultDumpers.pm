@@ -38,7 +38,7 @@ use strict;
 use warnings;
 no warnings 'recursion';
 
-our $VERSION = '0.613';
+our $VERSION = '0.614';
 
 use Math::Symbolic::Custom::Base;
 BEGIN { *import = \&Math::Symbolic::Custom::Base::aggregate_import }
@@ -56,6 +56,7 @@ our $Aggregate_Export = [
     qw/
       to_code
       to_sub
+      to_text_tree
       /
 ];
 

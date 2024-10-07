@@ -1,5 +1,14 @@
 Revision history for Perl extension Math::Symbolic.
 
+0.614  Mon Oct 7 09:48 2024
+    (MJOHNSON)
+    - Made bug fixes, updates and some additions to the examples
+    - Added ln(x) as an alias for log(e,x) in the parsers
+    - Added method differentiate() as a convenience wrapper for 
+      partial_derivative()
+    - Added some routines to facilitate debug dumping of 
+      Math::Symbolic trees
+
 0.613  Sun Sep 8 13:17 2024
     - Fix for broken constant folding in simplification code.
 

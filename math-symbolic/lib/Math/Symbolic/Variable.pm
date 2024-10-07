@@ -45,7 +45,7 @@ use Math::Symbolic::Derivative qw//;
 
 use base 'Math::Symbolic::Base';
 
-our $VERSION = '0.613';
+our $VERSION = '0.614';
 
 =head1 METHODS
 
