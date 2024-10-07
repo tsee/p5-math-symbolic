@@ -72,7 +72,7 @@ our %EXPORT_TAGS = (
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our $VERSION = '0.613';
+our $VERSION = '0.614';
 
 =begin comment
 

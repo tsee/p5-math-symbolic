@@ -21,6 +21,9 @@ examples/run16.pl
 examples/run17.pl
 examples/run18.pl
 examples/run19.pl
+examples/MS-PDL-Prima-plot.pl
+examples/Newton-Raphson.pl
+examples/tree_dump.pl
 lib/Math/Symbolic.pm
 lib/Math/Symbolic/AuxFunctions.pm
 lib/Math/Symbolic/Base.pm
@@ -67,6 +70,7 @@ t/19misccalc.t
 t/20miscalgebra.t
 t/21more_derivatives.t
 t/22dumpers.t
+t/23differentiate_method.t
 t/90regression.t
 TODO
 xt/00dist.t
