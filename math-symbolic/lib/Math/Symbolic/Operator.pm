@@ -1126,7 +1126,7 @@ sub tid {
     my $self = shift;
     my $op_info = $Op_Types[$self->type()];
     my $op_str = defined($op_info->{infix_string}) ? $op_info->{infix_string} : $op_info->{prefix_string};
-    return "'$op_str' { subexpression: '" . $self->to_string() . "'}";
+    return "Operator. '$op_str' { subexpression: '" . $self->to_string() . "'}";
 }
 
 1;

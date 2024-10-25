@@ -277,6 +277,18 @@ Returns the type of the term. (T_CONSTANT)
 
 sub term_type { T_CONSTANT }
 
+=head2 Method tid
+
+tid() is implemented here to facilitate tree dumping. See 
+tree_dump.pl in the examples.
+
+=cut
+
+sub tid {
+    my $self = shift;
+    return "Constant. '" . $self->to_string() . "'";
+}
+
 =head2 Method differentiate
 
 Returns 0.
