@@ -257,6 +257,15 @@ Returns a string representation of the constant.
 
 sub to_string {
     my $self = shift;
+
+    if ( $self->{special} eq 'pi' ) {
+        return 'pi';
+    }
+    # TODO: sync up these symbol names
+    elsif ( $self->{special} eq 'euler' ) {
+        return 'e';
+    }
+
     return $self->value();
 }
 
