@@ -150,6 +150,12 @@ sub _Lexer {
                             'VAR', Math::Symbolic::Variable->new({name=>$name, signature=>[split /,/, $sig]})
                         );
                     }
+                    elsif ( $name eq 'pi' ) {
+                        return('NUM',  Math::Symbolic::Constant->pi());
+                    }
+                    elsif ( $name eq 'e' ) {
+                        return('NUM',  Math::Symbolic::Constant->euler());
+                    }
                     else {
                         return('VAR', Math::Symbolic::Variable->new($name));
                     }
@@ -232,6 +238,12 @@ sub _Lexer {
                         return(
                             'VAR', Math::Symbolic::Variable->new({name=>$name, signature=>[split /,/, $sig]})
                         );
+                    }
+                    elsif ( $name eq 'pi' ) {
+                        return('NUM',  Math::Symbolic::Constant->pi());
+                    }
+                    elsif ( $name eq 'e' ) {
+                        return('NUM',  Math::Symbolic::Constant->euler());
                     }
                     else {
                         return('VAR', Math::Symbolic::Variable->new($name));

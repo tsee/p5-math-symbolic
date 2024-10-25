@@ -507,34 +507,34 @@ sub new {
 [
 	{#State 0
 		ACTIONS => {
-			'NUM' => 8,
-			'PRIVEFUNC' => 6,
-			"(" => 7,
-			'PRED' => 3,
-			'VAR' => 4,
-			'EFUNC' => 5,
-			"-" => 2,
-			'FUNC' => 1
+			'PRED' => 1,
+			"(" => 2,
+			"-" => 3,
+			'NUM' => 4,
+			'FUNC' => 5,
+			'EFUNC' => 6,
+			'VAR' => 7,
+			'PRIVEFUNC' => 9
 		},
 		GOTOS => {
-			'exp' => 9
+			'exp' => 8
 		}
 	},
 	{#State 1
 		ACTIONS => {
-			"(" => 10
+			"{" => 10
 		}
 	},
 	{#State 2
 		ACTIONS => {
-			'PRIVEFUNC' => 6,
-			"(" => 7,
-			'NUM' => 8,
-			'PRED' => 3,
-			'VAR' => 4,
-			'EFUNC' => 5,
-			'FUNC' => 1,
-			"-" => 2
+			'PRIVEFUNC' => 9,
+			'VAR' => 7,
+			'EFUNC' => 6,
+			'FUNC' => 5,
+			'NUM' => 4,
+			"-" => 3,
+			"(" => 2,
+			'PRED' => 1
 		},
 		GOTOS => {
 			'exp' => 11
@@ -542,136 +542,136 @@ sub new {
 	},
 	{#State 3
 		ACTIONS => {
-			"{" => 12
+			'EFUNC' => 6,
+			'FUNC' => 5,
+			'PRIVEFUNC' => 9,
+			'VAR' => 7,
+			"(" => 2,
+			'PRED' => 1,
+			'NUM' => 4,
+			"-" => 3
+		},
+		GOTOS => {
+			'exp' => 12
 		}
 	},
 	{#State 4
-		DEFAULT => -6
-	},
-	{#State 5
-		DEFAULT => -5
-	},
-	{#State 6
-		DEFAULT => -4
-	},
-	{#State 7
-		ACTIONS => {
-			"(" => 7,
-			'PRIVEFUNC' => 6,
-			'NUM' => 8,
-			'FUNC' => 1,
-			"-" => 2,
-			'EFUNC' => 5,
-			'VAR' => 4,
-			'PRED' => 3
-		},
-		GOTOS => {
-			'exp' => 13
-		}
-	},
-	{#State 8
 		DEFAULT => -1
 	},
-	{#State 9
+	{#State 5
 		ACTIONS => {
-			'' => 14,
-			"+" => 15,
-			"^" => 16,
-			"*" => 17,
-			"/" => 18,
-			"-" => 19
+			"(" => 13
 		}
+	},
+	{#State 6
+		DEFAULT => -5
+	},
+	{#State 7
+		DEFAULT => -6
+	},
+	{#State 8
+		ACTIONS => {
+			"/" => 14,
+			"-" => 15,
+			'' => 16,
+			"*" => 17,
+			"+" => 18,
+			"^" => 19
+		}
+	},
+	{#State 9
+		DEFAULT => -4
 	},
 	{#State 10
 		ACTIONS => {
-			'NUM' => 8,
-			'PRIVEFUNC' => 6,
-			"(" => 7,
-			'PRED' => 3,
-			'VAR' => 4,
-			'EFUNC' => 5,
-			"-" => 2,
-			'FUNC' => 1
+			'EFUNC' => 6,
+			'FUNC' => 5,
+			'PRIVEFUNC' => 9,
+			'VAR' => 7,
+			"(" => 2,
+			'PRED' => 1,
+			'NUM' => 4,
+			"-" => 3
 		},
 		GOTOS => {
-			'exp' => 21,
-			'list' => 20
+			'exp' => 20
 		}
 	},
 	{#State 11
 		ACTIONS => {
-			"^" => 16
-		},
-		DEFAULT => -11
+			")" => 21,
+			"^" => 19,
+			"-" => 15,
+			"/" => 14,
+			"*" => 17,
+			"+" => 18
+		}
 	},
 	{#State 12
 		ACTIONS => {
-			'PRIVEFUNC' => 6,
-			"(" => 7,
-			'NUM' => 8,
-			'FUNC' => 1,
-			"-" => 2,
-			'PRED' => 3,
-			'EFUNC' => 5,
-			'VAR' => 4
+			"^" => 19
 		},
-		GOTOS => {
-			'exp' => 22
-		}
+		DEFAULT => -11
 	},
 	{#State 13
 		ACTIONS => {
-			")" => 23,
-			"^" => 16,
-			"-" => 19,
-			"+" => 15,
-			"/" => 18,
-			"*" => 17
+			'FUNC' => 5,
+			'EFUNC' => 6,
+			'VAR' => 7,
+			'PRIVEFUNC' => 9,
+			'PRED' => 1,
+			"(" => 2,
+			"-" => 3,
+			'NUM' => 4
+		},
+		GOTOS => {
+			'list' => 23,
+			'exp' => 22
 		}
 	},
 	{#State 14
-		DEFAULT => 0
-	},
-	{#State 15
 		ACTIONS => {
-			'NUM' => 8,
-			'PRIVEFUNC' => 6,
-			"(" => 7,
-			"-" => 2,
-			'FUNC' => 1,
-			'PRED' => 3,
-			'VAR' => 4,
-			'EFUNC' => 5
+			'NUM' => 4,
+			"-" => 3,
+			"(" => 2,
+			'PRED' => 1,
+			'PRIVEFUNC' => 9,
+			'VAR' => 7,
+			'EFUNC' => 6,
+			'FUNC' => 5
 		},
 		GOTOS => {
 			'exp' => 24
 		}
 	},
-	{#State 16
+	{#State 15
 		ACTIONS => {
-			'NUM' => 8,
-			"(" => 7,
-			'PRIVEFUNC' => 6,
-			"-" => 2,
-			'FUNC' => 1,
-			'EFUNC' => 5,
-			'VAR' => 4,
-			'PRED' => 3
+			'VAR' => 7,
+			'PRIVEFUNC' => 9,
+			'FUNC' => 5,
+			'EFUNC' => 6,
+			"-" => 3,
+			'NUM' => 4,
+			'PRED' => 1,
+			"(" => 2
 		},
 		GOTOS => {
 			'exp' => 25
 		}
 	},
+	{#State 16
+		DEFAULT => 0
+	},
 	{#State 17
 		ACTIONS => {
-			'PRIVEFUNC' => 6,
-			"(" => 7,
-			'NUM' => 8,
-			'PRED' => 3,
-			'VAR' => 4,
-			'EFUNC' => 5,
-			'FUNC' => 1,
-			"-" => 2
+			"-" => 3,
+			'NUM' => 4,
+			'PRED' => 1,
+			"(" => 2,
+			'VAR' => 7,
+			'PRIVEFUNC' => 9,
+			'FUNC' => 5,
+			'EFUNC' => 6
 		},
 		GOTOS => {
 			'exp' => 26
@@ -679,14 +679,14 @@ sub new {
 	},
 	{#State 18
 		ACTIONS => {
-			'VAR' => 4,
-			'EFUNC' => 5,
-			'PRED' => 3,
-			"-" => 2,
-			'FUNC' => 1,
-			'NUM' => 8,
-			"(" => 7,
-			'PRIVEFUNC' => 6
+			'FUNC' => 5,
+			'EFUNC' => 6,
+			'VAR' => 7,
+			'PRIVEFUNC' => 9,
+			'PRED' => 1,
+			"(" => 2,
+			"-" => 3,
+			'NUM' => 4
 		},
 		GOTOS => {
 			'exp' => 27
@@ -694,14 +694,14 @@ sub new {
 	},
 	{#State 19
 		ACTIONS => {
-			'NUM' => 8,
-			'PRIVEFUNC' => 6,
-			"(" => 7,
-			'PRED' => 3,
-			'EFUNC' => 5,
-			'VAR' => 4,
-			"-" => 2,
-			'FUNC' => 1
+			'NUM' => 4,
+			"-" => 3,
+			"(" => 2,
+			'PRED' => 1,
+			'PRIVEFUNC' => 9,
+			'VAR' => 7,
+			'EFUNC' => 6,
+			'FUNC' => 5
 		},
 		GOTOS => {
 			'exp' => 28
@@ -709,88 +709,88 @@ sub new {
 	},
 	{#State 20
 		ACTIONS => {
-			")" => 29
+			"-" => 15,
+			"/" => 14,
+			"+" => 18,
+			"*" => 17,
+			"}" => 29,
+			"^" => 19
 		}
 	},
 	{#State 21
-		ACTIONS => {
-			"^" => 16,
-			"+" => 15,
-			"," => 30,
-			"-" => 19,
-			"/" => 18,
-			"*" => 17
-		},
-		DEFAULT => -15
+		DEFAULT => -13
 	},
 	{#State 22
 		ACTIONS => {
-			"-" => 19,
+			"^" => 19,
+			"," => 30,
+			"/" => 14,
+			"-" => 15,
 			"*" => 17,
-			"/" => 18,
-			"}" => 31,
-			"+" => 15,
-			"^" => 16
-		}
+			"+" => 18
+		},
+		DEFAULT => -15
 	},
 	{#State 23
-		DEFAULT => -13
+		ACTIONS => {
+			")" => 31
+		}
 	},
 	{#State 24
 		ACTIONS => {
-			"^" => 16,
-			"*" => 17,
-			"/" => 18
+			"^" => 19
 		},
-		DEFAULT => -7
+		DEFAULT => -10
 	},
 	{#State 25
 		ACTIONS => {
-			"^" => 16
+			"^" => 19,
+			"/" => 14,
+			"*" => 17
 		},
-		DEFAULT => -12
+		DEFAULT => -8
 	},
 	{#State 26
 		ACTIONS => {
-			"^" => 16
+			"^" => 19
 		},
 		DEFAULT => -9
 	},
 	{#State 27
 		ACTIONS => {
-			"^" => 16
+			"^" => 19,
+			"*" => 17,
+			"/" => 14
 		},
-		DEFAULT => -10
+		DEFAULT => -7
 	},
 	{#State 28
 		ACTIONS => {
-			"*" => 17,
-			"/" => 18,
-			"^" => 16
+			"^" => 19
 		},
-		DEFAULT => -8
+		DEFAULT => -12
 	},
 	{#State 29
-		DEFAULT => -2
+		DEFAULT => -3
 	},
 	{#State 30
 		ACTIONS => {
-			'NUM' => 8,
-			'PRIVEFUNC' => 6,
-			"(" => 7,
-			'PRED' => 3,
-			'EFUNC' => 5,
-			'VAR' => 4,
-			"-" => 2,
-			'FUNC' => 1
+			"-" => 3,
+			'NUM' => 4,
+			'PRED' => 1,
+			"(" => 2,
+			'VAR' => 7,
+			'PRIVEFUNC' => 9,
+			'FUNC' => 5,
+			'EFUNC' => 6
 		},
 		GOTOS => {
-			'exp' => 21,
-			'list' => 32
+			'list' => 32,
+			'exp' => 22
 		}
 	},
 	{#State 31
-		DEFAULT => -3
+		DEFAULT => -2
 	},
 	{#State 32
 		DEFAULT => -14
@@ -984,6 +984,12 @@ sub _Lexer {
                             'VAR', Math::Symbolic::Variable->new({name=>$name, signature=>[split /,/, $sig]})
                         );
                     }
+                    elsif ( $name eq 'pi' ) {
+                        return('NUM',  Math::Symbolic::Constant->pi());
+                    }
+                    elsif ( $name eq 'e' ) {
+                        return('NUM',  Math::Symbolic::Constant->euler());
+                    }
                     else {
                         return('VAR', Math::Symbolic::Variable->new($name));
                     }
@@ -1066,6 +1072,12 @@ sub _Lexer {
                         return(
                             'VAR', Math::Symbolic::Variable->new({name=>$name, signature=>[split /,/, $sig]})
                         );
+                    }
+                    elsif ( $name eq 'pi' ) {
+                        return('NUM',  Math::Symbolic::Constant->pi());
+                    }
+                    elsif ( $name eq 'e' ) {
+                        return('NUM',  Math::Symbolic::Constant->euler());
                     }
                     else {
                         return('VAR', Math::Symbolic::Variable->new($name));

@@ -4,7 +4,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23+15+9+3;
+use Test::More tests => 23+15+9+3+8;
 
 BEGIN {
 	use_ok('Math::Symbolic');
@@ -112,7 +112,8 @@ eval {
 ok( !$@, 'parsing exp() does not throw an error');
 isa_ok($res, 'Math::Symbolic::Operator', 'parsing exp() returns an operator');
 my $string = $res->to_string('prefix');
-ok( ($string =~ /^exponentiate\(2\.7\d*,\s*multiply\(a,\s*b\)\)$/),
+#ok( ($string =~ /^exponentiate\(2\.7\d*,\s*multiply\(a,\s*b\)\)$/),    # NOTE: stringifying e no longer produces a number
+ok( ($string =~ /^exponentiate\(e,\s*multiply\(a,\s*b\)\)$/),
     'Parse of exp() turns it into e^()'
 );
 
@@ -132,10 +133,28 @@ eval {
 ok( !$@, 'parsing ln() does not throw an error');
 isa_ok($res, 'Math::Symbolic::Operator', 'parsing ln() returns an operator');
 $string = $res->to_string('prefix');
-ok( ($string =~ /^log\(2\.7\d*,\s*multiply\(a,\s*b\)\)$/),
+#ok( ($string =~ /^log\(2\.7\d*,\s*multiply\(a,\s*b\)\)$/),         # NOTE: stringifying e no longer produces a number
+ok( ($string =~ /^log\(e,\s*multiply\(a,\s*b\)\)$/),
     'Parse of ln(x) turns it into log(e,x)'
 );
 
+eval {
+    $res = Math::Symbolic->parse_from_string('pi');
+};
+ok( !$@, 'parsing pi does not throw an error');
+isa_ok($res, 'Math::Symbolic::Constant', 'parsing pi returns a constant');
+$string = $res->to_string();
+ok( $string eq 'pi', 'stringifying constant pi returns "pi"');
+ok( $res->value() =~ m/^3\.14159265/, 'evaluating pi returns a number that looks like pi');
+
+eval {
+    $res = Math::Symbolic->parse_from_string('e');
+};
+ok( !$@, 'parsing e does not throw an error');
+isa_ok($res, 'Math::Symbolic::Constant', 'parsing e returns a constant');
+$string = $res->to_string();
+ok( $string eq 'e', 'stringifying constant e returns "e"');
+ok( $res->value() =~ m/^2\.71828182/, 'evaluating e returns a number that looks like e');
 
 # test the ' notation
 sub test_parse {

@@ -1,5 +1,5 @@
 package Math::Symbolic::Parser::Precompiled;
-our $VERSION = '0.614';
+our $VERSION = '0.620';
 
 use strict;
 
@@ -4924,7 +4924,13 @@ sub Parse::RecDescent::Math::Symbolic::Parser::Precompiled::variable
                 }
                 $return;
               }
-              else {
+              elsif ( $varname eq 'pi' ) {
+                Math::Symbolic::Constant->pi();
+              }
+              elsif ( $varname eq 'e' ) {
+                Math::Symbolic::Constant->euler();
+              }
+              else {                
                 Math::Symbolic::Variable->new( $varname );
               }
             };
@@ -6011,7 +6017,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                             'calls' => [],
                                                             'changed' => 0,
                                                             'impcount' => 0,
-                                                            'line' => 253,
+                                                            'line' => 259,
                                                             'name' => 'identifier_list',
                                                             'opcount' => 0,
                                                             'prods' => [
@@ -6027,7 +6033,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                                               'description' => '/[a-zA-Z][a-zA-Z0-9_]*/',
                                                                                                                               'hashname' => '__PATTERN1__',
                                                                                                                               'ldelim' => '/',
-                                                                                                                              'line' => 253,
+                                                                                                                              'line' => 259,
                                                                                                                               'lookahead' => 0,
                                                                                                                               'mod' => '',
                                                                                                                               'pattern' => '[a-zA-Z][a-zA-Z0-9_]*',
@@ -6039,7 +6045,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                         'op' => bless( {
                                                                                                                          'description' => '\',\'',
                                                                                                                          'hashname' => '__STRING1__',
-                                                                                                                         'line' => 253,
+                                                                                                                         'line' => 259,
                                                                                                                          'lookahead' => 0,
                                                                                                                          'pattern' => ','
                                                                                                                        }, 'Parse::RecDescent::Literal' ),
@@ -6047,7 +6053,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                                                                                                                                'description' => '/[a-zA-Z][a-zA-Z0-9_]*/',
                                                                                                                                'hashname' => '__PATTERN2__',
                                                                                                                                'ldelim' => '/',
-                                                                                                                               'line' => 253,
+                                                                                                                               'line' => 259,
                                                                                                                                'lookahead' => 0,
                                                                                                                                'mod' => '',
                                                                                                                                'pattern' => '[a-zA-Z][a-zA-Z0-9_]*',
@@ -6062,7 +6068,7 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
               $item[1]
             }',
                                                                                                         'hashname' => '__ACTION1__',
-                                                                                                        'line' => 254,
+                                                                                                        'line' => 260,
                                                                                                         'lookahead' => 0
                                                                                                       }, 'Parse::RecDescent::Action' )
                                                                                              ],
@@ -6467,7 +6473,13 @@ package Math::Symbolic::Parser::Precompiled; sub new { my $self = bless( {
                 }
                 $return;
               }
-              else {
+              elsif ( $varname eq \'pi\' ) {
+                Math::Symbolic::Constant->pi();
+              }
+              elsif ( $varname eq \'e\' ) {
+                Math::Symbolic::Constant->euler();
+              }
+              else {                
                 Math::Symbolic::Variable->new( $varname );
               }
             }',

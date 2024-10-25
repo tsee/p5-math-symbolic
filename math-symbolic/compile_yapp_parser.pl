@@ -32,7 +32,7 @@ $code =~ s/(?<!# Module )Parse::Yapp::Driver/Math::Symbolic::Parser::Yapp::Drive
 print $fh <<HERE;
 package Math::Symbolic::Parser::Yapp::Driver;
 use strict;
-our \$VERSION = '1.05';
+our \$VERSION = '1.21';
 
 HERE
 print $fh $code;

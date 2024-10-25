@@ -45,7 +45,7 @@ use Math::Symbolic::Derivative qw//;
 
 use base 'Math::Symbolic::Base';
 
-our $VERSION = '0.614';
+our $VERSION = '0.620';
 
 =head1 METHODS
 
@@ -235,6 +235,18 @@ Returns the type of the term. (T_VARIABLE)
 
 sub term_type {
     return T_VARIABLE;
+}
+
+=head2 Method tid
+
+tid() is implemented here to facilitate tree dumping. See 
+tree_dump.pl in the examples.
+
+=cut
+
+sub tid {
+    my $self = shift;
+    return "Variable. '" . $self->to_string() . "'";
 }
 
 =head2 Method differentiate

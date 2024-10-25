@@ -35,7 +35,7 @@ use Math::Symbolic::ExportConstants qw/:all/;
 
 use base 'Math::Symbolic::Base';
 
-our $VERSION = '0.614';
+our $VERSION = '0.620';
 
 =head1 METHODS
 
@@ -257,6 +257,15 @@ Returns a string representation of the constant.
 
 sub to_string {
     my $self = shift;
+
+    if ( $self->{special} eq 'pi' ) {
+        return 'pi';
+    }
+    # TODO: sync up these symbol names
+    elsif ( $self->{special} eq 'euler' ) {
+        return 'e';
+    }
+
     return $self->value();
 }
 
@@ -267,6 +276,18 @@ Returns the type of the term. (T_CONSTANT)
 =cut
 
 sub term_type { T_CONSTANT }
+
+=head2 Method tid
+
+tid() is implemented here to facilitate tree dumping. See 
+tree_dump.pl in the examples.
+
+=cut
+
+sub tid {
+    my $self = shift;
+    return "Constant. '" . $self->to_string() . "'";
+}
 
 =head2 Method differentiate
 

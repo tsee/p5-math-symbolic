@@ -1,9 +1,10 @@
 Revision history for Perl extension Math::Symbolic.
 
-0.614  Mon Oct 7 09:48 2024
+0.620  Fri Oct 25 15:28 2024
     (MJOHNSON)
     - Made bug fixes, updates and some additions to the examples
     - Added ln(x) as an alias for log(e,x) in the parsers
+    - Added 'pi' and 'e' to the parsers
     - Added method differentiate() as a convenience wrapper for 
       partial_derivative()
     - Added some routines to facilitate debug dumping of 
