@@ -451,6 +451,12 @@ our $Grammar = <<'GRAMMAR_END';
                 }
                 $return;
               }
+              elsif ( $varname eq 'pi' ) {
+                Math::Symbolic::Constant->pi();
+              }
+              elsif ( $varname eq 'e' ) {
+                Math::Symbolic::Constant->euler();
+              }
               else {
                 Math::Symbolic::Variable->new( $varname );
               }
